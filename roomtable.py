@@ -7,7 +7,7 @@ from cas import CASClient
 app = Flask(__name__, template_folder='./templates')
 app.secret_key = urandom(24)
 
-CAS_SERVICE_URL = "http://localhost:8000"
+CAS_SERVICE_URL = "http://localhost:8000/login"
 CAS_SERVER_URL = "https://secure.its.yale.edu/cas/login"
 cas = CASClient(
     version=3.0,
@@ -28,8 +28,6 @@ def login():
 
     next_url = request.args.get('next', url_for('search'))
     ticket = request.args.get('ticket')
-    print(next_url)
-    print(ticket)
     if not ticket:
         cas_login_url = cas.get_login_url()
         return redirect(cas_login_url)
