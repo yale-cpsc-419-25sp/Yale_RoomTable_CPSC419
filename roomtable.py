@@ -1,16 +1,45 @@
+from os import urandom
 from time import localtime, asctime, strftime
-from flask import Flask, request, make_response, redirect, url_for
+from flask import Flask, request, make_response, session, redirect, url_for
 from flask import render_template
+from cas import CASClient
 
 app = Flask(__name__, template_folder='./templates')
+app.secret_key = urandom(24)
 
+CAS_SERVICE_URL = "http://localhost:8000/login"
+CAS_SERVER_URL = "https://secure.its.yale.edu/cas"
+cas = CASClient(
+    version=3.0,
+    service_url=CAS_SERVICE_URL,
+    server_url=CAS_SERVER_URL
+)
 
 @app.route('/', methods=['GET'])
 def index():
-
     html = render_template('index.html')
     response = make_response(html)
     return response
+
+@app.route('/login', methods=['GET'])
+def login():
+    if 'username' in session:
+        return redirect(url_for('search'))
+
+    next = request.args.get('next')
+    ticket = request.args.get('ticket')
+    if not ticket:
+        cas_login_url = cas.get_login_url()
+        app.logger.debug('CAS login URL: %s', cas_login_url)
+        return redirect(cas_login_url)
+
+    user, _, _ = cas.verify_ticket(ticket)
+
+    if not user:
+        return
+    else:
+        session['username'] = user
+        return redirect(next)
 
 @app.route('/search', methods=['GET'])
 def search():
