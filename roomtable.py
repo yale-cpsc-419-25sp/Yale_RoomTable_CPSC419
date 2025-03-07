@@ -1,5 +1,6 @@
 from os import urandom, environ
 from time import localtime, asctime, strftime
+from functools import wraps
 from flask import Flask, request, make_response, session, redirect, url_for
 from flask import render_template
 from cas import CASClient
@@ -18,6 +19,20 @@ cas = CASClient(
     server_url=CAS_SERVER_URL
 )
 
+
+def login_required(f):
+    """
+    Decorate routes to require login.
+
+    https://flask.palletsprojects.com/en/1.1.x/patterns/viewdecorators/
+    """
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session.get('net_id') is None:
+            return render_template("index.html")
+        return f(*args, **kwargs)
+    return decorated_function
+
 @app.route('/', methods=['GET'])
 def index():
     html = render_template('index.html')
@@ -26,7 +41,7 @@ def index():
 
 @app.route('/login', methods=['GET'])
 def login():
-    if 'username' in session:
+    if 'net_id' in session:
         return redirect(url_for('search'))
 
     next_url = request.args.get('next', url_for('search'))
@@ -35,21 +50,23 @@ def login():
         cas_login_url = cas.get_login_url()
         return redirect(cas_login_url)
 
-    user, _, _ = cas.verify_ticket(ticket)
+    net_id, _, _ = cas.verify_ticket(ticket)
 
-    if not user:
+    if not net_id:
         return
     else:
-        session['username'] = user
+        session['net_id'] = net_id
         return redirect(next_url)
 
 @app.route('/search', methods=['GET'])
+@login_required
 def search():
     html = render_template('search.html')
     response = make_response(html)
     return response
 
 @app.route('/results', methods=['GET'])
+@login_required
 def results():
     capacity = request.args.get('capacity')
     print(capacity)
