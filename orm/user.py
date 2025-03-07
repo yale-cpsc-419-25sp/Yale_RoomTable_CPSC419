@@ -15,4 +15,4 @@ class User(Base):
     name: Mapped[str] = mapped_column(String)
 
     resco_id: Mapped[int] = mapped_column(Integer, ForeignKey("rescos.id"))
-    # resco: Mapped[ResidentialCollege] = relationship("ResidentialCollege")
+    resco: Mapped[ResidentialCollege] = relationship("ResidentialCollege")

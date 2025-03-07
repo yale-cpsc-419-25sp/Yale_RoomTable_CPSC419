@@ -1,11 +1,41 @@
 from base import Base
 
-def Review(Base):
-    def __init__(self):
-        pass
-    
-def SuiteReview(Review):
-    __tablename__ = "suite_reviews"
+from sqlalchemy import (
+    CheckConstraint, ForeignKey,
+    Integer, String
+)
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-def RoomReview(Review):
-    __tablename__ = "room_reviews"
+from user import User
+
+class Review(Base):
+    __tablename__ = "reviews"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    rating: Mapped[int] = mapped_column(Integer, CheckConstraint("rating BETWEEN 1 AND 5"))
+    text: Mapped[str] = mapped_column(String)
+    image: Mapped[str] = mapped_column(String)
+    type: Mapped[str] = mapped_column(String)
+
+    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"))
+    user: Mapped[User] = relationship("User")
+
+    __mapper_args__ = {
+        "polymorphic_identity":"review",
+        "polymorphic_on":type
+    }
+    
+class SuiteReview(Review):
+    suite_id: Mapped[int] = mapped_column(Integer, ForeignKey("rooms.id"))
+
+    __mapper_args__ = {
+        "polymorphic_identity":"suite_review"
+    }
+
+
+class RoomReview(Review):
+    room_id: Mapped[int] = mapped_column(Integer, ForeignKey("rooms.id"))
+
+    __mapper_args__ = {
+        "polymorphic_identity":"room_review"
+    }

@@ -6,7 +6,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-def Friend(Base):
+class Friend(Base):
     __tablename__ = "friends"
 
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"))

@@ -6,6 +6,8 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from resco import ResidentialCollege
+
 def Suite(Base):
     __tablename__ = "suites"
 
@@ -15,3 +17,4 @@ def Suite(Base):
     capacity: Mapped[int] = mapped_column(Integer)
 
     resco_id: Mapped[int] = mapped_column(Integer, ForeignKey('rescos.id'))
+    resco: Mapped[ResidentialCollege] = relationship("ResidentialCollege")
