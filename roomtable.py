@@ -1,4 +1,4 @@
-from os import urandom
+from os import urandom, environ
 from time import localtime, asctime, strftime
 from flask import Flask, request, make_response, session, redirect, url_for
 from flask import render_template
@@ -7,7 +7,10 @@ from cas import CASClient
 app = Flask(__name__, template_folder='./templates')
 app.secret_key = urandom(24)
 
-CAS_SERVICE_URL = "http://localhost:8000/login"
+# https://stackoverflow.com/questions/67439625/python-equivalent-of-process-env-port-3000
+port = int(environ.get('PORT', 8000))
+
+CAS_SERVICE_URL = "http://localhost:" + str(port) + "/login"
 CAS_SERVER_URL = "https://secure.its.yale.edu/cas/login"
 cas = CASClient(
     version=3.0,

@@ -1,5 +1,7 @@
 from sys import argv, exit, stderr
 from roomtable import app
+from os import environ
+
 
 def main():
 
@@ -9,6 +11,7 @@ def main():
 
     try:
         port = int(argv[1])
+        environ['PORT'] = str(port)
     except Exception:
         print('Port must be an integer.', file=stderr)
         exit(1)
