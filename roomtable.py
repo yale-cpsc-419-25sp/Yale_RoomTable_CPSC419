@@ -57,6 +57,13 @@ def login():
     else:
         session['net_id'] = net_id
         return redirect(next_url)
+    
+@app.route('/homepage', methods=["GET"])
+@login_required
+def homepage():
+    html = render_template("homepage.html")
+    response = make_response(html)
+    return response
 
 @app.route('/search', methods=['GET'])
 @login_required

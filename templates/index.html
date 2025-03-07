@@ -2,44 +2,10 @@
  <html>
    <head>
       <title>RoomTable</title>
-      <link rel="stylesheet" href="/styles.css">
+      <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+      <link rel="stylesheet" href="{{ url_for('static', filename='carousel.css') }}">
 
-      <style>
-         .banner{
-            background-color: rgb(0, 53, 107);
-            color: rgb(255, 255, 255);
-            text-align: center;
-            padding: 30px;
-            font-size: 60px;
-            border: 5px solid rgb(255, 255, 255);
-         }
-         
-         .blue-box {
-            background-color: rgb(0, 53, 107);
-            color: rgb(255, 255, 255);
-            text-align: center;
-            padding: 20px;
-            font-size: 50px;
-            border: 5px solid rgb(255, 255, 255);
-         }
-
-         button {
-            background-color: rgb(0, 53, 107);
-            color: rgb(255, 255, 255);
-            padding: 10px;
-            font-size: 16px;
-            border-radius: 25px;
-            cursor: pointer;
-         }
-         button:hover {
-            background-color: rgb(1, 37, 65);;
-         }
-
-         @font-face {
-            font-family: 'YaleNew';
-            src: url('YaleNew-Bold.otf');
-         }
-      </style>
+     
       </head>
    <body>
       <div class = "blue-box">
@@ -48,11 +14,20 @@
 
 
       <div class = "carousel-container">
+         <button class = "carousel-btn left-btn">&#10094</button>
          <div class = "carousel-images">
             <img src = "{{url_for('static', filename='pierson.jpg')}}">
             <img src = "{{url_for('static', filename='franklin.jpg')}}">
             <img src = "{{url_for('static', filename='morse.jpg')}}">
+            <img src = "{{url_for('static', filename='trumbull.jpg')}}">
+            <img src = "{{url_for('static', filename='td.jpg')}}">
+            <img src = "{{url_for('static', filename='hopper.jpg')}}">
+
+
+
          </div>
+         <button class = "carousel-btn right-btn">&#10095</button>
+
       </div>
       <p>Streamline the housing process with RoomTable. Save your favorite rooms, view friends' rooms, and view floor plans.</p>
       <p>To search for a room, please login.</p>
@@ -60,7 +35,7 @@
          <button type="submit">Login with Yale CAS</button>
       </form>
 
-      <script src="/carousel.js"></script>
+      <script src="{{ url_for('static', filename='carousel.js') }}"></script>
 
    </body>
  </html>

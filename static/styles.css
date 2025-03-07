@@ -1,0 +1,98 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background-color: #f4f4f4;
+}
+
+.banner{
+    background-color: rgb(0, 53, 107);
+    color: white;
+    text-align: center;
+    padding: 30px;
+    font-size: 60px;
+    border: 5px solid rgb(255, 255, 255);
+ }
+
+ .blue-box {
+    background-color: rgb(0, 53, 107);
+    color: rgb(255, 255, 255);
+    text-align: center;
+    padding: 20px;
+    font-size: 50px;
+    border: 5px solid rgb(255, 255, 255);
+ }
+
+
+.home-button {
+    display: inline-block;
+    margin: 10px;
+    padding: 12px 24px;
+    font-size: 18px;
+    text-decoration: none;
+    color: white;
+    background-color: rgb(0, 53, 107);
+    border-radius: 25px;
+    transition: background 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+
+ 
+button {
+    background-color: rgb(0, 53, 107);
+    color: rgb(255, 255, 255);
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 25px;
+    cursor: pointer;
+ }
+
+.button-container {
+    margin-top: 15px;
+}
+
+.nav-button {
+    display: block;
+    width: 200px;
+    padding: 15px;
+    margin: 10px;
+    font-size: 18px;
+    text-align: center;
+    text-decoration: none;
+    color: white;
+    background-color: rgb(0, 53, 107);
+    border-radius: 8px;
+    transition: background 0.3s ease-in-out;
+}
+
+
+ button:hover {
+    background-color: rgb(1, 37, 65);;
+ }
+
+ .nav-button:hover {
+    background-color: rgb(1, 37, 65);
+    border-color: rgb(200, 200, 200);
+}
+
+
+.nav-link {
+    flex: 1; 
+    max-width: 200px; 
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: 2px solid white; 
+    border-radius: 8px;
+    text-align: center;
+    transition: background 0.3s ease-in-out, border 0.3s ease-in-out;
+}
+
+ @font-face {
+    font-family: 'YaleNew';
+    src: url('YaleNew-Bold.otf');
+ }

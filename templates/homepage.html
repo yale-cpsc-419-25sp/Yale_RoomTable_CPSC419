@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>RoomTable</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+     <div class="banner">
+
+        <a class="nav-link">Housing Draw</a>
+        <a href = "{{url_for('search')}}" class="nav-link">Search Rooms</a>
+        <a class="nav-link">Reviews</a>
+        <form action="/logout" method="post">
+            <button type="submit" class="button">Log Out</button>
+        </form>
+
+     </div>
+
+     <div>Your Saved Rooms:</div>
+
+    
+ 
+
+</body>
+</html>
