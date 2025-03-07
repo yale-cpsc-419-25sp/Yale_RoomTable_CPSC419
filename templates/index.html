@@ -2,7 +2,7 @@
  <html>
    <head>
       <title>RoomTable</title>
-      <link rel="stylesheet" href="styles.css">
+      <link rel="stylesheet" href="/styles.css">
 
       <style>
          .banner{
@@ -49,9 +49,9 @@
 
       <div class = "carousel-container">
          <div class = "carousel-images">
-            <img src = "images/franklin.jpg">
-            <img src = "images/morse.jpg">
-            <img src = "images/pierson.jpg">
+            <img src = "{{url_for('static', filename='pierson.jpg')}}">
+            <img src = "{{url_for('static', filename='franklin.jpg')}}">
+            <img src = "{{url_for('static', filename='morse.jpg')}}">
          </div>
       </div>
       <p>Streamline the housing process with RoomTable. Save your favorite rooms, view friends' rooms, and view floor plans.</p>
@@ -60,7 +60,7 @@
          <button type="submit">Login with Yale CAS</button>
       </form>
 
-      <script src="carousel.js"></script>
+      <script src="/carousel.js"></script>
 
    </body>
  </html>
