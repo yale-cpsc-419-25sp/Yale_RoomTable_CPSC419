@@ -2,11 +2,24 @@
  <html>
    <head>
       <title>RoomTable</title>
+      <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+      <link rel="stylesheet" href="{{ url_for('static', filename='search.css') }}">
+
       </head>
    <body>
+        <div class="banner">
+            <a href = "{{url_for('homepage')}}" class="nav-link">My Saved Rooms</a>
+            <a class="nav-link">Deadlines</a>
+            <a href = "{{url_for('search')}}" class="nav-link">Search Rooms</a>
+            <a class="nav-link">Reviews</a>
+            <form action="/logout" method="post">
+                <button type="submit" class="logout">Log Out</button>
+            </form>
+
+        </div>
       <h1>Search for a Room</h1>
       <p>Search for rooms in your residential college.</p>
-      <div>
+      <div class = "search-box">
             <form action="results" method="GET">
                 <label for="college">Residential College:</label>
                 <select name="college" id="college">

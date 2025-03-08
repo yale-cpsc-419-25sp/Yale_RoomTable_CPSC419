@@ -7,12 +7,12 @@
 <body>
 
      <div class="banner">
-
-        <a class="nav-link">Housing Draw</a>
+        <a href = "{{url_for('homepage')}}" class="nav-link">My Saved Rooms</a>
+        <a class="nav-link">Deadlines</a>
         <a href = "{{url_for('search')}}" class="nav-link">Search Rooms</a>
         <a class="nav-link">Reviews</a>
         <form action="/logout" method="post">
-            <button type="submit" class="button">Log Out</button>
+            <button type="submit" class="logout">Log Out</button>
         </form>
 
      </div>
