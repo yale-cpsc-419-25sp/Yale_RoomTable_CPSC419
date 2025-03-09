@@ -1,46 +1,39 @@
 from base import Base
 from room import Room
 from suite import Suite
+from user import User
 
 from sqlalchemy import (
-    CheckConstraint, ForeignKey,
-    Integer, String
+    ForeignKey,
+    Integer
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from user import User
-
-class Review(Base):
-    __tablename__ = "reviews"
+class Preference(Base):
+    __tablename__ = "preferences"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    rating: Mapped[int] = mapped_column(Integer, CheckConstraint("rating BETWEEN 1 AND 5"))
-    text: Mapped[str] = mapped_column(String)
-    image: Mapped[str] = mapped_column(String)
-    type: Mapped[str] = mapped_column(String)
 
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"))
     user: Mapped[User] = relationship("User")
 
     __mapper_args__ = {
-        "polymorphic_identity":"review",
+        "polymorphic_identity":"preference",
         "polymorphic_on":type
     }
-    
 
-
-class RoomReview(Review):
+class RoomPreference(Preference):
     room_id: Mapped[int] = mapped_column(Integer, ForeignKey("rooms.id"))
     room: Mapped[Room] = relationship("Room")
 
     __mapper_args__ = {
-        "polymorphic_identity":"room_review"
+        "polymorphic_identity":"room_preference"
     }
 
-class SuiteReview(Review):
-    suite_id: Mapped[int] = mapped_column(Integer, ForeignKey("rooms.id"))
+class SuitePreference(Preference):
+    suite_id: Mapped[int] = mapped_column(Integer, ForeignKey("suites.id"))
     suite: Mapped[Suite] = relationship("Suite")
-
+    
     __mapper_args__ = {
-        "polymorphic_identity":"suite_review"
+        "polymorphic_identity":"suite_preference"
     }

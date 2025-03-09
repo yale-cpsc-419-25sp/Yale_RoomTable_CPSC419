@@ -13,6 +13,9 @@ class Database():
 
         Base.metadata.create_all(self.engine)
 
+        self._database_init()
+
+    def _database_init(self):
         ResidentialCollege(self.session)
 
     def show_tables(self):
