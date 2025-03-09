@@ -1,7 +1,10 @@
 from sys import argv, exit, stderr
 from roomtable import app
 
+from database import Database
+
 def main():
+    db = Database()
 
     if len(argv) != 2:
         print('Usage: ' + argv[0] + ' port', file=stderr)
@@ -18,6 +21,8 @@ def main():
     except Exception as ex:
         print(ex, file=stderr)
         exit(1)
+    
+    db.close()
 
 if __name__ == '__main__':
     main()
