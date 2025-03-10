@@ -14,10 +14,9 @@ class Review(Base):
     __tablename__ = "reviews"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    accessibility_rating: Mapped[int] = mapped_column(Integer, CheckConstraint("accessibility_rating BETWEEN 1 AND 5"))
-    space_rating: Mapped[int] = mapped_column(Integer, CheckConstraint("space_rating BETWEEN 1 AND 5"))
+    rating: Mapped[int] = mapped_column(Integer, CheckConstraint("rating BETWEEN 1 AND 5"))
     text: Mapped[str] = mapped_column(String)
-    image: Mapped[str | None] = mapped_column(String, nullable=True)
+    # image: Mapped[str] = mapped_column(String)
     type: Mapped[str] = mapped_column(String)
 
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"))
@@ -30,17 +29,17 @@ class Review(Base):
     
 
 
-class RoomReview(Review):
-    room_id: Mapped[int] = mapped_column(Integer, ForeignKey("rooms.id"))
-    room: Mapped[Room] = relationship("Room", foreign_keys=[room_id])
+# class RoomReview(Review):
+#     room_id: Mapped[int] = mapped_column(Integer, ForeignKey("rooms.id"))
+#     room: Mapped[Room] = relationship("Room")
 
-    __mapper_args__ = {
-        "polymorphic_identity":"room_review"
-    }
+#     __mapper_args__ = {
+#         "polymorphic_identity":"room_review"
+#     }
 
 class SuiteReview(Review):
-    suite_id: Mapped[int] = mapped_column(Integer, ForeignKey("suites.id"))
-    suite: Mapped[Suite] = relationship("Suite", foreign_keys = [suite_id])
+    suite_id: Mapped[int] = mapped_column(Integer, ForeignKey("rooms.id"))
+    suite: Mapped[Suite] = relationship("Suite")
 
     __mapper_args__ = {
         "polymorphic_identity":"suite_review"
