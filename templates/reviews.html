@@ -1,0 +1,40 @@
+<form action="{{ url_for('review') }}" method="POST">
+    <label for="suite">Suite</label>
+    <select name="suite" required>
+        <option value="1">Suite 1</option>
+        <option value="2">Suite 2</option>
+        <!-- Add other suite options here -->
+    </select>
+
+    <label for="accessibility">Accessibility (1-5)</label>
+    <input type="number" name="accessibility" min="1" max="5" required>
+
+    <label for="space">Space (1-5)</label>
+    <input type="number" name="space" min="1" max="5" required>
+
+    <label for="review">Review</label>
+    <textarea name="review"></textarea>
+
+    <button type="submit">Submit</button>
+</form>
+<h2>Reviews</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Suite</th>
+            <th>Accessibility</th>
+            <th>Space</th>
+            <th>Review</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for review in reviews %}
+        <tr>
+            <td>{{ review.suite.name }}</td>  <!-- Update to show suite name -->
+            <td>{{ review.accessibility_rating }}</td>
+            <td>{{ review.space_rating }}</td>
+            <td>{{ review.text }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

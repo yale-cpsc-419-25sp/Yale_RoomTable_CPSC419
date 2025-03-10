@@ -1,7 +1,7 @@
-from base import Base
-# from room import Room
-from suite import Suite
-from user import User
+from models.base import Base
+from models.room import Room
+from models.suite import Suite
+from models.user import User
 
 from sqlalchemy import (
     ForeignKey,

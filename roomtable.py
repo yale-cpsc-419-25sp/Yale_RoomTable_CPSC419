@@ -2,8 +2,16 @@ from os import urandom, environ
 from time import localtime, asctime, strftime
 from functools import wraps
 from flask import Flask, request, make_response, session, redirect, url_for
-from flask import render_template
+from flask import render_template, request
 from cas import CASClient
+
+from models.room import Room
+from models.review import SuiteReview
+from models.base import Base
+from models.user import User
+from database import Database
+
+db = Database()
 
 app = Flask(__name__, template_folder='./templates')
 app.secret_key = urandom(24)
@@ -82,3 +90,30 @@ def results():
     html = render_template('results.html', capacity=capacity, floor=floor, class_year=class_year)
     response = make_response(html)
     return response
+
+
+
+
+
+@app.route('/reviews', methods = ["GET", "POST"])
+def review():
+    if request.method == 'POST':
+        room = request.form['suite']
+        accessibility = request.form['accessibility']
+        space = request.form['space']
+        review = request.form['review']
+
+        db.create_review(
+            suite_id=room,
+            accessibility_rating=accessibility,
+            space_rating=space,
+            image = None,
+            review_text=review
+        )
+        
+        
+        return redirect(url_for('reviews'))
+
+    # Query all reviews to display
+    all_reviews = db.session.query(SuiteReview).all()
+    return render_template('reviews.html', reviews=all_reviews)
