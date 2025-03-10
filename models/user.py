@@ -14,5 +14,5 @@ class User(Base):
     netid: Mapped[str] = mapped_column(String)
     name: Mapped[str] = mapped_column(String)
 
-    resco_id: Mapped[int] = mapped_column(Integer, ForeignKey("rescos.id"))
-    resco: Mapped[ResidentialCollege] = relationship("ResidentialCollege")
+    # resco_id: Mapped[int] = mapped_column(Integer, ForeignKey("rescos.id"))
+    # resco: Mapped[ResidentialCollege] = relationship("ResidentialCollege")

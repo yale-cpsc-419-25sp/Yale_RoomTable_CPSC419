@@ -29,13 +29,13 @@ class Review(Base):
     
 
 
-class RoomReview(Review):
-    room_id: Mapped[int] = mapped_column(Integer, ForeignKey("rooms.id"))
-    room: Mapped[Room] = relationship("Room")
+# class RoomReview(Review):
+#     room_id: Mapped[int] = mapped_column(Integer, ForeignKey("rooms.id"))
+#     room: Mapped[Room] = relationship("Room")
 
-    __mapper_args__ = {
-        "polymorphic_identity":"room_review"
-    }
+#     __mapper_args__ = {
+#         "polymorphic_identity":"room_review"
+#     }
 
 class SuiteReview(Review):
     suite_id: Mapped[int] = mapped_column(Integer, ForeignKey("rooms.id"))
