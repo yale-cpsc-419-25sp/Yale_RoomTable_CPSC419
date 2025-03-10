@@ -22,15 +22,19 @@ class Database():
         # ResidentialCollege(self.session)
         ResidentialCollege()
 
-    def create_review(self, suite_id, accessibility_rating, image, space_rating, review_text, user_id = None):
+    def create_review(self, suite_id, accessibility_rating, space_rating, review_text, rating, user_id=None):
+        if not user_id:
+            raise ValueError("A valid user_id is required")
+
         new_review = SuiteReview(
-            suite_id=suite_id,
-            accessibility_rating=accessibility_rating,
-            space_rating=space_rating,
-            image=image,
-            text=review_text,
-            user_id=user_id
-         )
+        suite_id=suite_id,
+        accessibility_rating=accessibility_rating,
+        space_rating=space_rating,
+        text=review_text,
+        rating=rating,
+        user_id=user_id,
+        type = "suite_review"
+    )
 
         self.session.add(new_review)
         self.session.commit()

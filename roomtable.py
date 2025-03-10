@@ -97,18 +97,25 @@ def results():
 
 @app.route('/reviews', methods = ["GET", "POST"])
 def review():
-    if request.method == 'POST':
-        room = request.form['suite']
-        accessibility = request.form['accessibility']
-        space = request.form['space']
-        review = request.form['review']
 
+    
+    if request.method == 'POST':
+        room_id = request.form['suite']
+        accessibility_rating = int(request.form['accessibility'])
+        space_rating = int(request.form['space'])
+        review_text = request.form['review']
+        rating = int(request.form['rating'])
+
+        user_id = session.get('user_id')
+        
         db.create_review(
-            suite_id=room,
-            accessibility_rating=accessibility,
-            space_rating=space,
-            image = None,
-            review_text=review
+            rating=rating,
+            review_text=review_text,
+            # type='suite_review',
+            accessibility_rating=accessibility_rating,
+            space_rating=space_rating,
+            user_id=user_id,
+            suite_id=room_id
         )
         
         
