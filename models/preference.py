@@ -1,5 +1,5 @@
 from base import Base
-from room import Room
+# from room import Room
 from suite import Suite
 from user import User
 
@@ -22,13 +22,13 @@ class Preference(Base):
         "polymorphic_on":type
     }
 
-class RoomPreference(Preference):
-    room_id: Mapped[int] = mapped_column(Integer, ForeignKey("rooms.id"))
-    room: Mapped[Room] = relationship("Room")
+# class RoomPreference(Preference):
+#     room_id: Mapped[int] = mapped_column(Integer, ForeignKey("rooms.id"))
+#     room: Mapped[Room] = relationship("Room")
 
-    __mapper_args__ = {
-        "polymorphic_identity":"room_preference"
-    }
+#     __mapper_args__ = {
+#         "polymorphic_identity":"room_preference"
+    # }
 
 class SuitePreference(Preference):
     suite_id: Mapped[int] = mapped_column(Integer, ForeignKey("suites.id"))
