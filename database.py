@@ -8,7 +8,7 @@ from models.review import SuiteReview
 
 
 class Database():
-    def __init__(self, database_url="sqlite:///roomtable.db"):
+    def __init__(self, database_url="sqlite:///data/roomtable.db"):
         self.engine = create_engine(database_url)
 
         self.Session = sessionmaker(bind=self.engine)
