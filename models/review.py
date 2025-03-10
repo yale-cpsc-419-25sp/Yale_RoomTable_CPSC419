@@ -18,6 +18,9 @@ class Review(Base):
     text: Mapped[str] = mapped_column(String)
     # image: Mapped[str] = mapped_column(String)
     type: Mapped[str] = mapped_column(String)
+ 
+    accessibility_rating: Mapped[int] = mapped_column(Integer, CheckConstraint("accessibility_rating BETWEEN 1 AND 5"))
+    space_rating: Mapped[int] = mapped_column(Integer, CheckConstraint("space_rating BETWEEN 1 AND 5"))
 
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"))
     user: Mapped[User] = relationship("User")
@@ -38,8 +41,11 @@ class Review(Base):
 #     }
 
 class SuiteReview(Review):
-    suite_id: Mapped[int] = mapped_column(Integer, ForeignKey("rooms.id"))
+    suite_id: Mapped[int] = mapped_column(Integer, ForeignKey("suites.id"))
     suite: Mapped[Suite] = relationship("Suite")
+    
+    # accessibility_rating: Mapped[int] = mapped_column(Integer, CheckConstraint("accessibility_rating BETWEEN 1 AND 5"))
+    # space_rating: Mapped[int] = mapped_column(Integer, CheckConstraint("space_rating BETWEEN 1 AND 5"))
 
     __mapper_args__ = {
         "polymorphic_identity":"suite_review"

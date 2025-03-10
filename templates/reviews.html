@@ -1,9 +1,9 @@
 <form action="{{ url_for('review') }}" method="POST">
-    <label for="room">Room</label>
-    <select name="room" required>
-        <option value="1">Room 1</option>
-        <option value="2">Room 2</option>
-        <!-- Add other room options here -->
+    <label for="suite">Suite</label>
+    <select name="suite" required>
+        <option value="1">Suite 1</option>
+        <option value="2">Suite 2</option>
+        <!-- Add other suite options here -->
     </select>
 
     <label for="accessibility">Accessibility (1-5)</label>
@@ -17,12 +17,11 @@
 
     <button type="submit">Submit</button>
 </form>
-
 <h2>Reviews</h2>
 <table>
     <thead>
         <tr>
-            <th>Room</th>
+            <th>Suite</th>
             <th>Accessibility</th>
             <th>Space</th>
             <th>Review</th>
@@ -31,7 +30,7 @@
     <tbody>
         {% for review in reviews %}
         <tr>
-            <td>{{ review.room.name }}</td>
+            <td>{{ review.suite.name }}</td>  <!-- Update to show suite name -->
             <td>{{ review.accessibility_rating }}</td>
             <td>{{ review.space_rating }}</td>
             <td>{{ review.text }}</td>

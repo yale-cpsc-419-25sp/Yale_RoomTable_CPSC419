@@ -6,7 +6,7 @@ from flask import render_template, request
 from cas import CASClient
 
 from models.room import Room
-from models.review import RoomReview
+from models.review import SuiteReview
 from models.base import Base
 from models.user import User
 from database import Database
@@ -98,13 +98,13 @@ def results():
 @app.route('/reviews', methods = ["GET", "POST"])
 def review():
     if request.method == 'POST':
-        room = request.form['room']
+        room = request.form['suite']
         accessibility = request.form['accessibility']
         space = request.form['space']
         review = request.form['review']
 
         db.create_review(
-            room_id=room,
+            suite_id=room,
             accessibility_rating=accessibility,
             space_rating=space,
             image = None,
@@ -115,5 +115,5 @@ def review():
         return redirect(url_for('reviews'))
 
     # Query all reviews to display
-    all_reviews = db.session.query(RoomReview).all()
+    all_reviews = db.session.query(SuiteReview).all()
     return render_template('reviews.html', reviews=all_reviews)

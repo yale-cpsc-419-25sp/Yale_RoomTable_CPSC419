@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from models.base import Base
 from models.resco import ResidentialCollege
 
-from models.review import RoomReview
+from models.review import SuiteReview
 
 
 class Database():
@@ -19,17 +19,18 @@ class Database():
         self._database_init()
 
     def _database_init(self):
-        ResidentialCollege(self.session)
+        # ResidentialCollege(self.session)
+        ResidentialCollege()
 
-    def create_review(self, room_id, accessibility_rating, image, space_rating, review_text, user_id = None):
-        new_review = RoomReview(
-            room_id = room_id,
-            accessibility_rating = accessibility_rating,
-            space_rating = space_rating,
-            image = image,
-            text = review_text,
-            user_id = user_id
-        )
+    def create_review(self, suite_id, accessibility_rating, image, space_rating, review_text, user_id = None):
+        new_review = SuiteReview(
+            suite_id=suite_id,
+            accessibility_rating=accessibility_rating,
+            space_rating=space_rating,
+            image=image,
+            text=review_text,
+            user_id=user_id
+         )
 
         self.session.add(new_review)
         self.session.commit()
