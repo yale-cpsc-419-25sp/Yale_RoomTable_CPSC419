@@ -1,5 +1,5 @@
 from models.base import Base
-from models.room import Room
+# from models.room import Room
 from models.suite import Suite
 from models.user import User
 
