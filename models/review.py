@@ -1,5 +1,5 @@
 from models.base import Base
-from models.room import Room
+# from models.room import Room
 from models.suite import Suite
 
 from sqlalchemy import (
@@ -15,11 +15,11 @@ class Review(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
 
-    text: Mapped[str] = mapped_column(String)
-    image: Mapped[str] = mapped_column(String)
+    review_text: Mapped[str] = mapped_column(String)
+    # image: Mapped[str] = mapped_column(String)
     type: Mapped[str] = mapped_column(String)
  
-    overall_rating: Mapped[int] = mapped_column(Integer, CheckConstraint("rating BETWEEN 1 AND 5"))
+    overall_rating: Mapped[int] = mapped_column(Integer, CheckConstraint("overall_rating BETWEEN 1 AND 5"))
     accessibility_rating: Mapped[int] = mapped_column(Integer, CheckConstraint("accessibility_rating BETWEEN 1 AND 5"))
     space_rating: Mapped[int] = mapped_column(Integer, CheckConstraint("space_rating BETWEEN 1 AND 5"))
 

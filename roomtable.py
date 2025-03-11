@@ -5,7 +5,7 @@ from flask import Flask, request, make_response, session, redirect, url_for
 from flask import render_template, request
 from cas import CASClient
 
-from models.room import Room
+# from models.room import Room
 from models.review import SuiteReview
 from models.base import Base
 from models.user import User
@@ -112,23 +112,23 @@ def review():
     suites = db.session.query(Suite).all()
 
     if request.method == 'POST':
-        room_id = request.form['suite']
+        suite_id = request.form['suite']
         accessibility_rating = int(request.form['accessibility'])
         space_rating = int(request.form['space'])
         review_text = request.form['review']
-        rating = int(request.form['rating'])
+        overall_rating = int(request.form['rating'])
         user_id = request.form.get('user_id')
 
         # user_id = session.get('user_id')
         
         db.create_review(
-            rating=rating,
+            suite_id=suite_id,
             review_text=review_text,
+            overall_rating=overall_rating,
             # type='suite_review',
             accessibility_rating=accessibility_rating,
             space_rating=space_rating,
-            user_id=user_id,
-            suite_id=room_id
+            user_id=user_id
         )
         
         

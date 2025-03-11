@@ -79,19 +79,19 @@ class Database():
 
         self.session.commit()
     
-    def create_review(self, suite_id, accessibility_rating, space_rating, review_text, rating, user_id=None):
+    def create_review(self, suite_id, review_text, overall_rating, accessibility_rating, space_rating, user_id=None):
         if not user_id:
             raise ValueError("A valid user_id is required")
 
         new_review = SuiteReview(
-        suite_id=suite_id,
-        accessibility_rating=accessibility_rating,
-        space_rating=space_rating,
-        text=review_text,
-        rating=rating,
-        user_id=user_id,
-        type = "suite_review"
-    )
+            suite_id=suite_id,
+            review_text=review_text,
+            overall_rating=overall_rating,
+            accessibility_rating=accessibility_rating,
+            space_rating=space_rating,
+            user_id=user_id,
+            type = "suite_review"
+        )
 
         self.session.add(new_review)
         self.session.commit()
