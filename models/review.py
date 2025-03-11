@@ -14,11 +14,12 @@ class Review(Base):
     __tablename__ = "reviews"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    rating: Mapped[int] = mapped_column(Integer, CheckConstraint("rating BETWEEN 1 AND 5"))
+
     text: Mapped[str] = mapped_column(String)
     image: Mapped[str] = mapped_column(String)
     type: Mapped[str] = mapped_column(String)
  
+    overall_rating: Mapped[int] = mapped_column(Integer, CheckConstraint("rating BETWEEN 1 AND 5"))
     accessibility_rating: Mapped[int] = mapped_column(Integer, CheckConstraint("accessibility_rating BETWEEN 1 AND 5"))
     space_rating: Mapped[int] = mapped_column(Integer, CheckConstraint("space_rating BETWEEN 1 AND 5"))
 
