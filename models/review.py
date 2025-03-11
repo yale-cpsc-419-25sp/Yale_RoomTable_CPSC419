@@ -16,7 +16,7 @@ class Review(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     rating: Mapped[int] = mapped_column(Integer, CheckConstraint("rating BETWEEN 1 AND 5"))
     text: Mapped[str] = mapped_column(String)
-    # image: Mapped[str] = mapped_column(String)
+    image: Mapped[str] = mapped_column(String)
     type: Mapped[str] = mapped_column(String)
  
     accessibility_rating: Mapped[int] = mapped_column(Integer, CheckConstraint("accessibility_rating BETWEEN 1 AND 5"))
