@@ -10,6 +10,7 @@ from models.review import SuiteReview
 from models.base import Base
 from models.user import User
 from database import Database
+from models.suite import Suite
 
 db = Database()
 
@@ -87,7 +88,18 @@ def results():
     print(capacity)
     floor = request.args.get('floor')
     class_year = request.args.get('class')
-    html = render_template('results.html', capacity=capacity, floor=floor, class_year=class_year)
+
+    query = db.session.query(Suite) 
+
+    if capacity:
+        query = query.filter(Suite.capacity == int(capacity))
+    # if floor:
+    #     query = query.filter(Suite.entryway == floor)
+    # if class_year:
+    #     query = query.filter(Suite.year == int(class_year))
+    print(f"Capacity: {capacity}")
+    suites = query.all()
+    html = render_template('results.html', capacity=capacity)
     response = make_response(html)
     return response
 
@@ -97,7 +109,7 @@ def results():
 
 @app.route('/reviews', methods = ["GET", "POST"])
 def review():
-
+    suites = db.session.query(Suite).all()
 
     if request.method == 'POST':
         room_id = request.form['suite']
@@ -124,4 +136,4 @@ def review():
 
     # Query all reviews to display
     all_reviews = db.session.query(SuiteReview).all()
-    return render_template('reviews.html', reviews=all_reviews)
+    return render_template('reviews.html', reviews=all_reviews, suites=suites)

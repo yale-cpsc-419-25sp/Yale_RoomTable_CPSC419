@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
  <html>
    <head>
       <title>RoomTable</title>
@@ -7,4 +7,59 @@
       <h1>Search for Room</h1>
       <p>Getting rooms with capacity of {{ capacity }}, on floor {{ floor }}, for class of {{ class_year }}.</p>
    </body>
- </html>
+ </html> -->
+
+
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suite Search Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Suite Search Results</h1>
+    
+    <h2>Filters Applied:</h2>
+    <ul>
+        {% if capacity %}
+            <li><strong>Capacity:</strong> {{ capacity }}</li>
+        {% endif %}
+        {% if floor %}
+            <li><strong>Floor:</strong> {{ floor }}</li>
+        {% endif %}
+        {% if class_year %}
+            <li><strong>Class Year:</strong> {{ class_year }}</li>
+        {% endif %}
+    </ul>
+
+    <h2>Matching Suites</h2>
+    {% if suites %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Suite Name</th>
+                    <th>Entryway</th>
+                    <th>Capacity</th>
+                    <th>Residential College</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for suite in suites %}
+                    <tr>
+                        <td>{{ suite.name }}</td>
+                        <td>{{ suite.entryway }}</td>
+                        <td>{{ suite.capacity }}</td>
+                        <td>{{ suite.resco.name }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No suites match the search criteria.</p>
+    {% endif %}
+
+    <a href="{{ url_for('search') }}">Back to Search</a>
+</body>
+</html>
