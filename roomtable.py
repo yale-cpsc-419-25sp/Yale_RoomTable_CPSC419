@@ -98,15 +98,16 @@ def results():
 @app.route('/reviews', methods = ["GET", "POST"])
 def review():
 
-    
+
     if request.method == 'POST':
         room_id = request.form['suite']
         accessibility_rating = int(request.form['accessibility'])
         space_rating = int(request.form['space'])
         review_text = request.form['review']
         rating = int(request.form['rating'])
+        user_id = request.form.get('user_id')
 
-        user_id = session.get('user_id')
+        # user_id = session.get('user_id')
         
         db.create_review(
             rating=rating,
@@ -119,7 +120,7 @@ def review():
         )
         
         
-        return redirect(url_for('reviews'))
+        return redirect(url_for('review'))
 
     # Query all reviews to display
     all_reviews = db.session.query(SuiteReview).all()

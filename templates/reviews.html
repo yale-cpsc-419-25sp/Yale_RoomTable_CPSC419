@@ -1,44 +1,173 @@
-<form action="{{ url_for('review') }}" method="POST">
-    <label for="suite">Suite</label>
+<!--Used https://stackoverflow.com/questions/70588824/create-rating-star-with-html-and-css for star rating-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Room Reviews</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='search.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='ratings.css') }}">
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.2/css/all.css" />
+
+  </head>
+  <body>
+    <div class="banner">
+      <a href="{{url_for('homepage')}}" class="nav-link">My Saved Rooms</a>
+      <a class="nav-link">Deadlines</a>
+      <a href="{{url_for('search')}}" class="nav-link">Search Rooms</a>
+      <a href="{{url_for('review')}}" class="nav-link">Reviews</a>
+      <form action="/logout" method="post">
+        <button type="submit" class="logout">Log Out</button>
+      </form>
+    </div>
+    
+    <h1>Submit a Review</h1>
+    <p>Share your experience with your suite.</p>
+    
+    <div class="search-box">
+     <form action="{{ url_for('review') }}" method="POST">
+    <label for="user_id">NetID:</label>
+    <input type="text" id="user_id" name="user_id" required><br>
+
+    <label for="suite">Suite:</label>
     <select name="suite" required>
         <option value="1">Suite 1</option>
         <option value="2">Suite 2</option>
-        <!-- Add other suite options here -->
-    </select>
+        <!-- More options -->
+    </select><br>
 
-    <label for="accessibility">Accessibility (1-5)</label>
-    <input type="number" name="accessibility" min="1" max="5" required>
+    <label>Accessibility:</label>
+    <div class="rating">
+        <label>
+            <input type="radio" name="accessibility" value="1" />
+            <span class="fa fa-star icon"></span>
+        </label>
+        <label>
+            <input type="radio" name="accessibility" value="2" />
+            <span class="fa fa-star icon"></span>
+            <span class="fa fa-star icon"></span>
+        </label>
+        <label>
+            <input type="radio" name="accessibility" value="3" />
+            <span class="fa fa-star icon"></span>
+            <span class="fa fa-star icon"></span>
+            <span class="fa fa-star icon"></span>
+        </label>
+        <label>
+            <input type="radio" name="accessibility" value="4" />
+            <span class="fa fa-star icon"></span>
+            <span class="fa fa-star icon"></span>
+            <span class="fa fa-star icon"></span>
+            <span class="fa fa-star icon"></span>
+        </label>
+        <label>
+            <input type="radio" name="accessibility" value="5" />
+            <span class="fa fa-star icon"></span>
+            <span class="fa fa-star icon"></span>
+            <span class="fa fa-star icon"></span>
+            <span class="fa fa-star icon"></span>
+            <span class="fa fa-star icon"></span>
+        </label>
+    </div>
 
-    <label for="space">Space (1-5)</label>
-    <input type="number" name="space" min="1" max="5" required>
+    <label>Space:</label>
+    <div class="rating">
+        <label>
+            <input type="radio" name="space" value="1" />
+            <span class="fa fa-star icon"></span>
+        </label>
+        <label>
+            <input type="radio" name="space" value="2" />
+            <span class="fa fa-star icon"></span>
+            <span class="fa fa-star icon"></span>
+        </label>
+        <label>
+            <input type="radio" name="space" value="3" />
+            <span class="fa fa-star icon"></span>
+            <span class="fa fa-star icon"></span>
+            <span class="fa fa-star icon"></span>
+        </label>
+        <label>
+            <input type="radio" name="space" value="4" />
+            <span class="fa fa-star icon"></span>
+            <span class="fa fa-star icon"></span>
+            <span class="fa fa-star icon"></span>
+            <span class="fa fa-star icon"></span>
+        </label>
+        <label>
+            <input type="radio" name="space" value="5" />
+            <span class="fa fa-star icon"></span>
+            <span class="fa fa-star icon"></span>
+            <span class="fa fa-star icon"></span>
+            <span class="fa fa-star icon"></span>
+            <span class="fa fa-star icon"></span>
+        </label>
+    </div>
 
-    <label for="rating">Rating (1-5)</label>
-    <input type="number" name="rating" min="1" max="5" required>
+    <label>Overall Rating:</label>
+    <div class="rating">
+        <label>
+            <input type="radio" name="rating" value="1" />
+            <span class="fa fa-star icon"></span>
+        </label>
+        <label>
+            <input type="radio" name="rating" value="2" />
+            <span class="fa fa-star icon"></span>
+            <span class="fa fa-star icon"></span>
+        </label>
+        <label>
+            <input type="radio" name="rating" value="3" />
+            <span class="fa fa-star icon"></span>
+            <span class="fa fa-star icon"></span>
+            <span class="fa fa-star icon"></span>
+        </label>
+        <label>
+            <input type="radio" name="rating" value="4" />
+            <span class="fa fa-star icon"></span>
+            <span class="fa fa-star icon"></span>
+            <span class="fa fa-star icon"></span>
+            <span class="fa fa-star icon"></span>
+        </label>
+        <label>
+            <input type="radio" name="rating" value="5" />
+            <span class="fa fa-star icon"></span>
+            <span class="fa fa-star icon"></span>
+            <span class="fa fa-star icon"></span>
+            <span class="fa fa-star icon"></span>
+            <span class="fa fa-star icon"></span>
+        </label>
+    </div>
 
+    <label for="review">Review:</label>
+    <textarea name="review"></textarea><br>
 
-    <label for="review">Review</label>
-    <textarea name="review"></textarea>
-
-    <button type="submit">Submit</button>
+    <input type="submit" value="Submit Review">
 </form>
-<h2>Reviews</h2>
-<table>
-    <thead>
+
+    </div>
+
+    <h2>Reviews</h2>
+    <table class = "review-table">
+      <thead>
         <tr>
-            <th>Suite</th>
-            <th>Accessibility</th>
-            <th>Space</th>
-            <th>Review</th>
+          <th>Suite</th>
+          <th>Accessibility</th>
+          <th>Space</th>
+          <th>Overall Rating</th>
+          <th>Review</th>
         </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
         {% for review in reviews %}
-        <tr>
-            <td>{{ review.suite.name }}</td>  <!-- Update to show suite name -->
-            <td>{{ review.accessibility_rating }}</td>
-            <td>{{ review.space_rating }}</td>
-            <td>{{ review.text }}</td>
+        <tr class = "review-row">
+          <td>{{ review.suite }}</td>
+          <td>{{ review.accessibility_rating }}</td>
+          <td>{{ review.space_rating }}</td>
+          <td>{{ review.rating }}</td>
+          <td>{{ review.text }}</td>
         </tr>
         {% endfor %}
-    </tbody>
-</table>
+      </tbody>
+    </table>
+  </body>
+</html>
