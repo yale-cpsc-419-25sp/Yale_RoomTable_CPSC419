@@ -166,11 +166,11 @@
       <tbody>
         {% for review in reviews %}
         <tr class = "review-row">
-          <td>{{ review.suite }}</td>
+          <td>{{ review.suite.name }}</td>
           <td>{{ review.accessibility_rating }}</td>
           <td>{{ review.space_rating }}</td>
-          <td>{{ review.rating }}</td>
-          <td>{{ review.text }}</td>
+          <td>{{ review.overall_rating }}</td>
+          <td>{{ review.review_text }}</td>
         </tr>
         {% endfor %}
       </tbody>

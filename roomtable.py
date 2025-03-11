@@ -14,6 +14,10 @@ from models.suite import Suite
 
 db = Database()
 
+# suites = db.session.query(Suite).all()
+# for suite in suites:
+#     print(suite.name, suite.capacity)
+
 app = Flask(__name__, template_folder='./templates')
 app.secret_key = urandom(24)
 
@@ -86,20 +90,18 @@ def search():
 def results():
     capacity = request.args.get('capacity')
     print(capacity)
-    floor = request.args.get('floor')
-    class_year = request.args.get('class')
 
-    query = db.session.query(Suite) 
 
+    query = db.session.query(Suite)
     if capacity:
-        query = query.filter(Suite.capacity == int(capacity))
+        query = query.filter(Suite.capacity == capacity)
     # if floor:
     #     query = query.filter(Suite.entryway == floor)
     # if class_year:
     #     query = query.filter(Suite.year == int(class_year))
     print(f"Capacity: {capacity}")
     suites = query.all()
-    html = render_template('results.html', capacity=capacity)
+    html = render_template('results.html', capacity=capacity, suites = suites)
     response = make_response(html)
     return response
 

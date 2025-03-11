@@ -17,6 +17,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Suite Search Results</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='search.css') }}">
+
+    
 </head>
 <body>
     <h1>Suite Search Results</h1>
@@ -60,6 +63,8 @@
         <p>No suites match the search criteria.</p>
     {% endif %}
 
-    <a href="{{ url_for('search') }}">Back to Search</a>
+    <a href="{{ url_for('search') }}" class = "nav-button">Back to Search</a>
+
+    
 </body>
 </html>
