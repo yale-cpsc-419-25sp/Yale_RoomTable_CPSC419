@@ -9,6 +9,7 @@ from cas import CASClient
 from models.review import SuiteReview
 from models.base import Base
 from models.user import User
+from models.friend import Friend
 from database import Database
 from models.suite import Suite
 
@@ -139,3 +140,27 @@ def review():
     # Query all reviews to display
     all_reviews = db.session.query(SuiteReview).all()
     return render_template('reviews.html', reviews=all_reviews, suites=suites)
+
+@app.route('/friends', methods = ["GET", "POST"])
+@login_required
+def friends():
+    if request.method == 'POST':
+        user_id = session.get('net_id')
+        friend_id = request.form['friend_id']
+
+        # TODO: If the user is trying to add themselves as a friend, return an error
+        
+        db.create_friendship(user_id, friend_id)
+
+        return redirect(url_for('friends'))
+
+    # Query all friends where the user_id is the current user
+    friends = db.session.query(Friend).filter(Friend.user_id == session.get('net_id')).all()
+
+    # TODO: Also query all friends where the friend_id is the current user? 
+    # TODO: Friend requests instead of just being able to add someone without their permission
+    # Briley: The way I envision this is that the user can send a friend request to another user, 
+    # and the other user can accept or decline the request.
+    # Then, each friend in the user's friend list will be a hyperlink to the friend's stuff.
+
+    return render_template('friends.html', friends=friends)
