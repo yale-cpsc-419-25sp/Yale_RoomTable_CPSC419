@@ -148,7 +148,15 @@ def friends():
         user_id = session.get('net_id')
         friend_id = request.form['friend_id']
 
-        # TODO: If the user is trying to add themselves as a friend, return an error
+        friends = db.session.query(Friend).filter(Friend.user_id == session.get('net_id')).all()
+
+        # Check if user is trying to add themselves as a friend
+        if user_id == friend_id:
+            return render_template('friends.html', error="You cannot add yourself as a friend.", friends=friends)
+        
+        # Check if the user is already friends with the friend_id
+        if db.session.query(Friend).filter(Friend.user_id == user_id, Friend.friend_id == friend_id).first():
+            return render_template('friends.html', error="You are already friends with this user.", friends=friends)
         
         db.create_friendship(user_id, friend_id)
 
