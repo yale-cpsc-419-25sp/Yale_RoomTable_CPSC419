@@ -12,6 +12,7 @@ from models.user import User
 from models.friend import Friend
 from database import Database
 from models.suite import Suite
+from models.preference import Preference
 
 db = Database()
 
@@ -75,7 +76,11 @@ def login():
 @app.route('/homepage', methods=["GET"])
 @login_required
 def homepage():
-    html = render_template("homepage.html")
+    # Get all the suites that the user has saved
+    user_id = session.get('net_id')
+    suites = db.session.query(Suite).join(Preference).filter(Preference.user_id == user_id).all()
+
+    html = render_template("homepage.html", suites=suites)
     response = make_response(html)
     return response
 
@@ -113,6 +118,14 @@ def summary(suite_id=None):
     query = db.session.query(Suite)
     review_query = db.session.query(SuiteReview)
 
+    if request.method == "POST":
+        # Save the suite
+        if suite_id:
+            user_id = session.get('net_id')
+            db.save_suite(user_id, suite_id)
+            return redirect(url_for('homepage'))
+    
+
     if suite_id:
         query = query.filter(Suite.id == suite_id)
         review_query = review_query.filter(SuiteReview.suite_id == suite_id)
@@ -120,7 +133,7 @@ def summary(suite_id=None):
     reviews = review_query.all()
     print(reviews)
 
-    html = render_template('summary.html', suites=suites, reviews=reviews)
+    html = render_template('summary.html', suites=suites, reviews=reviews, suite_id=suite_id)
     response = make_response(html)
     return response
 

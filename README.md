@@ -33,13 +33,18 @@ b. Strengthen stability of website
 
 ### Beta Version: April 18th, 2025
 a. Add Bootstrap and other Javascript functionalities using libraries like React.js
+
 b. Continue to improve on Presentation Tier to build a cohesive, aesthetically pleasing
 front-end
+
 c. Google Calendar integration for housing process timeline
 ### Alpha Version: April 9th, 2025
 a. Enhance Presentation Tier by adding site logo, fonts, color, etc.
+
 b. Attach floor plans to each suite/room on the Room Summary Page
+
 c. Adding review and viewing reviews functionality to the Room Summary Page
+
 ### MVP: March 28th, 2025
 a. Yale Central Authentication Service for user login
 

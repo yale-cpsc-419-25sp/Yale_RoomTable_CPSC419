@@ -8,6 +8,7 @@ from models.resco import ResidentialCollege
 from models.suite import Suite
 from models.review import SuiteReview
 from models.friend import Friend
+from models.preference import Preference
 
 class Database():
     def __init__(self, database_url="sqlite:///data/roomtable.db"):
@@ -104,6 +105,15 @@ class Database():
         )
 
         self.session.add(new_friend)
+        self.session.commit()
+    
+    def save_suite(self, user_id, suite_id):
+        new_preference = Preference(
+            user_id=user_id,
+            suite_id=suite_id
+        )
+
+        self.session.add(new_preference)
         self.session.commit()
 
 

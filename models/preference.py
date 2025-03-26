@@ -13,14 +13,15 @@ class Preference(Base):
     __tablename__ = "preferences"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"))
     user: Mapped[User] = relationship("User")
+    suite_id: Mapped[int] = mapped_column(Integer, ForeignKey("suites.id"))
+    suite: Mapped[Suite] = relationship("Suite")
 
-    __mapper_args__ = {
-        "polymorphic_identity":"preference",
-        "polymorphic_on":type
-    }
+    # __mapper_args__ = {
+    #     "polymorphic_identity":"preference",
+    #     "polymorphic_on":type
+    # }
 
 # class RoomPreference(Preference):
 #     room_id: Mapped[int] = mapped_column(Integer, ForeignKey("rooms.id"))
@@ -30,10 +31,10 @@ class Preference(Base):
 #         "polymorphic_identity":"room_preference"
 #     }
 
-class SuitePreference(Preference):
-    suite_id: Mapped[int] = mapped_column(Integer, ForeignKey("suites.id"))
-    suite: Mapped[Suite] = relationship("Suite")
+# class SuitePreference(Preference):
+#     suite_id: Mapped[int] = mapped_column(Integer, ForeignKey("suites.id"))
+#     suite: Mapped[Suite] = relationship("Suite")
     
-    __mapper_args__ = {
-        "polymorphic_identity":"suite_preference"
-    }
+#     __mapper_args__ = {
+#         "polymorphic_identity":"suite_preference"
+#     }

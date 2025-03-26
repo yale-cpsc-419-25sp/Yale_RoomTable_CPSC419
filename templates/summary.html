@@ -57,5 +57,8 @@
         {% endif %}
 
         <a href="{{ url_for('search') }}" class = "nav-button">Back to Search</a>
+        <form action="{{ url_for('summary', suite_id=suite_id) }}" method="POST">
+            <button type="submit">Save Room</button>
+        </form>
     </body>
 </html>

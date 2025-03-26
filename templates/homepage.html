@@ -8,7 +8,7 @@
 
      <div class="banner">
         <a href = "{{url_for('homepage')}}" class="nav-link">My Saved Rooms</a>
-        <a href = "{{url_for('friends)}}"   class="nav-link">Add Friends</a>
+        <a href = "{{url_for('friends')}}"   class="nav-link">Add Friends</a>
         <a href = "{{url_for('search')}}" class="nav-link">Search Rooms</a>
         <a class="nav-link">Reviews</a>
         <form action="/logout" method="post">
@@ -18,9 +18,29 @@
      </div>
 
      <div>Your Saved Rooms:</div>
-
-    
- 
+        <div class="room-table">
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Residential College</th>
+                    <th>Entryway</th>
+                    <th>Capacity</th>
+                    <th>Number of Singles</th>
+                    <th>Number of Doubles</th>
+                    <th>Class Year</th>
+                </tr>
+                {% for suite in suites %}
+                    <tr>
+                        <td>{{ suite.name }}</td>
+                        <td>{{ suite.resco.name }}</td>
+                        <td>{{ suite.entryway }}</td>
+                        <td>{{ suite.capacity }}</td>
+                        <td>{{ suite.singles }}</td>
+                        <td>{{ suite.doubles }}</td>
+                        <td>{{ suite.year }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
 
 </body>
 </html>
