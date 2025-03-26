@@ -107,7 +107,22 @@ def results():
     return response
 
 
+@app.route('/summary/<int:suite_id>', methods = ["GET", "POST"])
+def summary(suite_id=None):
+    # Display information about the suite, as well as the reviews it has
+    query = db.session.query(Suite)
+    review_query = db.session.query(SuiteReview)
 
+    if suite_id:
+        query = query.filter(Suite.id == suite_id)
+        review_query = review_query.filter(SuiteReview.suite_id == suite_id)
+    suites = query.all()
+    reviews = review_query.all()
+    print(reviews)
+
+    html = render_template('summary.html', suites=suites, reviews=reviews)
+    response = make_response(html)
+    return response
 
 
 @app.route('/reviews', methods = ["GET", "POST"])
