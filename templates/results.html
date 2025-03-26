@@ -49,7 +49,11 @@
             <tbody>
                 {% for suite in suites %}
                     <tr>
-                        <td>{{ suite.name }}</td>
+                        <td>
+                            <a href="{{ url_for('summary', suite_id=suite.id) }}">
+                                {{ suite.name }}
+                            </a>
+                        </td>
                         <td>{{ suite.entryway }}</td>
                         <td>{{ suite.capacity }}</td>
                         <td>{{ suite.resco.name }}</td>

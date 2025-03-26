@@ -3,9 +3,59 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='search.css') }}">
         <title>Suite Summary</title>
     </head>
     <body>
-        <h1>Suite/Room Summary</h1>
+        <h1>Suite Summary</h1>
+
+        {% for suite in suites %}
+            <h2>Name</h2>
+            <p>{{ suite.name }}</p>
+
+            <h2>Residential College</h2>
+            <p>{{ suite.resco.name }}</p>
+
+            <h2>Entryway</h2>
+            <p>{{ suite.entryway }}</p>
+
+            <h2>Capacity</h2>
+            <p>{{ suite.capacity }}</p>
+
+            <h2>Number of Singles</h2>
+            <p>{{ suite.singles }}</p>
+
+            <h2>Number of Doubles</h2>
+            <p>{{ suite.doubles }}</p>
+
+            <h2>Class Year</h2>
+            <p>{{ suite.year }}</p>
+        {% endfor %}
+
+        <h1>Reviews</h1>
+        {% if reviews %}
+            {% for review in reviews %}
+                <h2>Overall Rating</h2>
+                <p>{{ review.overall_rating }}</p>
+
+                <h2>Accessibility Rating</h2>
+                <p>{{ review.accessibility_rating }}</p>
+
+                <h2>Space Rating</h2>
+                <p>{{ review.space_rating }}</p>
+
+                <h2>Text</h2>
+                {% if review.review_text %}
+                    <p>{{ review.review_text }}</p>
+                {% else %}
+                    <p>N/A</p>
+                {%endif%}
+            {% endfor %}
+        {% else %}
+            <p>No reviews.</p>
+        {% endif %}
+
+        <a href="{{ url_for('search') }}" class = "nav-button">Back to Search</a>
     </body>
 </html>
