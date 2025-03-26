@@ -17,7 +17,11 @@
 
      </div>
 
-     <div>Your Saved Rooms:</div>
+     {% if friend_id %}
+     <div>Saved Rooms for {{ friend_id }}</div>
+     {% else %}
+     <div> Your Saved Rooms: </div>
+    {% endif %}
         <div class="room-table">
             <table>
                 <tr>

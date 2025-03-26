@@ -26,7 +26,7 @@
         <h2>Friends List</h2>
         <ul>
             {% for friend in friends %}
-                <li>{{ friend.friend_id }}</li>
+                <li><a href="{{ url_for('friend', friend_id=friend.friend_id)}}">{{ friend.friend_id }}</a></li>
             {% endfor %}
         </ul>
     </div>

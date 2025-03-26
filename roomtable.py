@@ -200,3 +200,11 @@ def friends():
     # Then, each friend in the user's friend list will be a hyperlink to the friend's stuff.
 
     return render_template('friends.html', friends=friends)
+
+@app.route('/friend/<string:friend_id>', methods = ["GET"])
+@login_required
+def friend(friend_id=None):
+    if friend_id:
+        # Query the friend's saved suites
+        suites = db.session.query(Suite).join(Preference).filter(Preference.user_id == friend_id).all()
+        return render_template('homepage.html', suites=suites, friend_id=friend_id)
