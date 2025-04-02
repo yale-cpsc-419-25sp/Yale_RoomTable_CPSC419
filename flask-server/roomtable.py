@@ -1,7 +1,6 @@
 from os import urandom, environ
-from time import localtime, asctime, strftime
 from functools import wraps
-from flask import Flask, request, make_response, session, redirect, url_for
+from flask import Flask, jsonify, request, make_response, session, redirect, url_for
 from flask import render_template, request
 from flask_cors import CORS
 from cas import CASClient
@@ -17,18 +16,14 @@ from models.preference import Preference
 
 db = Database()
 
-# suites = db.session.query(Suite).all()
-# for suite in suites:
-#     print(suite.name, suite.capacity)
-
 app = Flask(__name__, template_folder='./templates', static_folder='./build/static')
 app.secret_key = urandom(24)
-CORS(app, supports_credentials=True)
+CORS(app, resources={r"/api/*": {"origins": "http://localhost:5173"}}, supports_credentials=True)
 
 # https://stackoverflow.com/questions/67439625/python-equivalent-of-process-env-port-3000
 port = int(environ.get('PORT', 8000))
 
-CAS_SERVICE_URL = "http://localhost:" + str(port) + "/login"
+CAS_SERVICE_URL = "http://localhost:" + str(port) + "/api/login"
 CAS_SERVER_URL = "https://secure.its.yale.edu/cas/login"
 cas = CASClient(
     version=3.0,
@@ -36,47 +31,52 @@ cas = CASClient(
     server_url=CAS_SERVER_URL
 )
 
-
-def login_required(f):
-    """
-    Decorate routes to require login.
-
-    https://flask.palletsprojects.com/en/1.1.x/patterns/viewdecorators/
-    """
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if session.get('net_id') is None:
-            return render_template("index.html")
-        return f(*args, **kwargs)
-    return decorated_function
-
-@app.route('/', methods=['GET'])
-def index():
-    html = render_template('index.html')
-    response = make_response(html)
-    return response
-
-@app.route('/login', methods=['GET'])
+@app.route('/api/login', methods=['GET'])
 def login():
     if 'net_id' in session:
-        return redirect(url_for('search'))
+        return redirect('http://localhost:5173/search')
 
-    next_url = request.args.get('next', url_for('search'))
     ticket = request.args.get('ticket')
     if not ticket:
         cas_login_url = cas.get_login_url()
         return redirect(cas_login_url)
 
     net_id, _, _ = cas.verify_ticket(ticket)
-
-    if not net_id:
-        return
-    else:
-        session['net_id'] = net_id
-        return redirect(next_url)
+    session['net_id'] = net_id
+    return redirect('http://localhost:5173/search')
     
+
+@app.route('/api/results', methods=['GET'])
+def api_results():
+    capacity = request.args.get('capacity')
+    floor = request.args.get('floor')
+    class_year = request.args.get('class_year')
+
+    query = db.session.query(Suite)
+    if capacity:
+        query = query.filter(Suite.capacity == capacity)
+    if floor:
+        query = query.filter(Suite.entryway == floor)
+    if class_year:
+        query = query.filter(Suite.year == int(class_year))
+    
+    suites = query.all()
+
+    suites_dicts = [
+        {
+            "id": suite.id,
+            "name": suite.name,
+            "entryway": suite.entryway,
+            "capacity": suite.capacity,
+            "resco": {"name": suite.resco.name} if suite.resco else None
+        }
+        for suite in suites
+    ]
+    print(suites_dicts)
+    return jsonify({"suites": suites_dicts})
+
+
 @app.route('/homepage', methods=["GET"])
-@login_required
 def homepage():
     # Get all the suites that the user has saved
     user_id = session.get('net_id')
@@ -85,34 +85,6 @@ def homepage():
     html = render_template("homepage.html", suites=suites)
     response = make_response(html)
     return response
-
-@app.route('/search', methods=['GET'])
-@login_required
-def search():
-    html = render_template('search.html')
-    response = make_response(html)
-    return response
-
-@app.route('/results', methods=['GET'])
-@login_required
-def results():
-    capacity = request.args.get('capacity')
-    print(capacity)
-
-
-    query = db.session.query(Suite)
-    if capacity:
-        query = query.filter(Suite.capacity == capacity)
-    # if floor:
-    #     query = query.filter(Suite.entryway == floor)
-    # if class_year:
-    #     query = query.filter(Suite.year == int(class_year))
-    print(f"Capacity: {capacity}")
-    suites = query.all()
-    html = render_template('results.html', capacity=capacity, suites = suites)
-    response = make_response(html)
-    return response
-
 
 @app.route('/summary/<int:suite_id>', methods = ["GET", "POST"])
 def summary(suite_id=None):
@@ -172,7 +144,6 @@ def review():
     return render_template('reviews.html', reviews=all_reviews, suites=suites)
 
 @app.route('/friends', methods = ["GET", "POST"])
-@login_required
 def friends():
     if request.method == 'POST':
         user_id = session.get('net_id')
@@ -204,7 +175,6 @@ def friends():
     return render_template('friends.html', friends=friends)
 
 @app.route('/friend/<string:friend_id>', methods = ["GET"])
-@login_required
 def friend(friend_id=None):
     if friend_id:
         # Query the friend's saved suites

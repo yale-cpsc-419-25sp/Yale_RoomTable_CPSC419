@@ -1,6 +1,6 @@
 import React from 'react';
 import { ReactTyped } from 'react-typed';
-import LoginButton from './Login';
+import LoginButton from './LoginButton';
 
 const Hero = () => {
     return (
