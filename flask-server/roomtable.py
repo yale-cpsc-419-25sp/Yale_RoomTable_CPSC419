@@ -55,10 +55,12 @@ def api_results():
     query = db.session.query(Suite)
     if capacity:
         query = query.filter(Suite.capacity == capacity)
-    if floor:
-        query = query.filter(Suite.entryway == floor)
-    if class_year:
-        query = query.filter(Suite.year == int(class_year))
+    # if floor:
+    #     query = query.filter(Suite.entryway == floor)
+    # if class_year:
+    #     query = query.filter(Suite.year == int(class_year))
+    
+    print(query)
     
     suites = query.all()
 
