@@ -5,16 +5,59 @@ import Hero from "./components/Hero";
 import SearchPage from "./pages/Search";
 import ResultsPage from "./pages/Results";
 
+function PrivateRoute({ user, children }) {
+    // console.log("user:", user);
+    // console.log("child:", children);
+    return user ? children : <Navigate to="/" />;
+};
+
 function App() {
-    // const [user, setUser] = useState(null);
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        fetch("http://localhost:8000/api/user", {
+            method: "GET",
+            credentials: "include",
+        })
+        .then(response => {
+            if (response.ok) return response.json();
+            throw new Error("Not logged in.");
+        })
+        .then(data => {
+            setUser(data.net_id);
+        })
+        .catch(() => {
+            setUser(null);
+        })
+        .finally(() => {
+            setLoading(false);
+        });
+    }, []);
+
+    if (loading) return;
 
     return (
         <Router>
-            <Navbar />
+            <Navbar user={user} />
             <Routes>
                 <Route path="/" element={<Hero />} />
-                <Route path="/search" element={<SearchPage />} />
-                <Route path="/results" element={<ResultsPage />} />
+                <Route
+                    path="/search"
+                    element={
+                        <PrivateRoute user={user}>
+                            <SearchPage />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/results"
+                    element={
+                        <PrivateRoute user={user}>
+                            <ResultsPage />
+                        </PrivateRoute>
+                    }
+                />
             </Routes>
         </Router>
     );

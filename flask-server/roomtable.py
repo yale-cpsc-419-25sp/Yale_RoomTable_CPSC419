@@ -44,6 +44,18 @@ def login():
     net_id, _, _ = cas.verify_ticket(ticket)
     session['net_id'] = net_id
     return redirect('http://localhost:5173/search')
+
+@app.route('/api/user', methods=['GET'])
+def get_user():
+    # print(session['net_id'])
+    if 'net_id' in session:
+        return jsonify({'net_id': session['net_id']})
+    return jsonify({'error': 'not logged in'}), 401
+
+# @app.route('/api/logout', methods=['POST'])
+# def logout():
+#     session.pop('net_id', None)
+#     return jsonify({'message': 'logged out'})
     
 
 @app.route('/api/results', methods=['GET'])
@@ -60,7 +72,7 @@ def api_results():
     # if class_year:
     #     query = query.filter(Suite.year == int(class_year))
     
-    print(query)
+    # print(query)
     
     suites = query.all()
 
@@ -74,7 +86,7 @@ def api_results():
         }
         for suite in suites
     ]
-    print(suites_dicts)
+    # print(suites_dicts)
     return jsonify({"suites": suites_dicts})
 
 
