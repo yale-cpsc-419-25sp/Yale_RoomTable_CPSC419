@@ -1,6 +1,7 @@
 // https://tailwindcss.com/plus/ui-blocks/application-ui/elements/dropdowns
 import { Menu, Transition, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
+import handleLogout from './Logout'
 
 export default function UserDropdown() {
   return (
@@ -60,12 +61,12 @@ export default function UserDropdown() {
         {/* Group 2: Log Out */}
         <div className="py-1">
           <MenuItem>
-            <a
-              href="/api/logout" // or your logout route
-              className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+            <button
+                onClick={handleLogout}
+                className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
             >
-              Log Out
-            </a>
+                Log Out
+            </button>
           </MenuItem>
         </div>
       </MenuItems>
