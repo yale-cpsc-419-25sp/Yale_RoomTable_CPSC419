@@ -41,7 +41,12 @@ function App() {
         <Router>
             <Navbar user={user} />
             <Routes>
-                <Route path="/" element={<Hero />} />
+                <Route
+                    path="/"
+                    element={
+                        user ? <Navigate to="/search"> </Navigate>: <Hero />
+                    }
+                />
                 <Route
                     path="/search"
                     element={

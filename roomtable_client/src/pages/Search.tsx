@@ -3,16 +3,6 @@ import React from "react";
 const SearchPage = () => {
   return (
     <div>
-      <div className="banner">
-        <a href="/homepage" className="nav-link">My Saved Rooms</a>
-        <a href="/friends" className="nav-link">Add Friends</a>
-        <a href="/search" className="nav-link">Search Rooms</a>
-        <a href="/review" className="nav-link">Reviews</a>
-        <form action="/" method="get">
-          <button type="submit" className="logout">Log Out</button>
-        </form>
-      </div>
-
       <h1>Search for a Room</h1>
       <p>Search for rooms in your residential college.</p>
 
