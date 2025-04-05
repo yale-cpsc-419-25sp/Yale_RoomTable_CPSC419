@@ -52,10 +52,10 @@ def get_user():
         return jsonify({'net_id': session['net_id']})
     return jsonify({'error': 'not logged in'}), 401
 
-# @app.route('/api/logout', methods=['POST'])
-# def logout():
-#     session.pop('net_id', None)
-#     return jsonify({'message': 'logged out'})
+@app.route('/api/logout', methods=['POST'])
+def logout():
+    session.pop('net_id', None)
+    return jsonify({'message': 'logged out'})
     
 
 @app.route('/api/results', methods=['GET'])
