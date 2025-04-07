@@ -57,6 +57,12 @@
                         <td>{{ suite.entryway }}</td>
                         <td>{{ suite.capacity }}</td>
                         <td>{{ suite.resco.name }}</td>
+                        <td>
+                            <form action="{{ url_for('like_room', suite_id=suite.id) }}" method="POST">
+                                <button type="submit">Like</button>
+                            </form> 
+                           
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>

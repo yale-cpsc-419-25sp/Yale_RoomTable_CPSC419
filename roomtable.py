@@ -115,6 +115,29 @@ def results():
     return response
 
 
+@app.route('/like_room<int:suite_id>', methods = ['GET', 'POST'])
+@login_required
+def like_room(suite_id):
+    netid = session.get('net_id')
+    print(f"User net_id from session: {netid}")
+
+    suite = db.session.query(Suite).filter_by(id=suite_id).first()
+    if not suite:
+        return "Suite not found", 404
+
+    existing_pref = db.session.query(Preference).filter_by(user_id=netid, suite_id=suite.id).first()
+
+    if not existing_pref:
+        preference = Preference(user_id=netid, suite_id=suite.id)
+        db.session.add(preference)
+        db.session.commit()
+        print(f"Added preference for netid {netid} and suite {suite.id}")
+    else:
+        print(f"Preference already exists for netid {netid} and suite {suite.id}")
+
+    return redirect(url_for('homepage'))
+
+
 @app.route('/summary/<int:suite_id>', methods = ["GET", "POST"])
 def summary(suite_id=None):
     # Display information about the suite, as well as the reviews it has
