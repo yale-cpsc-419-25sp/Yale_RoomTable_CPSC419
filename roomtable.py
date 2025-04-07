@@ -4,7 +4,7 @@ from functools import wraps
 from flask import Flask, request, make_response, session, redirect, url_for
 from flask import render_template, request
 from cas import CASClient
-
+from sqlalchemy import func
 # from models.room import Room
 from models.review import SuiteReview
 from models.base import Base
@@ -95,14 +95,16 @@ def search():
 @login_required
 def results():
     capacity = request.args.get('capacity')
-    print(capacity)
+    floor = request.args.get('floor') 
+    print(floor)
 
 
     query = db.session.query(Suite)
     if capacity:
         query = query.filter(Suite.capacity == capacity)
-    # if floor:
-    #     query = query.filter(Suite.entryway == floor)
+    if floor:
+        query = query.filter(func.substring(Suite.name, 2, 1) == floor)
+        print(f"query: {query})")
     # if class_year:
     #     query = query.filter(Suite.year == int(class_year))
     print(f"Capacity: {capacity}")

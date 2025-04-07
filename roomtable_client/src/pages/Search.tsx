@@ -1,4 +1,5 @@
 import React from "react";
+import "../../../static/search.css"
 
 const SearchPage = () => {
   return (
@@ -46,7 +47,9 @@ const SearchPage = () => {
           </select>
           <br />
 
-          <input type="submit" value="Search" />
+          <div className="button-layout">
+            <input type="submit" value="Search" className="search-button" />
+          </div>
         </form>
       </div>
     </div>
