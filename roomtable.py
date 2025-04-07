@@ -96,6 +96,7 @@ def search():
 def results():
     capacity = request.args.get('capacity')
     floor = request.args.get('floor') 
+    class_year = request.args.get('class')
     print(floor)
 
 
@@ -105,8 +106,8 @@ def results():
     if floor:
         query = query.filter(func.substring(Suite.name, 2, 1) == floor)
         print(f"query: {query})")
-    # if class_year:
-    #     query = query.filter(Suite.year == int(class_year))
+    if class_year:
+        query = query.filter(Suite.year == int(class_year))
     print(f"Capacity: {capacity}")
     suites = query.all()
     html = render_template('results.html', capacity=capacity, suites = suites)
