@@ -4,6 +4,7 @@ from flask import Flask, jsonify, request, make_response, session, redirect, url
 from flask import render_template, request
 from flask_cors import CORS
 from cas import CASClient
+from sqlalchemy import func
 
 # from models.room import Room
 from models.review import SuiteReview
@@ -67,10 +68,10 @@ def api_results():
     query = db.session.query(Suite)
     if capacity:
         query = query.filter(Suite.capacity == capacity)
-    # if floor:
-    #     query = query.filter(Suite.entryway == floor)
-    # if class_year:
-    #     query = query.filter(Suite.year == int(class_year))
+    if floor:
+        query = query.filter(func.substring(Suite.name, 2, 1) == floor)
+    if class_year:
+        query = query.filter(Suite.year == int(class_year))
     
     # print(query)
     

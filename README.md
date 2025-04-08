@@ -29,6 +29,7 @@ in my browser.
 
 ### Final Version: May 1st, 2025
 a. Improve on any known bugs
+
 b. Strengthen stability of website
 
 ### Beta Version: April 18th, 2025

@@ -22,8 +22,8 @@ const SearchPage = () => {
             <option value="Triple">3</option>
             <option value="Quad">4</option>
             <option value="Quint">5</option>
-            <option value="Septet">6</option>
-            <option value="Sextet">7</option>
+            <option value="Sextet">6</option>
+            <option value="Septet">7</option>
             <option value="Octet">8</option>
           </select>
           <br />
@@ -41,9 +41,8 @@ const SearchPage = () => {
 
           <label htmlFor="class">Class Year:</label>
           <select name="class" id="class">
-            <option value="2026">2026</option>
-            <option value="2027">2027</option>
-            <option value="2028">2028</option>
+            <option value="2">Sophomore</option>
+            <option value="3">Junior/Senior</option>
           </select>
           <br />
 
