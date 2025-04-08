@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-function Summary() {
+function SummaryPage() {
     const { suite_id } = useParams();
     const navigate = useNavigate();
     const [suite, setSuite] = useState(null);
@@ -99,4 +99,4 @@ function Summary() {
     );
 }
 
-export default Summary;
+export default SummaryPage;

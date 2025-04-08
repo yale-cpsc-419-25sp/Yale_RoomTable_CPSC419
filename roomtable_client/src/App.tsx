@@ -4,7 +4,8 @@ import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import SearchPage from "./pages/Search";
 import ResultsPage from "./pages/Results";
-import Summary from "./pages/Summary";
+import SummaryPage from "./pages/Summary";
+// import Homepage from "./pages/Homepage";
 
 function PrivateRoute({ user, children }) {
     // console.log("user:", user);
@@ -68,10 +69,18 @@ function App() {
                     path="/summary/:suite_id"
                     element={
                         <PrivateRoute user={user}>
-                            <Summary />
+                            <SummaryPage />
                         </PrivateRoute>
                     }
                 />
+                {/* <Route
+                    path="/homepage"
+                    element={
+                        <PrivateRoute user={user}>
+                            <Homepage />
+                        </PrivateRoute>
+                    }
+                /> */}
             </Routes>
         </Router>
     );

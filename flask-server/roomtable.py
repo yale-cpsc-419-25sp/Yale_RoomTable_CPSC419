@@ -88,8 +88,8 @@ def api_results():
 
     return jsonify({"suites": suites_dicts})
 
-@app.route('/api/summary/<int:suite_id>', methods=["GET"])
-def summary_api(suite_id):
+@app.route('/api/summary/<int:suite_id>', methods=["GET", "POST"])
+def summary_api(suite_id=None):
     suite = db.session.query(Suite).filter(Suite.id == suite_id).first()
     reviews = db.session.query(SuiteReview).filter(SuiteReview.suite_id == suite_id).all()
 
@@ -113,16 +113,6 @@ def summary_api(suite_id):
             } for r in reviews
         ]
     })
-
-@app.route('/homepage', methods=["GET"])
-def homepage():
-    # Get all the suites that the user has saved
-    user_id = session.get('net_id')
-    suites = db.session.query(Suite).join(Preference).filter(Preference.user_id == user_id).all()
-
-    html = render_template("homepage.html", suites=suites)
-    response = make_response(html)
-    return response
 
 
 @app.route('/reviews', methods = ["GET", "POST"])
