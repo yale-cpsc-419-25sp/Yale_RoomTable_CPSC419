@@ -73,8 +73,6 @@ def api_results():
     if class_year:
         query = query.filter(Suite.year == int(class_year))
     
-    # print(query)
-    
     suites = query.all()
 
     suites_dicts = [
@@ -87,9 +85,34 @@ def api_results():
         }
         for suite in suites
     ]
-    # print(suites_dicts)
+
     return jsonify({"suites": suites_dicts})
 
+@app.route('/api/summary/<int:suite_id>', methods=["GET"])
+def summary_api(suite_id):
+    suite = db.session.query(Suite).filter(Suite.id == suite_id).first()
+    reviews = db.session.query(SuiteReview).filter(SuiteReview.suite_id == suite_id).all()
+
+    return jsonify({
+        "suite": {
+            "id": suite.id,
+            "name": suite.name,
+            "resco": suite.resco.name,
+            "entryway": suite.entryway,
+            "capacity": suite.capacity,
+            "singles": suite.singles,
+            "doubles": suite.doubles,
+            "year": suite.year
+        },
+        "reviews": [
+            {
+                "overall_rating": r.overall_rating,
+                "accessibility_rating": r.accessibility_rating,
+                "space_rating": r.space_rating,
+                "review_text": r.review_text
+            } for r in reviews
+        ]
+    })
 
 @app.route('/homepage', methods=["GET"])
 def homepage():
@@ -98,31 +121,6 @@ def homepage():
     suites = db.session.query(Suite).join(Preference).filter(Preference.user_id == user_id).all()
 
     html = render_template("homepage.html", suites=suites)
-    response = make_response(html)
-    return response
-
-@app.route('/summary/<int:suite_id>', methods = ["GET", "POST"])
-def summary(suite_id=None):
-    # Display information about the suite, as well as the reviews it has
-    query = db.session.query(Suite)
-    review_query = db.session.query(SuiteReview)
-
-    if request.method == "POST":
-        # Save the suite
-        if suite_id:
-            user_id = session.get('net_id')
-            db.save_suite(user_id, suite_id)
-            return redirect(url_for('homepage'))
-    
-
-    if suite_id:
-        query = query.filter(Suite.id == suite_id)
-        review_query = review_query.filter(SuiteReview.suite_id == suite_id)
-    suites = query.all()
-    reviews = review_query.all()
-    print(reviews)
-
-    html = render_template('summary.html', suites=suites, reviews=reviews, suite_id=suite_id)
     response = make_response(html)
     return response
 

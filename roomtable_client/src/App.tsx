@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import SearchPage from "./pages/Search";
 import ResultsPage from "./pages/Results";
+import Summary from "./pages/Summary";
 
 function PrivateRoute({ user, children }) {
     // console.log("user:", user);
@@ -60,6 +61,14 @@ function App() {
                     element={
                         <PrivateRoute user={user}>
                             <ResultsPage />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/summary/:suite_id"
+                    element={
+                        <PrivateRoute user={user}>
+                            <Summary />
                         </PrivateRoute>
                     }
                 />
