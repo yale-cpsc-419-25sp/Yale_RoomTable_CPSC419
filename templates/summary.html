@@ -31,6 +31,11 @@
 
             <h2>Class Year</h2>
             <p>{{ suite.year }}</p>
+
+            <h2>Floor Plans</h2>
+            <p>
+            <img src="{{ url_for('static', filename='MY_Floor_' + suite.name[1] + '.jpg') }}" width="1250">
+            </p>
         {% endfor %}
 
         <h1>Reviews</h1>
