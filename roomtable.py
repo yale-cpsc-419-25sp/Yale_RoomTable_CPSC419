@@ -97,18 +97,14 @@ def results():
     capacity = request.args.get('capacity')
     floor = request.args.get('floor') 
     class_year = request.args.get('class')
-    print(floor)
-
 
     query = db.session.query(Suite)
     if capacity:
         query = query.filter(Suite.capacity == capacity)
     if floor:
         query = query.filter(func.substring(Suite.name, 2, 1) == floor)
-        print(f"query: {query})")
     if class_year:
         query = query.filter(Suite.year == int(class_year))
-    print(f"Capacity: {capacity}")
     suites = query.all()
     html = render_template('results.html', capacity=capacity, suites = suites)
     response = make_response(html)
