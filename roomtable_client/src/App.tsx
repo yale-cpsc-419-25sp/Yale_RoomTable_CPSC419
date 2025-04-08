@@ -73,7 +73,14 @@ function App() {
                         </PrivateRoute>
                     }
                 />
-                <Route path="/homepage" element={<Homepage />} />
+                <Route
+                    path="/homepage"
+                    element={
+                        <PrivateRoute user={user}>
+                            <Homepage />
+                        </PrivateRoute>
+                    }
+                />
             </Routes>
         </Router>
     );
