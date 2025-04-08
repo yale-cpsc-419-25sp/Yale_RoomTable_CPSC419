@@ -110,9 +110,22 @@ class Database():
     def save_suite(self, user_id, suite_id):
         new_preference = Preference(
             user_id=user_id,
-            suite_id=suite_id
+            suite_id=suite_id,
+            rank=1
         )
 
+        # Get existing preferences for the user
+        existing_preferences = self.session.query(Preference).filter(Preference.user_id == user_id).all()
+
+        # Modify existing preferences by incrementing their rank
+        for preference in existing_preferences:
+            if preference.suite_id == suite_id:
+                preference.rank = 1
+            else:
+                preference.rank += 1
+        
+
+        # Add new preference
         self.session.add(new_preference)
         self.session.commit()
 

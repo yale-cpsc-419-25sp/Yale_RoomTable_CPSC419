@@ -32,6 +32,7 @@
                     <th>Number of Singles</th>
                     <th>Number of Doubles</th>
                     <th>Class Year</th>
+                    <th>Rank</th>
                 </tr>
                 {% for suite in suites %}
                     <tr>
@@ -42,6 +43,7 @@
                         <td>{{ suite.singles }}</td>
                         <td>{{ suite.doubles }}</td>
                         <td>{{ suite.year }}</td>
+                        <td>{{ ranks[suite.id] }}</td>
                     </tr>
                 {% endfor %}
             </table>

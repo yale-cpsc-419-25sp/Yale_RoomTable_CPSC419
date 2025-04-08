@@ -79,8 +79,16 @@ def homepage():
     # Get all the suites that the user has saved
     user_id = session.get('net_id')
     suites = db.session.query(Suite).join(Preference).filter(Preference.user_id == user_id).all()
+    # Get the ranks for each suite
+    ranks = db.session.query(Preference).filter(Preference.user_id == user_id).all()
+    rank_dict = {}
+    for rank in ranks:
+        rank_dict[rank.suite_id] = rank.rank
+    
+    # Sort suites by rank
+    suites.sort(key=lambda suite: rank_dict[suite.id])
 
-    html = render_template("homepage.html", suites=suites)
+    html = render_template("homepage.html", suites=suites, ranks=rank_dict)
     response = make_response(html)
     return response
 
