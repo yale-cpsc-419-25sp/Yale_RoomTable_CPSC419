@@ -12,7 +12,7 @@
             <a href = "{{url_for('friends')}}" class="nav-link">Add Friends</a>
             <a href = "{{url_for('search')}}" class="nav-link">Search Rooms</a>
             <a href = "{{url_for('review')}}" class="nav-link">Reviews</a>
-            <form action="/logout" method="post">
+            <form action="{{url_for('logout')}}" method="get">
                 <button type="submit" class="logout">Log Out</button>
             </form>
 
@@ -23,9 +23,9 @@
             <form action="results" method="GET">
                 <label for="college">Residential College:</label>
                 <select name="college" id="college">
-                    <option value="franklin">Benjamin Franklin</option>
+                    <!-- <option value="franklin">Benjamin Franklin</option> -->
                     <option value="murray">Pauli Murray</option>
-                    <option value="saybrook">Saybrook</option>
+                    <!-- <option value="saybrook">Saybrook</option>
                     <option value="branford">Branford</option>
                     <option value="pierson">Pierson</option>
                     <option value="davenport">Davenport</option>
@@ -36,7 +36,7 @@
                     <option value="berkeley">Berkeley</option>
                     <option value="hopper">Grace Hopper</option>
                     <option value="trumbull">Trumbull</option>
-                    <option value="silliman">Silliman</option>
+                    <option value="silliman">Silliman</option> -->
 
 
 
@@ -50,8 +50,8 @@
                     <option value="Triple">3</option>
                     <option value="Quad">4</option>
                     <option value="Quint">5</option>
-                    <option value="Septet">6</option>
-                    <option value="Sextet">7</option>
+                    <option value="Sextet">6</option>
+                    <option value="Septet">7</option>
                     <option value="Octet">8</option>
                 </select>
                 <br>
@@ -67,9 +67,8 @@
                 <br>            
                 <label for="class">Class Year:</label>
                 <select name="class" id="class">
-                    <option value="2026">2026</option>
-                    <option value="2027">2027</option>
-                    <option value="2028">2028</option>
+                    <option value="2">Sophomore</option>
+                    <option value="3">Junior/Senior</option>
                 </select>
                 <br>
                 <input type="submit" value="Search">

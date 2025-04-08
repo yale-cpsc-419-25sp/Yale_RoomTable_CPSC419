@@ -12,6 +12,9 @@ each residential college. To streamline the housing process, the web application
 housing spreadsheets, where students can declare their group formations and suite preferences. For
 now, we will be building our site to only display Murray rooms and suites.
 
+## Requirements
+
+
 ## Setup
 
 Run "runserver.py" with a given port number and then in a web browser, type localhost:"PORT".
@@ -29,7 +32,6 @@ in my browser.
 
 ### Final Version: May 1st, 2025
 a. Improve on any known bugs
-
 b. Strengthen stability of website
 
 ### Beta Version: April 18th, 2025

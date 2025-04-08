@@ -4,7 +4,7 @@ from functools import wraps
 from flask import Flask, request, make_response, session, redirect, url_for
 from flask import render_template, request
 from cas import CASClient
-
+from sqlalchemy import func
 # from models.room import Room
 from models.review import SuiteReview
 from models.base import Base
@@ -12,6 +12,7 @@ from models.user import User
 from models.friend import Friend
 from database import Database
 from models.suite import Suite
+from models.preference import Preference
 
 db = Database()
 
@@ -75,7 +76,19 @@ def login():
 @app.route('/homepage', methods=["GET"])
 @login_required
 def homepage():
-    html = render_template("homepage.html")
+    # Get all the suites that the user has saved
+    user_id = session.get('net_id')
+    suites = db.session.query(Suite).join(Preference).filter(Preference.user_id == user_id).all()
+    # Get the ranks for each suite
+    ranks = db.session.query(Preference).filter(Preference.user_id == user_id).all()
+    rank_dict = {}
+    for rank in ranks:
+        rank_dict[rank.suite_id] = rank.rank
+    
+    # Sort suites by rank
+    suites.sort(key=lambda suite: rank_dict[suite.id])
+
+    html = render_template("homepage.html", suites=suites, ranks=rank_dict)
     response = make_response(html)
     return response
 
@@ -90,21 +103,43 @@ def search():
 @login_required
 def results():
     capacity = request.args.get('capacity')
-    print(capacity)
-
+    floor = request.args.get('floor') 
+    class_year = request.args.get('class')
 
     query = db.session.query(Suite)
     if capacity:
         query = query.filter(Suite.capacity == capacity)
-    # if floor:
-    #     query = query.filter(Suite.entryway == floor)
-    # if class_year:
-    #     query = query.filter(Suite.year == int(class_year))
-    print(f"Capacity: {capacity}")
+    if floor:
+        query = query.filter(func.substring(Suite.name, 2, 1) == floor)
+    if class_year:
+        query = query.filter(Suite.year == int(class_year))
     suites = query.all()
     html = render_template('results.html', capacity=capacity, suites = suites)
     response = make_response(html)
     return response
+
+
+@app.route('/like_room<int:suite_id>', methods = ['GET', 'POST'])
+@login_required
+def like_room(suite_id):
+    netid = session.get('net_id')
+    print(f"User net_id from session: {netid}")
+
+    suite = db.session.query(Suite).filter_by(id=suite_id).first()
+    if not suite:
+        return "Suite not found", 404
+
+    existing_pref = db.session.query(Preference).filter_by(user_id=netid, suite_id=suite.id).first()
+
+    if not existing_pref:
+        preference = Preference(user_id=netid, suite_id=suite.id)
+        db.session.add(preference)
+        db.session.commit()
+        print(f"Added preference for netid {netid} and suite {suite.id}")
+    else:
+        print(f"Preference already exists for netid {netid} and suite {suite.id}")
+
+    return redirect(url_for('homepage'))
 
 
 @app.route('/summary/<int:suite_id>', methods = ["GET", "POST"])
@@ -113,14 +148,21 @@ def summary(suite_id=None):
     query = db.session.query(Suite)
     review_query = db.session.query(SuiteReview)
 
+    if request.method == "POST":
+        # Save the suite
+        if suite_id:
+            user_id = session.get('net_id')
+            db.save_suite(user_id, suite_id)
+            return redirect(url_for('homepage'))
+    
+
     if suite_id:
         query = query.filter(Suite.id == suite_id)
         review_query = review_query.filter(SuiteReview.suite_id == suite_id)
     suites = query.all()
     reviews = review_query.all()
-    print(reviews)
 
-    html = render_template('summary.html', suites=suites, reviews=reviews)
+    html = render_template('summary.html', suites=suites, reviews=reviews, suite_id=suite_id)
     response = make_response(html)
     return response
 
@@ -135,9 +177,7 @@ def review():
         space_rating = int(request.form['space'])
         review_text = request.form['review']
         overall_rating = int(request.form['rating'])
-        user_id = request.form.get('user_id')
-
-        # user_id = session.get('user_id')
+        user_id = session.get('net_id')
         
         db.create_review(
             suite_id=suite_id,
@@ -155,6 +195,36 @@ def review():
     # Query all reviews to display
     all_reviews = db.session.query(SuiteReview).all()
     return render_template('reviews.html', reviews=all_reviews, suites=suites)
+
+@app.route('/review/<int:suite_id>', methods = ["POST"])
+@login_required
+def review_suite(suite_id=None):
+    if suite_id:
+        # Query the suite to get its information
+        suite = db.session.query(Suite).filter(Suite.id == suite_id).first()
+        if not suite:
+            return "Suite not found", 404
+
+        # Get the review information from the form
+        accessibility_rating = int(request.form['accessibility'])
+        space_rating = int(request.form['space'])
+        review_text = request.form['review']
+        overall_rating = int(request.form['rating'])
+        user_id = session.get('net_id')
+
+        # Create the review in the database
+        db.create_review(
+            suite_id=suite_id,
+            review_text=review_text,
+            overall_rating=overall_rating,
+            accessibility_rating=accessibility_rating,
+            space_rating=space_rating,
+            user_id=user_id
+        )
+        review_query = db.session.query(SuiteReview).filter(SuiteReview.suite_id == suite_id).all()
+        return render_template('summary.html', suites=[suite], reviews=review_query, suite_id=suite_id)
+
+
 
 @app.route('/friends', methods = ["GET", "POST"])
 @login_required
@@ -187,3 +257,23 @@ def friends():
     # Then, each friend in the user's friend list will be a hyperlink to the friend's stuff.
 
     return render_template('friends.html', friends=friends)
+
+@app.route('/friend/<string:friend_id>', methods = ["GET"])
+@login_required
+def friend(friend_id=None):
+    if friend_id:
+        # Query the friend's saved suites
+        suites = db.session.query(Suite).join(Preference).filter(Preference.user_id == friend_id).all()
+        # Get the ranks for each suite
+        ranks = db.session.query(Preference).filter(Preference.user_id == friend_id).all()
+        rank_dict = {}
+        for rank in ranks:
+            rank_dict[rank.suite_id] = rank.rank
+        
+        suites.sort(key=lambda suite: rank_dict[suite.id])
+        return render_template('homepage.html', suites=suites, friend_id=friend_id, ranks=rank_dict)
+
+@app.route('/logout', methods=['GET'])
+def logout():
+    session.pop('net_id', None)
+    return redirect(url_for('index'))

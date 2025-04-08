@@ -5,8 +5,7 @@ from models.user import User
 
 from sqlalchemy import (
     ForeignKey,
-    Integer, 
-    String
+    Integer
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -14,11 +13,10 @@ class Preference(Base):
     __tablename__ = "preferences"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    user_id: Mapped[int] = mapped_column(String)
-    # user: Mapped[User] = relationship("User")
+    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"))
+    user: Mapped[User] = relationship("User")
     suite_id: Mapped[int] = mapped_column(Integer, ForeignKey("suites.id"))
     suite: Mapped[Suite] = relationship("Suite")
-    rank: Mapped[int] = mapped_column(Integer)
 
     # __mapper_args__ = {
     #     "polymorphic_identity":"preference",
