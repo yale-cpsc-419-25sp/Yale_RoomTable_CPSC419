@@ -66,9 +66,9 @@ def api_results():
     class_year = request.args.get('class_year')
 
     query = db.session.query(Suite)
-    if capacity:
+    if capacity and capacity != "Any":
         query = query.filter(Suite.capacity == capacity)
-    if floor:
+    if floor and floor != "Any":
         query = query.filter(func.substring(Suite.name, 2, 1) == floor)
     if class_year:
         query = query.filter(Suite.year == int(class_year))
@@ -138,7 +138,7 @@ def homepage_api():
             'resco_id': suite.resco_id,
             'resco_name': suite.resco.name if suite.resco else None
         })
-        
+
     return jsonify({'suites': suites_data})
 
 @app.route('/reviews', methods = ["GET", "POST"])

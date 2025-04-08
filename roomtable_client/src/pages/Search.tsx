@@ -14,6 +14,7 @@ const SearchPage = () => {
 
           <label htmlFor="capacity">Capacity:</label>
           <select name="capacity" id="capacity">
+            <option value="Any">Any</option>
             <option value="Single">1</option>
             <option value="Double">2</option>
             <option value="Triple">3</option>
@@ -27,6 +28,7 @@ const SearchPage = () => {
 
           <label htmlFor="floor">Floor:</label>
           <select name="floor" id="floor">
+            <option value="Any">Any</option>
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
