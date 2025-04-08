@@ -153,7 +153,6 @@ def summary(suite_id=None):
         review_query = review_query.filter(SuiteReview.suite_id == suite_id)
     suites = query.all()
     reviews = review_query.all()
-    print(reviews)
 
     html = render_template('summary.html', suites=suites, reviews=reviews, suite_id=suite_id)
     response = make_response(html)
@@ -170,9 +169,7 @@ def review():
         space_rating = int(request.form['space'])
         review_text = request.form['review']
         overall_rating = int(request.form['rating'])
-        user_id = request.form.get('user_id')
-
-        # user_id = session.get('user_id')
+        user_id = session.get('net_id')
         
         db.create_review(
             suite_id=suite_id,
@@ -190,6 +187,36 @@ def review():
     # Query all reviews to display
     all_reviews = db.session.query(SuiteReview).all()
     return render_template('reviews.html', reviews=all_reviews, suites=suites)
+
+@app.route('/review/<int:suite_id>', methods = ["POST"])
+@login_required
+def review_suite(suite_id=None):
+    if suite_id:
+        # Query the suite to get its information
+        suite = db.session.query(Suite).filter(Suite.id == suite_id).first()
+        if not suite:
+            return "Suite not found", 404
+
+        # Get the review information from the form
+        accessibility_rating = int(request.form['accessibility'])
+        space_rating = int(request.form['space'])
+        review_text = request.form['review']
+        overall_rating = int(request.form['rating'])
+        user_id = session.get('net_id')
+
+        # Create the review in the database
+        db.create_review(
+            suite_id=suite_id,
+            review_text=review_text,
+            overall_rating=overall_rating,
+            accessibility_rating=accessibility_rating,
+            space_rating=space_rating,
+            user_id=user_id
+        )
+        review_query = db.session.query(SuiteReview).filter(SuiteReview.suite_id == suite_id).all()
+        return render_template('summary.html', suites=[suite], reviews=review_query, suite_id=suite_id)
+
+
 
 @app.route('/friends', methods = ["GET", "POST"])
 @login_required
@@ -230,3 +257,8 @@ def friend(friend_id=None):
         # Query the friend's saved suites
         suites = db.session.query(Suite).join(Preference).filter(Preference.user_id == friend_id).all()
         return render_template('homepage.html', suites=suites, friend_id=friend_id)
+
+@app.route('/logout', methods=['GET'])
+def logout():
+    session.pop('net_id', None)
+    return redirect(url_for('index'))
