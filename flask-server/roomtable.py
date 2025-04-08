@@ -90,6 +90,12 @@ def api_results():
 
 @app.route('/api/summary/<int:suite_id>', methods=["GET", "POST"])
 def summary_api(suite_id=None):
+
+    if request.method == "POST" and suite_id:
+        user_id = session.get('net_id')
+        db.save_suite(user_id, suite_id)
+        return redirect('http://localhost:5173/homepage')
+
     suite = db.session.query(Suite).filter(Suite.id == suite_id).first()
     reviews = db.session.query(SuiteReview).filter(SuiteReview.suite_id == suite_id).all()
 
@@ -114,6 +120,26 @@ def summary_api(suite_id=None):
         ]
     })
 
+@app.route('/api/homepage', methods=["GET"])
+def homepage_api():
+    user_id = session.get('net_id')
+    suites = db.session.query(Suite).join(Preference).filter(Preference.user_id == user_id).all()
+    
+    suites_data = []
+    for suite in suites:
+        suites_data.append({
+            'id': suite.id,
+            'name': suite.name,
+            'entryway': suite.entryway,
+            'capacity': suite.capacity,
+            'singles': suite.singles,
+            'doubles': suite.doubles,
+            'year': suite.year,
+            'resco_id': suite.resco_id,
+            'resco_name': suite.resco.name if suite.resco else None
+        })
+        
+    return jsonify({'suites': suites_data})
 
 @app.route('/reviews', methods = ["GET", "POST"])
 def review():

@@ -36,18 +36,18 @@ function SummaryPage() {
     };
 
     const handleSaveSuite = async () => {
-        await fetch(`http://localhost:8000/api/save_suite/${suite_id}`, {
+        await fetch(`http://localhost:8000/api/summary/${suite_id}`, {
             method: "POST",
             credentials: "include"
         });
-        navigate("/");
+        window.location.href = "http://localhost:5173/homepage";
     };
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    if (!suite) return <div>Loading...</div>;
+    if (!suite) return;
 
     return (
         <div>

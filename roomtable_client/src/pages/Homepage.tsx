@@ -8,7 +8,7 @@ function Homepage() {
             credentials: "include"
         })
             .then(res => res.json())
-            .then(data => setSuites(data));
+            .then(data => setSuites(data.suites));
     }, []);
 
     return (
