@@ -264,7 +264,14 @@ def friend(friend_id=None):
     if friend_id:
         # Query the friend's saved suites
         suites = db.session.query(Suite).join(Preference).filter(Preference.user_id == friend_id).all()
-        return render_template('homepage.html', suites=suites, friend_id=friend_id)
+        # Get the ranks for each suite
+        ranks = db.session.query(Preference).filter(Preference.user_id == friend_id).all()
+        rank_dict = {}
+        for rank in ranks:
+            rank_dict[rank.suite_id] = rank.rank
+        
+        suites.sort(key=lambda suite: rank_dict[suite.id])
+        return render_template('homepage.html', suites=suites, friend_id=friend_id, ranks=rank_dict)
 
 @app.route('/logout', methods=['GET'])
 def logout():
