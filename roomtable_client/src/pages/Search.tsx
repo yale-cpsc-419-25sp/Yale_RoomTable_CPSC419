@@ -4,9 +4,6 @@ import "../../../static/search.css"
 const SearchPage = () => {
   return (
     <div>
-      <h1>Search for a Room</h1>
-      <p>Search for rooms in your residential college.</p>
-
       <div className="search-box">
         <form action="/results" method="GET">
           <label htmlFor="college">Residential College:</label>
