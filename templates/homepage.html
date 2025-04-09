@@ -33,10 +33,15 @@
                     <th>Number of Doubles</th>
                     <th>Class Year</th>
                     <th>Rank</th>
+                    <th>Remove</th>
                 </tr>
                 {% for suite in suites %}
                     <tr>
-                        <td>{{ suite.name }}</td>
+                        <td>
+                            <a href="{{ url_for('summary', suite_id=suite.id) }}">
+                                {{ suite.name }}
+                            </a>
+                        </td>
                         <td>{{ suite.resco.name }}</td>
                         <td>{{ suite.entryway }}</td>
                         <td>{{ suite.capacity }}</td>
@@ -44,6 +49,11 @@
                         <td>{{ suite.doubles }}</td>
                         <td>{{ suite.year }}</td>
                         <td>{{ ranks[suite.id] }}</td>
+                        <td>
+                            <form action="{{ url_for('like_room', suite_id=suite.id) }}" method="post">
+                                <button type="submit">Remove</button>
+                            </form>
+                        </td>
                     </tr>
                 {% endfor %}
             </table>

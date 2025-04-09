@@ -114,7 +114,11 @@ def results():
     if class_year:
         query = query.filter(Suite.year == int(class_year))
     suites = query.all()
-    html = render_template('results.html', capacity=capacity, suites = suites)
+
+    user_id = session.get('net_id')
+    liked_suites = db.liked_suite_ids(user_id)
+
+    html = render_template('results.html', capacity=capacity, suites = suites, liked_suites=liked_suites)
     response = make_response(html)
     return response
 
@@ -129,7 +133,11 @@ def like_room(suite_id):
     if not suite:
         return "Suite not found", 404
 
-    db.save_suite(netid, suite_id)
+    if db.is_suite_liked(netid, suite_id):
+        db.remove_suite(netid, suite_id)
+    else:
+        db.save_suite(netid, suite_id)
+        
     return redirect(url_for('homepage'))
 
 

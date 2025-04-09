@@ -59,9 +59,12 @@
                         <td>{{ suite.resco.name }}</td>
                         <td>
                             <form action="{{ url_for('like_room', suite_id=suite.id) }}" method="POST">
-                                <button type="submit">Like</button>
+                                {% if suite.id in liked_suites %}
+                                    <button type="submit">Remove</button>
+                                {% else %}
+                                    <button type="submit">Like</button>
+                                {% endif %}
                             </form> 
-                           
                         </td>
                     </tr>
                 {% endfor %}
