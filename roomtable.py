@@ -129,16 +129,7 @@ def like_room(suite_id):
     if not suite:
         return "Suite not found", 404
 
-    existing_pref = db.session.query(Preference).filter_by(user_id=netid, suite_id=suite.id).first()
-
-    if not existing_pref:
-        preference = Preference(user_id=netid, suite_id=suite.id)
-        db.session.add(preference)
-        db.session.commit()
-        print(f"Added preference for netid {netid} and suite {suite.id}")
-    else:
-        print(f"Preference already exists for netid {netid} and suite {suite.id}")
-
+    db.save_suite(netid, suite_id)
     return redirect(url_for('homepage'))
 
 
