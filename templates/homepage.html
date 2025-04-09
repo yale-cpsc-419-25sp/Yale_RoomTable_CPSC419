@@ -33,7 +33,9 @@
                     <th>Number of Doubles</th>
                     <th>Class Year</th>
                     <th>Rank</th>
-                    <th>Remove</th>
+                    {% if not friend_id %}
+                        <th>Remove</th>
+                    {% endif %}
                 </tr>
                 {% for suite in suites %}
                     <tr>
@@ -50,9 +52,11 @@
                         <td>{{ suite.year }}</td>
                         <td>{{ ranks[suite.id] }}</td>
                         <td>
-                            <form action="{{ url_for('like_room', suite_id=suite.id) }}" method="post">
-                                <button type="submit">Remove</button>
-                            </form>
+                            {% if not friend_id %}
+                                <form action="{{ url_for('like_room', suite_id=suite.id) }}" method="post">
+                                    <button type="submit">Remove</button>
+                                </form>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}
