@@ -7,6 +7,7 @@ import ResultsPage from "./pages/Results";
 import SummaryPage from "./pages/Summary";
 import Homepage from "./pages/Homepage";
 import Friends from "./pages/Friends";
+import FriendPage from "./pages/FriendPage";
 
 function PrivateRoute({ user, children }) {
     // console.log("user:", user);
@@ -87,6 +88,14 @@ function App() {
                     element={
                         <PrivateRoute user={user}>
                             <Friends />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/friends/:friendId"
+                    element={
+                        <PrivateRoute user={user}>
+                            <FriendPage />
                         </PrivateRoute>
                     }
                 />

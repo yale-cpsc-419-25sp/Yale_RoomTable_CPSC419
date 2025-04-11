@@ -62,7 +62,7 @@ export default function Friends() {
         <ul>
           {friends.map(fid => (
             <li key={fid}>
-              <a href={`/friend/${fid}`}>{fid}</a>
+              <a href={`/friends/${fid}`}>{fid}</a>
             </li>
           ))}
         </ul>

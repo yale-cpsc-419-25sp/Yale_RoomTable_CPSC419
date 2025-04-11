@@ -19,7 +19,6 @@ class Preference(Base):
     suite_id: Mapped[int] = mapped_column(Integer, ForeignKey("suites.id"))
     suite: Mapped[Suite] = relationship("Suite")
     rank: Mapped[int] = mapped_column(Integer)
-
     # __mapper_args__ = {
     #     "polymorphic_identity":"preference",
     #     "polymorphic_on":type

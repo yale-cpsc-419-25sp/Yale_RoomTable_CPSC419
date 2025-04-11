@@ -196,10 +196,29 @@ def get_friends():
     friends = db.session.query(Friend).filter(Friend.user_id == user_id).all()
     friend_list = [f.friend_id for f in friends]
     return jsonify({"friends": friend_list})
-    
-@app.route('/friend/<string:friend_id>', methods=["GET"])
-def friend(friend_id=None):
+
+@app.route('/api/friends/<string:friend_id>', methods=["GET"])
+def friend_preferences(friend_id=None):
     if friend_id:
-        # Query the friend's saved suites
         suites = db.session.query(Suite).join(Preference).filter(Preference.user_id == friend_id).all()
-        return render_template('homepage.html', suites=suites, friend_id=friend_id)
+        # ranks = db.session.query(Preference).filter(Preference.user_id == friend_id).all()
+        # rank_dict = {rank.suite_id: rank.rank for rank in ranks}
+
+        suite_list = []
+        for suite in suites:
+            suite_list.append({
+                "id": suite.id,
+                "name": suite.name,
+                "resco": suite.resco.name,
+                "entryway": suite.entryway,
+                "capacity": suite.capacity,
+                "singles": suite.singles,
+                "doubles": suite.doubles,
+                "year": suite.year,
+                # "rank": rank_dict[suite.id]
+            })
+
+        return jsonify({
+            "friend_id": friend_id,
+            "suites": suite_list
+        })
