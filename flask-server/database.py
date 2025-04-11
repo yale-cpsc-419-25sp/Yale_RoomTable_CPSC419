@@ -110,12 +110,51 @@ class Database():
     def save_suite(self, user_id, suite_id):
         new_preference = Preference(
             user_id=user_id,
-            suite_id=suite_id
+            suite_id=suite_id,
+            rank=1
         )
 
+        # Get existing preferences for the user
+        existing_preferences = self.session.query(Preference).filter(Preference.user_id == user_id).all()
+
+        # Modify existing preferences by incrementing their rank
+        for preference in existing_preferences:
+            if preference.suite_id == suite_id:
+                preference.rank = 1
+            else:
+                preference.rank += 1
+        
+
+        # Add new preference
         self.session.add(new_preference)
         self.session.commit()
+    
+    def remove_suite(self, user_id, suite_id):
+        preference = self.session.query(Preference).filter_by(user_id=user_id, suite_id=suite_id).first()
 
+        if preference:
+            removed_rank = preference.rank
+
+            lower_ranked_preferences = self.session.query(Preference).filter(
+                Preference.user_id == user_id,
+                Preference.rank > removed_rank
+            ).all()
+
+            for pref in lower_ranked_preferences:
+                pref.rank -= 1
+
+            # Actually remove the preference from the DB
+            self.session.delete(preference)
+            self.session.commit()
+
+            self.session.expire_all()
+    
+    def liked_suite_ids(self, user_id):
+        preferences = self.session.query(Preference).filter_by(user_id=user_id).all()
+        return [pref.suite_id for pref in preferences]
+
+    def is_suite_liked(self, user_id, suite_id):
+        return self.session.query(Preference).filter_by(user_id=user_id, suite_id=suite_id).first() is not None
 
     def show_tables(self):
         inspector = inspect(self.engine)

@@ -200,9 +200,15 @@ def get_friends():
 @app.route('/api/friends/<string:friend_id>', methods=["GET"])
 def friend_preferences(friend_id=None):
     if friend_id:
+        # Query the friend's saved suites
         suites = db.session.query(Suite).join(Preference).filter(Preference.user_id == friend_id).all()
-        # ranks = db.session.query(Preference).filter(Preference.user_id == friend_id).all()
-        # rank_dict = {rank.suite_id: rank.rank for rank in ranks}
+        # Get the ranks for each suite
+        ranks = db.session.query(Preference).filter(Preference.user_id == friend_id).all()
+        rank_dict = {}
+        for rank in ranks:
+            rank_dict[rank.suite_id] = rank.rank
+        
+        suites.sort(key=lambda suite: rank_dict[suite.id])
 
         suite_list = []
         for suite in suites:
@@ -215,7 +221,7 @@ def friend_preferences(friend_id=None):
                 "singles": suite.singles,
                 "doubles": suite.doubles,
                 "year": suite.year,
-                # "rank": rank_dict[suite.id]
+                "rank": rank_dict[suite.id]
             })
 
         return jsonify({
