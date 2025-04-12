@@ -5,6 +5,7 @@ from flask import render_template, request
 from flask_cors import CORS
 from cas import CASClient
 from sqlalchemy import func
+from sqlalchemy.orm import joinedload
 
 # from models.room import Room
 from models.review import SuiteReview
@@ -64,66 +65,71 @@ def api_results():
     floor = request.args.get('floor')
     class_year = request.args.get('class_year')
 
-    query = db.session.query(Suite)
-    if capacity and capacity != "Any":
-        query = query.filter(Suite.capacity == capacity)
-    if floor and floor != "Any":
-        query = query.filter(func.substring(Suite.name, 2, 1) == floor)
-    if class_year:
-        query = query.filter(Suite.year == int(class_year))
-    
-    suites = query.all()
+    with db.get_session() as db_session:
+        query = db_session.query(Suite)
+        if capacity and capacity != "Any":
+            query = query.filter(Suite.capacity == capacity)
+        if floor and floor != "Any":
+            query = query.filter(func.substring(Suite.name, 2, 1) == floor)
+        if class_year:
+            query = query.filter(Suite.year == int(class_year))
+        
+        suites = query.all()
 
-    suites_dicts = [
-        {
-            "id": suite.id,
-            "name": suite.name,
-            "entryway": suite.entryway,
-            "capacity": suite.capacity,
-            "resco": {"name": suite.resco.name} if suite.resco else None
-        }
-        for suite in suites
-    ]
+        suites_dicts = [
+            {
+                "id": suite.id,
+                "name": suite.name,
+                "entryway": suite.entryway,
+                "capacity": suite.capacity,
+                "resco": {"name": suite.resco.name} if suite.resco else None
+            }
+            for suite in suites
+        ]
 
-    return jsonify({"suites": suites_dicts})
+        return jsonify({"suites": suites_dicts})
 
 @app.route('/api/summary/<int:suite_id>', methods=["GET", "POST"])
 def summary_api(suite_id=None):
+    with db.get_session() as db_session:
+        if request.method == "POST" and suite_id:
+            user_id = session.get('net_id')
+            db.save_suite(user_id, suite_id)
+            return redirect('http://localhost:5173/homepage')
 
-    if request.method == "POST" and suite_id:
-        user_id = session.get('net_id')
-        db.save_suite(user_id, suite_id)
-        return redirect('http://localhost:5173/homepage')
+        suite = db_session.query(Suite).filter(Suite.id == suite_id).first()
+        reviews = db_session.query(SuiteReview).filter(SuiteReview.suite_id == suite_id).all()
 
-    suite = db.session.query(Suite).filter(Suite.id == suite_id).first()
-    reviews = db.session.query(SuiteReview).filter(SuiteReview.suite_id == suite_id).all()
-
-    return jsonify({
-        "suite": {
-            "id": suite.id,
-            "name": suite.name,
-            "resco": suite.resco.name,
-            "entryway": suite.entryway,
-            "capacity": suite.capacity,
-            "singles": suite.singles,
-            "doubles": suite.doubles,
-            "year": suite.year
-        },
-        "reviews": [
-            {
-                "overall_rating": r.overall_rating,
-                "accessibility_rating": r.accessibility_rating,
-                "space_rating": r.space_rating,
-                "review_text": r.review_text
-            } for r in reviews
-        ]
-    })
+        return jsonify({
+            "suite": {
+                "id": suite.id,
+                "name": suite.name,
+                "resco": suite.resco.name,
+                "entryway": suite.entryway,
+                "capacity": suite.capacity,
+                "singles": suite.singles,
+                "doubles": suite.doubles,
+                "year": suite.year
+            },
+            "reviews": [
+                {
+                    "overall_rating": r.overall_rating,
+                    "accessibility_rating": r.accessibility_rating,
+                    "space_rating": r.space_rating,
+                    "review_text": r.review_text
+                } for r in reviews
+            ]
+        })
 
 @app.route('/api/homepage', methods=["GET"])
 def homepage_api():
     user_id = session.get('net_id')
-    suites = db.session.query(Suite).join(Preference).filter(Preference.user_id == user_id).all()
     
+    with db.get_session() as db_session:
+        suites = db_session.query(Suite).join(Preference).filter(Preference.user_id == user_id).options(
+            joinedload(Suite.resco)
+        ).all()
+
     suites_data = []
     for suite in suites:
         suites_data.append({
@@ -180,9 +186,10 @@ def add_friend():
     if user_id == friend_id:
         return jsonify({"error": "You cannot add yourself as a friend."}), 400
 
-    existing = db.session.query(Friend).filter_by(user_id=user_id, friend_id=friend_id).first()
-    if existing:
-        return jsonify({"error": "You are already friends with this user."}), 400
+    with db.get_session() as db_session:
+        existing = db_session.query(Friend).filter_by(user_id=user_id, friend_id=friend_id).first()
+        if existing:
+            return jsonify({"error": "You are already friends with this user."}), 400
 
     db.create_friendship(user_id, friend_id)
     return jsonify({"message": "Friend added successfully"})
@@ -193,38 +200,40 @@ def get_friends():
     if not user_id:
         return jsonify({"error": "Not logged in"}), 401
 
-    friends = db.session.query(Friend).filter(Friend.user_id == user_id).all()
-    friend_list = [f.friend_id for f in friends]
-    return jsonify({"friends": friend_list})
+    with db.get_session() as db_session:
+        friends = db_session.query(Friend).filter(Friend.user_id == user_id).all()
+        friend_list = [f.friend_id for f in friends]
+        return jsonify({"friends": friend_list})
 
 @app.route('/api/friends/<string:friend_id>', methods=["GET"])
 def friend_preferences(friend_id=None):
     if friend_id:
-        # Query the friend's saved suites
-        suites = db.session.query(Suite).join(Preference).filter(Preference.user_id == friend_id).all()
-        # Get the ranks for each suite
-        ranks = db.session.query(Preference).filter(Preference.user_id == friend_id).all()
-        rank_dict = {}
-        for rank in ranks:
-            rank_dict[rank.suite_id] = rank.rank
-        
-        suites.sort(key=lambda suite: rank_dict[suite.id])
+        with db.get_session() as db_session:
+            # Query the friend's saved suites
+            suites = db_session.query(Suite).join(Preference).filter(Preference.user_id == friend_id).all()
+            # Get the ranks for each suite
+            ranks = db_session.query(Preference).filter(Preference.user_id == friend_id).all()
+            rank_dict = {}
+            for rank in ranks:
+                rank_dict[rank.suite_id] = rank.rank
+            
+            suites.sort(key=lambda suite: rank_dict[suite.id])
 
-        suite_list = []
-        for suite in suites:
-            suite_list.append({
-                "id": suite.id,
-                "name": suite.name,
-                "resco": suite.resco.name,
-                "entryway": suite.entryway,
-                "capacity": suite.capacity,
-                "singles": suite.singles,
-                "doubles": suite.doubles,
-                "year": suite.year,
-                "rank": rank_dict[suite.id]
+            suite_list = []
+            for suite in suites:
+                suite_list.append({
+                    "id": suite.id,
+                    "name": suite.name,
+                    "resco": suite.resco.name,
+                    "entryway": suite.entryway,
+                    "capacity": suite.capacity,
+                    "singles": suite.singles,
+                    "doubles": suite.doubles,
+                    "year": suite.year,
+                    "rank": rank_dict[suite.id]
+                })
+
+            return jsonify({
+                "friend_id": friend_id,
+                "suites": suite_list
             })
-
-        return jsonify({
-            "friend_id": friend_id,
-            "suites": suite_list
-        })
