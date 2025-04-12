@@ -29,6 +29,7 @@ const SearchPage = () => {
           <label htmlFor="floor">Floor:</label>
           <select name="floor" id="floor">
             <option value="Any">Any</option>
+            <option value="Lower">Lower</option>
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>

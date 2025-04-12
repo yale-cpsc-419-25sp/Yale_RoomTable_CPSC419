@@ -70,7 +70,10 @@ def api_results():
         if capacity and capacity != "Any":
             query = query.filter(Suite.capacity == capacity)
         if floor and floor != "Any":
-            query = query.filter(func.substring(Suite.name, 2, 1) == floor)
+            if floor == "Lower":
+                query = query.filter(Suite.name.ilike('%Lower'))
+            else:
+                query = query.filter(func.substring(Suite.name, 2, 1) == floor)
         if class_year:
             query = query.filter(Suite.year == int(class_year))
         
