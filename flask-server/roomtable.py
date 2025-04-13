@@ -149,6 +149,42 @@ def homepage_api():
 
     return jsonify({'suites': suites_data})
 
+@app.route('/api/suites')
+def get_suites():
+    with db.get_session() as db_session:
+        suites = db_session.query(Suite).all()
+        suites_dicts = [
+            {"id": suite.id, "name": suite.name}
+            for suite in suites
+        ]
+        return jsonify({"suites": suites_dicts})
+
+@app.route('/api/reviews', methods=['GET', 'POST'])
+def reviews_api():
+    if request.method == 'POST':
+        data = request.json
+        db.create_review(
+            suite_id=data['suite'],
+            review_text=data['review'],
+            overall_rating=int(data['rating']),
+            accessibility_rating=int(data['accessibility']),
+            space_rating=int(data['space']),
+            user_id=session['net_id']
+        )
+        return jsonify({'message': 'Review submitted'}), 201
+
+    with db.get_session() as db_session:
+        all_reviews = db_session.query(SuiteReview).join(Suite).all()
+        return jsonify({
+            'reviews': [{
+                'suite_name': r.suite.name,
+                'accessibility_rating': r.accessibility_rating,
+                'space_rating': r.space_rating,
+                'overall_rating': r.overall_rating,
+                'review_text': r.review_text
+            } for r in all_reviews]
+        })
+
 @app.route('/reviews', methods = ["GET", "POST"])
 def review():
     suites = db.session.query(Suite).all()
