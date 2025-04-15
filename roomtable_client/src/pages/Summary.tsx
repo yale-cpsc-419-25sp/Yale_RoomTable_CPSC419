@@ -7,26 +7,30 @@ function SummaryPage() {
     const [suite, setSuite] = useState(null);
     const [reviews, setReviews] = useState([]);
     const [formData, setFormData] = useState({
+        suite: suite_id,
         accessibility: "",
         space: "",
         rating: "",
         review: "",
+        user_id: '',
     });
 
+  
     useEffect(() => {
-        fetch(`http://localhost:8000/api/summary/${suite_id}`, {
-            credentials: "include"
-        })
-            .then(res => res.json())
-            .then(data => {
-                setSuite(data.suite);
-                setReviews(data.reviews);
-            });
-    }, [suite_id]);
+        fetch(`http://localhost:8000/api/summary/${suite_id}`, { credentials: "include" })
+          .then(res => res.json())
+          .then(data => {
+            setSuite(data.suite);
+            setReviews(data.reviews);
+            setFormData(prev => ({ ...prev, user_id: data.id }));
+          });
+      }, []);
+      
+
 
     const handleSubmitReview = async (e) => {
         e.preventDefault();
-        await fetch(`http://localhost:8000/api/review/${suite_id}`, {
+        await fetch(`http://localhost:8000/api/reviews`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
@@ -50,53 +54,124 @@ function SummaryPage() {
     if (!suite) return;
 
     return (
-        <div>
-            <h1>Suite Summary</h1>
-            <h2>Name</h2>
-            <p>{suite.name}</p>
-            <h2>Residential College</h2>
-            <p>{suite.resco}</p>
-            <h2>Entryway</h2>
-            <p>{suite.entryway}</p>
-            <h2>Capacity</h2>
-            <p>{suite.capacity}</p>
-            <h2>Number of Singles</h2>
-            <p>{suite.singles}</p>
-            <h2>Number of Doubles</h2>
-            <p>{suite.doubles}</p>
-            <h2>Class Year</h2>
-            <p>{suite.year}</p>
+        <div className="p-6 max-w-5xl mx-auto">
+            <h1 className="text-3xl font-bold mb-4">Suite Summary</h1>
+            <table className="min-w-full border border-gray-300 rounded-mb mb-6 shadow-sm">
+                <thead className="bg-[#00356B] text-white">
+                <tr>
+                    <th className="px-4 py-2 text-left">Name</th>
+                    <th className="px-4 py-2 text-left">Residential College</th>
+                    <th className="px-4 py-2 text-left">Entryway</th>
+                    <th className="px-4 py-2 text-left">Capacity</th>
+                    <th className="px-4 py-2 text-left">Singles</th>
+                    <th className="px-4 py-2 text-left">Doubles</th>
+                    <th className="px-4 py-2 text-left">Class Year</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr className="bg-gray-100">
+                    <td className="px-4 py-2">{suite.name}</td>
+                    <td className="px-4 py-2">{suite.resco}</td>
+                    <td className="px-4 py-2">{suite.entryway}</td>
+                    <td className="px-4 py-2">{suite.capacity}</td>
+                    <td className="px-4 py-2">{suite.singles}</td>
+                    <td className="px-4 py-2">{suite.doubles}</td>
+                    <td className="px-4 py-2">{suite.year}</td>
+                </tr>
+                </tbody>
+            </table>
 
-            <h1>Reviews</h1>
-            {reviews.length ? reviews.map((r, i) => (
-                <div key={i}>
-                    <h2>Overall Rating</h2>
-                    <p>{r.overall_rating}</p>
-                    <h2>Accessibility Rating</h2>
-                    <p>{r.accessibility_rating}</p>
-                    <h2>Space Rating</h2>
-                    <p>{r.space_rating}</p>
-                    <h2>Text</h2>
-                    <p>{r.review_text || "N/A"}</p>
-                </div>
-            )) : <p>No reviews.</p>}
+        <div className="mb-6">
+            <h2 className="text-2xl font-semibold mb-2">Reviews</h2>
+                {reviews.length ? (
+                    reviews.map((r, i) => (
+                        <div
+                        key={i}
+                        className="border border-gray-300 rounded-md p-4 mb-4 bg-gray-50 shadow-sm"
+                        >
+                            <p><strong>overall Rating:</strong>{r.overall_rating}</p>
+                            <p><strong>Accessibility Rating:</strong>{r.accessibility_rating}</p>
+                            <p><strong>Space Rating:</strong>{r.space_rating}</p>
+                            <p><strong>Review:</strong>{r.review_text || "N/A"}</p>
+                        </div>
+                    )) 
+                ) : (
 
-            <form onSubmit={handleSubmitReview}>
-                <label>Accessibility:</label>
-                <input type="number" name="accessibility" min="1" max="5" required onChange={handleChange} />
-                <label>Space:</label>
-                <input type="number" name="space" min="1" max="5" required onChange={handleChange} />
-                <label>Overall Rating:</label>
-                <input type="number" name="rating" min="1" max="5" required onChange={handleChange} />
-                <label>Review:</label>
-                <textarea name="review" onChange={handleChange}></textarea>
-                <button type="submit">Submit Review</button>
-            </form>
-
-            <button onClick={handleSaveSuite}>Save Room</button>
-            <button onClick={() => navigate("/search")}>Back to Search</button>
+                    <p className="text-gray-500">No reviews.</p>
+                 )}
         </div>
-    );
+        <div className="bg-white p-6 rounded-md shadow-md border border-gray-300">
+        <h2 className="text-xl font-semibold mb-4">Add a Review</h2>
+        <form onSubmit={handleSubmitReview} className="space-y-4">
+          <div>
+            <label className="block font-medium">Accessibility (1–5)</label>
+            <input
+              type="number"
+              name="accessibility"
+              min="1"
+              max="5"
+              required
+              onChange={handleChange}
+              className="w-full border px-3 py-2 rounded-md"
+            />
+          </div>
+          <div>
+            <label className="block font-medium">Space (1–5)</label>
+            <input
+              type="number"
+              name="space"
+              min="1"
+              max="5"
+              required
+              onChange={handleChange}
+              className="w-full border px-3 py-2 rounded-md"
+            />
+          </div>
+          <div>
+            <label className="block font-medium">Overall Rating (1–5)</label>
+            <input
+              type="number"
+              name="rating"
+              min="1"
+              max="5"
+              required
+              onChange={handleChange}
+              className="w-full border px-3 py-2 rounded-md"
+            />
+          </div>
+          <div>
+            <label className="block font-medium">Review Text</label>
+            <textarea
+              name="review"
+              onChange={handleChange}
+              className="w-full border px-3 py-2 rounded-md"
+            />
+          </div>
+          <button
+            type="submit"
+            className="bg-[#00356B] text-white px-4 py-2 rounded-md hover:bg-[#002955]"
+          >
+            Submit Review
+          </button>
+        </form>
+      </div>
+
+      <div className="mt-6 flex gap-4">
+        <button
+          onClick={handleSaveSuite}
+          className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
+        >
+          Save Room
+        </button>
+        <button
+          onClick={() => navigate("/search")}
+          className="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700"
+        >
+          Back to Search
+        </button>
+      </div>
+    </div>
+  );
 }
 
 export default SummaryPage;
