@@ -31,7 +31,7 @@ const ResultsPage = () => {
   }, [location.search]);
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white rounded-2xl shadow-lg">
+    <div className="max-w-8xl mx-auto p-6 bg-white rounded-2xl shadow-lg">
       
 
 
@@ -46,22 +46,25 @@ const ResultsPage = () => {
       </div>
      
 
-      <h2 className="text-xl font-semibold text-gray-700 mb-2">Matching Suites</h2>
+      {/* <h2 className="text-xl font-semibold text-gray-700 mb-2">Matching Suites</h2> */}
       {results.length > 0 ? (
-        <table className="min-w-full border border-gray-300 shadow-sm rounded-md overflow-hidden">
-          <thead className="bg - [#00356B] text-white uppercase text-sm">
+          <table className="min-w-full border border-gray-300 rounded-md shadow-sm">
+          <thead className="bg-[#00356B] text-white">
             <tr>
-              <th className="px-4 py-2 text-left text-black">Suite</th>
-              <th className="px-4 py-2 text-left text-black">Entryway</th>
-              <th className="px-4 py-2 text-left text-black">Capacity</th>
-              <th className="px-4 py-2 text-left text-black">Residential College</th>
+                <th className="px-4 py-2 text-left">Suite</th>
+                <th className="px-4 py-2 text-left">Entryway</th>
+                <th className="px-4 py-2 text-left">Capacity</th>
+                <th className="px-4 py-2 text-left">Number of Singles</th>
+                <th className="px-4 py-2 text-left">Number of Doubles</th>
+                <th className="px-4 py-2 text-left">Class Year</th>
+                <th className="px-4 py-2 text-left">Residential College</th>
             </tr>
           </thead>
           <tbody>
             {results.map((suite, index) => (
               <tr 
               key={suite.id}
-              className={index % 2 === 0 ? "bg-gray-100" : "bg-gray-200"}>
+              className={index % 2 === 0 ? "bg-gray-0" : "bg-gray-100"}>
                 <td className = "px-4 py-2">
                   <a href={`/summary/${suite.id}`}
                   className = "text-blue-700 underline hover:text-blue-9000"
@@ -71,6 +74,9 @@ const ResultsPage = () => {
                 </td>
                 <td className="px-4 py-2">{suite.entryway}</td>
                 <td className="px-4 py-2">{suite.capacity}</td>
+                <td className="px-4 py-2">{suite.singles}</td>
+                <td className="px-4 py-2">{suite.doubles}</td>
+                <td className="px-4 py-2">{suite.year}</td>
                 <td className="px-4 py-2">{suite.resco?.name}</td>
               </tr>
             ))}
@@ -80,10 +86,10 @@ const ResultsPage = () => {
         <p>No suites match the search criteria.</p>
       )}
 
-      <button onClick={() => navigate("/search")}   className="mt-6 bg-[#00356B] hover:bg-[#00509E] text-white font-bold py-2 px-6 rounded shadow-md transition-all"
+      {/* <button onClick={() => navigate("/search")}   className="mt-6 bg-[#00356B] hover:bg-[#00509E] text-white font-bold py-2 px-6 rounded shadow-md transition-all"
       >
         Back to Search
-      </button>
+      </button> */}
     </div>
   );
 };
