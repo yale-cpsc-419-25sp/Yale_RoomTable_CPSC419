@@ -19,19 +19,9 @@ function FriendPage() {
 
     return (
         <div>
-            <div className="banner">
-                <a href="/homepage" className="nav-link">My Saved Rooms</a>
-                <a href="/friends" className="nav-link">Add Friends</a>
-                <a href="/search" className="nav-link">Search Rooms</a>
-                <a href="/review" className="nav-link">Reviews</a>
-                <form action="http://localhost:8000/logout" method="get">
-                    <button type="submit" className="logout">Log Out</button>
-                </form>
-            </div>
-
-            <h2>Saved Rooms for {friendId}:</h2>
+            <h2 className="px-4 py-2">Saved Rooms for {friendId}:</h2>
             {error && <p style={{ color: 'red' }}>{error}</p>}
-            <div className="room-table">
+            {/* <div className="room-table">
                 <table>
                     <thead>
                         <tr>
@@ -60,7 +50,63 @@ function FriendPage() {
                         ))}
                     </tbody>
                 </table>
-            </div>
+            </div> */}
+            <table className="min-w-full border border-gray-300 shadow-sm rounded-md overflow-hidden">
+                <thead className="bg - [#00356B] text-white uppercase text-sm">
+                    <tr>
+                        <th className="px-4 py-2 text-left text-black">Suite</th>
+                        <th className="px-4 py-2 text-left text-black">Residential College</th>
+                        <th className="px-4 py-2 text-left text-black">Entryway</th>
+                        <th className="px-4 py-2 text-left text-black">Capacity</th>
+                        <th className="px-4 py-2 text-left text-black">Number of Singles</th>
+                        <th className="px-4 py-2 text-left text-black">Number of Doubles</th>
+                        <th className="px-4 py-2 text-left text-black">Class Year</th>
+                    </tr>
+                </thead>
+                {/* <tbody>
+                    {results.map((suite, index) => (
+                    <tr 
+                    key={suite.id}
+                    className={index % 2 === 0 ? "bg-gray-100" : "bg-gray-200"}>
+                        <td className = "px-4 py-2">
+                        <a href={`/summary/${suite.id}`}
+                        className = "text-blue-700 underline hover:text-blue-900"
+                        >
+                            {suite.name}
+                            </a>
+                        </td>
+                        <td className="px-4 py-2">{suite.resco}</td>
+                        <td className="px-4 py-2">{suite.entryway}</td>
+                        <td className="px-4 py-2">{suite.capacity}</td>
+                        <td className="px-4 py-2">{suite.singles}</td>
+                        <td className="px-4 py-2">{suite.doubles}</td>
+                        <td className="px-4 py-2">{suite.year}</td>
+                    </tr>
+                    ))}
+                </tbody> */}
+                <tbody>
+                    {suites.map((suite) => (
+                        <tr 
+                        key={suite.id}>
+                        {/* className={index % 2 === 0 ? "bg-gray-100" : "bg-gray-200"}> */}
+                            {/* <td className="px-4 py-2">{suite.name}</td> */}
+                            <td className="px-4 py-2">
+                                <a href={`/summary/${suite.id}`}
+                                className = "text-blue-700 underline hover:text-blue-9000"
+                                >
+                                    {suite.name}
+                                    </a>
+                            </td>
+                            <td className="px-4 py-2">{suite.resco}</td>
+                            <td className="px-4 py-2">{suite.entryway}</td>
+                            <td className="px-4 py-2">{suite.capacity}</td>
+                            <td className="px-4 py-2">{suite.singles}</td>
+                            <td className="px-4 py-2">{suite.doubles}</td>
+                            <td className="px-4 py-2">{suite.year}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         </div>
     );
 }

@@ -46,21 +46,42 @@ function Homepage() {
                             <th className="px-4 py-2 text-left">Class Year</th>
                         </tr>
                     </thead>
+                    {/* <tbody>
+                        {results.map((suite, index) => (
+                        <tr 
+                        key={suite.id}
+                        className={index % 2 === 0 ? "bg-gray-100" : "bg-gray-200"}>
+                            <td className = "px-4 py-2">
+                            <a href={`/summary/${suite.id}`}
+                            className = "text-blue-700 underline hover:text-blue-900"
+                            >
+                                {suite.name}
+                                </a>
+                            </td>
+                            <td className="px-4 py-2">{suite.resco}</td>
+                            <td className="px-4 py-2">{suite.entryway}</td>
+                            <td className="px-4 py-2">{suite.capacity}</td>
+                            <td className="px-4 py-2">{suite.singles}</td>
+                            <td className="px-4 py-2">{suite.doubles}</td>
+                            <td className="px-4 py-2">{suite.year}</td>
+                        </tr>
+                        ))}
+                    </tbody> */}
                     <tbody>
                         {suites.map((suite) => (
                             <tr key={suite.id}>
-                                <td  className="px-4 py-2">{suite.name}</td>
-                                <td className="px-4 py-2">{rescoMapping[suite.resco_id] || 'Unknown ResCo'}</td>
-                                <td  className="px-4 py-2">{suite.entryway}</td>
-                                <td  className="px-4 py-2">{suite.capacity}</td>
-                                <td  className="px-4 py-2">{suite.singles}</td>
-                                <td  className="px-4 py-2">{suite.doubles}</td>
-                                <td  className="px-4 py-2">{suite.year}</td>
+                                <td>{suite.name}</td>
+                                <td>{suite.resco}</td>
+                                <td>{suite.entryway}</td>
+                                <td>{suite.capacity}</td>
+                                <td>{suite.singles}</td>
+                                <td>{suite.doubles}</td>
+                                <td>{suite.year}</td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
-            </div>
+            {/* </div> */}
         </div>
     );
 }
