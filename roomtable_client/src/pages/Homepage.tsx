@@ -50,7 +50,7 @@ function Homepage() {
                         {suites.map((suite) => (
                             <tr key={suite.id}>
                                 <td  className="px-4 py-2">{suite.name}</td>
-                                <td className="px-4 py-2">{rescoMapping[suite.resco] || 'Unknown ResCo'}</td>
+                                <td className="px-4 py-2">{rescoMapping[suite.resco_id] || 'Unknown ResCo'}</td>
                                 <td  className="px-4 py-2">{suite.entryway}</td>
                                 <td  className="px-4 py-2">{suite.capacity}</td>
                                 <td  className="px-4 py-2">{suite.singles}</td>
