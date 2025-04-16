@@ -8,9 +8,9 @@ function SummaryPage() {
     const [reviews, setReviews] = useState([]);
     const [formData, setFormData] = useState({
         suite: suite_id,
-        accessibility: "",
-        space: "",
-        rating: "",
+        accessibility: null,
+        space: null,
+        rating: null,
         review: "",
         user_id: '',
     });
@@ -28,6 +28,7 @@ function SummaryPage() {
       
 
 
+
     const handleSubmitReview = async (e) => {
         e.preventDefault();
         await fetch(`http://localhost:8000/api/reviews`, {
@@ -36,9 +37,24 @@ function SummaryPage() {
             credentials: "include",
             body: JSON.stringify(formData)
         });
-        window.location.reload();
+    
+        // Re-fetch reviews to show the newly added one
+        const res = await fetch(`http://localhost:8000/api/summary/${suite_id}`, { credentials: "include" });
+        const data = await res.json();
+        setReviews(data.reviews);
+    
+        // Optionally clear the form:
+        setFormData(prev => ({
+            ...prev,
+            accessibility: "",
+            space: "",
+            rating: "",
+            review: "",
+        }));
     };
+    
 
+      
     const handleSaveSuite = async () => {
         await fetch(`http://localhost:8000/api/summary/${suite_id}`, {
             method: "POST",
@@ -48,6 +64,7 @@ function SummaryPage() {
     };
 
     const handleChange = (e) => {
+        
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
@@ -111,6 +128,7 @@ function SummaryPage() {
               min="1"
               max="5"
               required
+              value={formData.accessibility ?? ""}
               onChange={handleChange}
               className="w-full border px-3 py-2 rounded-md"
             />
@@ -123,6 +141,7 @@ function SummaryPage() {
               min="1"
               max="5"
               required
+              value={formData.space ?? ""}
               onChange={handleChange}
               className="w-full border px-3 py-2 rounded-md"
             />
@@ -135,6 +154,7 @@ function SummaryPage() {
               min="1"
               max="5"
               required
+              value={formData.rating ?? ""}
               onChange={handleChange}
               className="w-full border px-3 py-2 rounded-md"
             />

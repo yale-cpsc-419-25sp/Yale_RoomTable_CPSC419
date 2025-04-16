@@ -182,10 +182,11 @@ def review():
             suite_id=suite_id,
             review_text=review_text,
             overall_rating=overall_rating,
-            # type='suite_review',
             accessibility_rating=accessibility_rating,
             space_rating=space_rating,
-            user_id=user_id
+            user_id=user_id,
+            type='suite_review'
+
         )
         
         
@@ -218,7 +219,8 @@ def review_suite(suite_id=None):
             overall_rating=overall_rating,
             accessibility_rating=accessibility_rating,
             space_rating=space_rating,
-            user_id=user_id
+            user_id=user_id,
+            type = type
         )
         review_query = db.session.query(SuiteReview).filter(SuiteReview.suite_id == suite_id).all()
         return render_template('summary.html', suites=[suite], reviews=review_query, suite_id=suite_id)
