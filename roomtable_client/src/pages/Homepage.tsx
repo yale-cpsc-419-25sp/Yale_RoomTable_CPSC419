@@ -11,6 +11,14 @@ function Homepage() {
             .then(data => setSuites(data.suites));
     }, []);
 
+    const rescoMapping = {
+        1: "Franklin",
+        2: "Berkeley",
+        3: "Branford",
+        4: "Davenport",
+        9: "Pauli Murray"
+    }
+
     return (
         <div className="p-6 max-w-6xl mx-auto">
             {/* <div className="banner">
@@ -42,7 +50,7 @@ function Homepage() {
                         {suites.map((suite) => (
                             <tr key={suite.id}>
                                 <td  className="px-4 py-2">{suite.name}</td>
-                                <td  className="px-4 py-2">{suite.resco}</td>
+                                <td className="px-4 py-2">{rescoMapping[suite.resco_id] || 'Unknown ResCo'}</td>
                                 <td  className="px-4 py-2">{suite.entryway}</td>
                                 <td  className="px-4 py-2">{suite.capacity}</td>
                                 <td  className="px-4 py-2">{suite.singles}</td>
