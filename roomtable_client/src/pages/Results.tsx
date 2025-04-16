@@ -32,14 +32,7 @@ const ResultsPage = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-2xl shadow-lg">
-      <div className="mb-4">
-        <button
-          onClick={() => navigate("/search")}
-          className="bg-[#00356B] hover:bg-[#00509E] text-white font-semibold py-2 px-4 rounded shadow transition"
-        >
-          ← Back to Search
-        </button>
-      </div>
+      
 
 
       <h1 className="text-3xl font-bold mb-4 text-gray-800">Suite Search Results</h1>
