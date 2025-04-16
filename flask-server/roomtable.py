@@ -92,16 +92,24 @@ def api_results():
 
         return jsonify({"suites": suites_dicts})
 
-@app.route('/api/summary/<int:suite_id>', methods=["GET", "POST"])
+@app.route('/api/summary/<int:suite_id>', methods=["GET", "POST", "DELETE"])
 def summary_api(suite_id=None):
     with db.get_session() as db_session:
         if request.method == "POST" and suite_id:
             user_id = session.get('net_id')
             db.save_suite(user_id, suite_id)
-            return redirect('http://localhost:5173/homepage')
+            # return redirect('http://localhost:5173/homepage')
+        
+        if request.method == "DELETE" and suite_id:
+            user_id = session.get('net_id')
+            db.remove_suite(user_id, suite_id)
+            # return redirect('http://localhost:5173/homepage')
+
+        user_id = session.get('net_id')
 
         suite = db_session.query(Suite).filter(Suite.id == suite_id).first()
         reviews = db_session.query(SuiteReview).filter(SuiteReview.suite_id == suite_id).all()
+        is_saved = db_session.query(Preference).filter_by(user_id=user_id, suite_id=suite_id).first() is not None
 
         return jsonify({
             "suite": {
@@ -112,7 +120,8 @@ def summary_api(suite_id=None):
                 "capacity": suite.capacity,
                 "singles": suite.singles,
                 "doubles": suite.doubles,
-                "year": suite.year
+                "year": suite.year,
+                "is_saved": is_saved
             },
             "reviews": [
                 {
@@ -276,3 +285,13 @@ def friend_preferences(friend_id=None):
                 "friend_id": friend_id,
                 "suites": suite_list
             })
+        
+@app.route('/api/unsave/<int:suite_id>', methods=["POST"])
+def unsave_suite(suite_id):
+    user_id = session.get('net_id')  # or 'user_id' depending on your login
+    if not user_id:
+        return jsonify({'error': 'Not logged in'}), 401
+
+    # with db.get_session() as db_session:
+    db.remove_suite(user_id, suite_id)
+    return jsonify({'message': 'Suite unsaved successfully'})

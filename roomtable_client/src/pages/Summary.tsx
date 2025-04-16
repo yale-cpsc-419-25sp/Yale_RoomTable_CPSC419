@@ -14,6 +14,7 @@ function SummaryPage() {
         review: "",
         user_id: '',
     });
+    const [isSaved, setIsSaved] = useState(false);
   
     useEffect(() => {
         fetch(`http://localhost:8000/api/summary/${suite_id}`, { credentials: "include" })
@@ -21,7 +22,8 @@ function SummaryPage() {
           .then(data => {
             setSuite(data.suite);
             setReviews(data.reviews);
-            setFormData(prev => ({ ...prev, user_id: data.id }));
+            setFormData(prev => ({ ...prev, user_id: data.id }))
+            setIsSaved(data.is_saved);
           });
       }, []);
 
@@ -53,11 +55,18 @@ function SummaryPage() {
 
       
     const handleSaveSuite = async () => {
+        const method = isSaved ? "DELETE" : "POST"
+        // ? `http://localhost:8000/api/unsave/${suite_id}`
+        // : `http://localhost:8000/api/summary/${suite_id}`;
+        // ? `http://localhost:8000/api/summary/${suite_id}`
+        // : `http://localhost:8000/api/unsave/${suite_id}`;
+    
         await fetch(`http://localhost:8000/api/summary/${suite_id}`, {
-            method: "POST",
-            credentials: "include"
+          method: method,
+          credentials: "include"
         });
-        window.location.href = "http://localhost:5173/homepage";
+        
+        setIsSaved(!isSaved);
     };
 
     const handleChange = (e) => {
@@ -185,12 +194,12 @@ function SummaryPage() {
       </div>
 
       <div className="mt-6 flex gap-4">
-        <button
-          onClick={handleSaveSuite}
-          className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
-        >
-          Save Room
-        </button>
+            <button
+              onClick={handleSaveSuite}
+              className={`text-white px-4 py-2 rounded-md ${isSaved ? "bg-red-600 hover:bg-red-700" : "bg-green-600 hover:bg-green-700"}`}
+            >
+              {isSaved ? "Unsave Room" : "Save Room"}
+            </button>
         <button
           onClick={() => navigate("/search")}
           className="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700"
