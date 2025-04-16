@@ -43,60 +43,83 @@ function ReviewForm() {
   };
 
   return (
-    <div className="review-form">
-      <h1>Submit a Review</h1>
-      <form onSubmit={handleSubmit}>
-        <label>Suite:</label>
-        <select name="suite" value={formData.suite} onChange={handleChange} required>
-          <option value="">Select Suite</option>
-          {suites.map((s) => (
-            <option key={s.id} value={s.id}>{s.name}</option>
-          ))}
-        </select>
+    <div className="p-6 max-w-4xl mx-auto bg-white shadow-lg rounded-lg">
+      <h1 className="text-2xl font-bold mb-4">Submit a Review</h1>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block font-medium">Suite:</label>
+          <select
+            name="suite"
+            value={formData.suite}
+            onChange={handleChange}
+            required
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+          >
+            <option value="">Select Suite</option>
+            {suites.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.name}
+              </option>
+            ))}
+          </select>
+        </div>
 
         {['accessibility', 'space', 'rating'].map((field) => (
           <div className="rating-group" key={field}>
-            <label>{field.charAt(0).toUpperCase() + field.slice(1)}:</label>
-            {[1, 2, 3, 4, 5].map((val) => (
-              <label key={val}>
-                <input
-                  type="radio"
-                  name={field}
-                  value={val}
-                  checked={formData[field] === String(val)}
-                  onChange={handleChange}
-                />
-                <span className="fa fa-star icon"></span>
-              </label>
-            ))}
+            <label className="block font-medium">{field.charAt(0).toUpperCase() + field.slice(1)}:</label>
+            <div className="flex space-x-2">
+              {[1, 2, 3, 4, 5].map((val) => (
+                <label key={val} className="flex items-center space-x-1">
+                  <input
+                    type="radio"
+                    name={field}
+                    value={val}
+                    checked={formData[field] === String(val)}
+                    onChange={handleChange}
+                    className="text-yellow-400"
+                  />
+                  <span className="fa fa-star"></span>
+                </label>
+              ))}
+            </div>
           </div>
         ))}
 
-        <label>Review:</label>
-        <textarea name="review" value={formData.review} onChange={handleChange}></textarea>
+        <div>
+          <label className="block font-medium">Review:</label>
+          <textarea
+            name="review"
+            value={formData.review}
+            onChange={handleChange}
+            rows="4"
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+          />
+        </div>
 
-        <button type="submit">Submit Review</button>
+        <button type="submit" className="search-button">
+          Submit Review
+        </button>
       </form>
 
-      <h2>Reviews</h2>
-      <table className="review-table">
-        <thead>
+      <h2 className="text-xl font-semibold mt-8">Reviews</h2>
+      <table className="min-w-full mt-4 border-collapse">
+        <thead className="bg-gray-100">
           <tr>
-            <th>Suite</th>
-            <th>Accessibility</th>
-            <th>Space</th>
-            <th>Overall</th>
-            <th>Review</th>
+            <th className="px-4 py-2 text-left">Suite</th>
+            <th className="px-4 py-2 text-left">Accessibility</th>
+            <th className="px-4 py-2 text-left">Space</th>
+            <th className="px-4 py-2 text-left">Overall</th>
+            <th className="px-4 py-2 text-left">Review</th>
           </tr>
         </thead>
         <tbody>
           {reviews.map((r, i) => (
-            <tr key={i}>
-              <td>{r.suite_name}</td>
-              <td>{r.accessibility_rating}</td>
-              <td>{r.space_rating}</td>
-              <td>{r.overall_rating}</td>
-              <td>{r.review_text}</td>
+            <tr key={i} className="border-t">
+              <td className="px-4 py-2">{r.suite_name}</td>
+              <td className="px-4 py-2">{r.accessibility_rating}</td>
+              <td className="px-4 py-2">{r.space_rating}</td>
+              <td className="px-4 py-2">{r.overall_rating}</td>
+              <td className="px-4 py-2">{r.review_text}</td>
             </tr>
           ))}
         </tbody>
