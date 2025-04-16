@@ -1,16 +1,23 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 import UserDropdown from './Dropdown';
+import Search from '../pages/Search'
 
 const Navbar = ({ user }) => {
     return (
-        <div className='flex justify-between items-center h-24 max-w-[1240px] mx-auto px-4'>
+        <div className='flex justify-between items-center h-24 w-full mx-auto px-6'>
             <div className="flex items-center space-x-2">
-                <h1 className="text-3xl font-bold">RoomTable</h1>
-                <img
-                    src="/floorplans/logowithoutroomtable.jpg"
-                    alt="RoomTable Logo"
-                    className="h-16 w-12 object-contain -mt-2"
-                />
+                <Link to='Search'>
+                    <img
+                        src="/floorplans/logowithoutroomtable.jpg"
+                        alt="RoomTable Logo"
+                        className="h-16 w-12 object-contain -mt-2"
+                    />
+                </Link>
+                <h1 className="text-3xl font-bold">
+                    <Link to='Search'>RoomTable</Link>
+                </h1>
+                
                 
             </div>
             <ul className='flex'>

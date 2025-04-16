@@ -70,20 +70,21 @@ function Homepage() {
                     <tbody>
                         {suites.map((suite) => (
                             <tr key={suite.id}>
-                                <td>{suite.name}</td>
-                                <td>{suite.resco}</td>
-                                <td>{suite.entryway}</td>
-                                <td>{suite.capacity}</td>
-                                <td>{suite.singles}</td>
-                                <td>{suite.doubles}</td>
-                                <td>{suite.year}</td>
+                                <td  className="px-4 py-2">{suite.name}</td>
+                                <td className="px-4 py-2">{rescoMapping[suite.resco_id] || 'Unknown ResCo'}</td>
+                                <td  className="px-4 py-2">{suite.entryway}</td>
+                                <td  className="px-4 py-2">{suite.capacity}</td>
+                                <td  className="px-4 py-2">{suite.singles}</td>
+                                <td  className="px-4 py-2">{suite.doubles}</td>
+                                <td  className="px-4 py-2">{suite.year}</td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             {/* </div> */}
+            </div>
         </div>
     );
-}
+};
 
 export default Homepage;
