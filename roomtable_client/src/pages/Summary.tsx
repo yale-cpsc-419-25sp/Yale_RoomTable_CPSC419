@@ -88,7 +88,15 @@ function SummaryPage() {
 
     return (
         <div className="p-6 max-w-5xl mx-auto">
-            <h1 className="text-3xl font-bold mb-4">Suite Summary</h1>
+            <div className="flex justify-between items-center mb-4">
+              <h1 className="text-3xl font-bold">Suite Summary</h1>
+              <button
+              onClick={handleSaveSuite}
+              className={`text-white px-4 py-2 rounded-md ${isSaved ? "bg-red-600 hover:bg-red-700" : "bg-green-600 hover:bg-green-700"}`}
+              >
+                {isSaved ? "Unsave Room" : "Save Room"}
+              </button>
+            </div>
             <table className="min-w-full border border-gray-300 rounded-mb mb-6 shadow-sm">
                 <thead className="bg-[#00356B] text-white">
                 <tr>
@@ -193,20 +201,15 @@ function SummaryPage() {
         </form>
       </div>
 
-      <div className="mt-6 flex gap-4">
-            <button
-              onClick={handleSaveSuite}
-              className={`text-white px-4 py-2 rounded-md ${isSaved ? "bg-red-600 hover:bg-red-700" : "bg-green-600 hover:bg-green-700"}`}
-            >
-              {isSaved ? "Unsave Room" : "Save Room"}
-            </button>
+      {/* <div className="mt-6 flex gap-4">
+            
         <button
           onClick={() => navigate("/search")}
           className="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700"
         >
           Back to Search
         </button>
-      </div>
+      </div> */}
     </div>
   );
 }
