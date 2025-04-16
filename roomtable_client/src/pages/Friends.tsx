@@ -33,18 +33,7 @@ export default function Friends() {
   };
 
   return (
-    <div>
-      {/* <div className="banner">
-        <a href="/saved" className="nav-link">My Saved Rooms</a>
-        <a href="/friends" className="nav-link">Add Friends</a>
-        <a href="/search" className="nav-link">Search Rooms</a>
-        <a href="/review" className="nav-link">Reviews</a>
-        <form action="/logout" method="get">
-          <button type="submit" className="logout">Log Out</button>
-        </form>
-      </div> */}
-
-      {/* <h1>{error && <span style={{ color: 'red' }}>{error}</span>}</h1> */}
+    <div className='flex justify-left items-center w-full mx-auto px-6'>
       <div className="mb-4">
         <h1 className="text-red-500 font-semibold">{error && error}</h1>
       </div>
@@ -62,19 +51,19 @@ export default function Friends() {
           />
           <button type="submit" className="search-button">Add Friend</button>
         </form>
-
+        <div>
+          <h2 className="text-2xl font-semibold mb-4 pt-12">Friends List</h2>
+          <ul className="list-none space-y-2">
+            {friends.map(fid => (
+              <li key={fid}>
+                <a href={`/friends/${fid}`}  className="text-blue-800 hover:text-blue-700">{fid}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
       
-      <div>
-        <h2 className="text-2xl font-semibold mb-4">Friends List</h2>
-        <ul className="list-none space-y-2">
-          {friends.map(fid => (
-            <li key={fid}>
-              <a href={`/friends/${fid}`}  className="text-blue-800 hover:text-blue-700">{fid}</a>
-            </li>
-          ))}
-        </ul>
-      </div>
+      
     </div>
   );
 }

@@ -40,14 +40,14 @@ export default function UserDropdown() {
               Friends
             </a>
           </MenuItem>
-          <MenuItem>
+          {/* <MenuItem>
             <a
               href="/search"
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
             >
               Search
             </a>
-          </MenuItem>
+          </MenuItem> */}
           <MenuItem>
             <a
               href="/review"
