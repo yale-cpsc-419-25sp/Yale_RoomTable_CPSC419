@@ -31,17 +31,29 @@ const ResultsPage = () => {
   }, [location.search]);
 
   return (
-    <div>
-      <h1>Suite Search Results</h1>
+    <div className="max-w-4xl mx-auto p-6 bg-white rounded-2xl shadow-lg">
+      <div className="mb-4">
+        <button
+          onClick={() => navigate("/search")}
+          className="bg-[#00356B] hover:bg-[#00509E] text-white font-semibold py-2 px-4 rounded shadow transition"
+        >
+          ← Back to Search
+        </button>
+      </div>
 
-      <h2>Filters Applied:</h2>
-      <ul>
-        {filters.capacity && <li><strong>Capacity:</strong> {filters.capacity}</li>}
-        {filters.floor && <li><strong>Floor:</strong> {filters.floor}</li>}
-        {filters.classYear && <li><strong>Class Year:</strong> {filters.classYear}</li>}
-      </ul>
 
-      <h2>Matching Suites</h2>
+      <h1 className="text-3xl font-bold mb-4 text-gray-800">Suite Search Results</h1>
+      <div className="mb-6">
+        <h2 className="text-xl font-semibold text-gray-700 mb-2">Filters Applied:</h2>
+        <ul  className="list-disc list-inside space-y-1 text-gray-600">
+          {filters.capacity && <li><span className="font-semibold text-gray-800">Capacity:</span> {filters.capacity}</li>}
+          {filters.floor && <li><span className="font-semibold text-gray-800">Floor:</span> {filters.floor}</li>}
+          {filters.classYear && <li><span className="font-semibold text-gray-800">Class Year:</span> {filters.classYear}</li>}
+        </ul>
+      </div>
+     
+
+      <h2 className="text-xl font-semibold text-gray-700 mb-2">Matching Suites</h2>
       {results.length > 0 ? (
         <table className="min-w-full border border-gray-300 shadow-sm rounded-md overflow-hidden">
           <thead className="bg - [#00356B] text-white uppercase text-sm">
