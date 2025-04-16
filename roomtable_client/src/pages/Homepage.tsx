@@ -41,8 +41,12 @@ function Homepage() {
                     <tbody>
                         {suites.map((suite) => (
                             <tr key={suite.id}>
-                                <td  className="px-4 py-2">{suite.name}</td>
-                                <td  className="px-4 py-2">{suite.resco}</td>
+                                <td  className="px-4 py-2">
+                                    <a href={`/summary/${suite.id}`}>
+                                    {suite.name}
+                                    </a>
+                                </td>
+                                <td  className="px-4 py-2">{suite.resco_name}</td>
                                 <td  className="px-4 py-2">{suite.entryway}</td>
                                 <td  className="px-4 py-2">{suite.capacity}</td>
                                 <td  className="px-4 py-2">{suite.singles}</td>
