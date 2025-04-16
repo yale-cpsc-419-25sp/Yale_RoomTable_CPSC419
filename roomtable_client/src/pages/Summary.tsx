@@ -14,7 +14,6 @@ function SummaryPage() {
         review: "",
         user_id: '',
     });
-
   
     useEffect(() => {
         fetch(`http://localhost:8000/api/summary/${suite_id}`, { credentials: "include" })
@@ -25,8 +24,6 @@ function SummaryPage() {
             setFormData(prev => ({ ...prev, user_id: data.id }));
           });
       }, []);
-      
-
 
 
     const handleSubmitReview = async (e) => {
@@ -70,6 +67,16 @@ function SummaryPage() {
 
     if (!suite) return;
 
+    // Todo: account for the two floor suite
+    let floorPlans = "/floorplans/MY";
+    // Check for A Lower and B Lower suites
+    if (suite.name.charAt(1) == " "){
+        floorPlans += " Basement_2.jpg"
+    }
+    else {
+        floorPlans += "_Floor_" + suite.name.charAt(1) + ".jpg";
+    }
+
     return (
         <div className="p-6 max-w-5xl mx-auto">
             <h1 className="text-3xl font-bold mb-4">Suite Summary</h1>
@@ -98,6 +105,7 @@ function SummaryPage() {
                 </tbody>
             </table>
 
+        <img src={floorPlans} alt="Suite Floorplan" className="w-full h-auto mb-6 rounded-md shadow-md" />
         <div className="mb-6">
             <h2 className="text-2xl font-semibold mb-2">Reviews</h2>
                 {reviews.length ? (
