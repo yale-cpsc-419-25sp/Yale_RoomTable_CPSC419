@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import "../../../static/search.css"
 
 export default function Friends() {
   const [friends, setFriends] = useState([]);
@@ -33,7 +34,7 @@ export default function Friends() {
 
   return (
     <div>
-      <div className="banner">
+      {/* <div className="banner">
         <a href="/saved" className="nav-link">My Saved Rooms</a>
         <a href="/friends" className="nav-link">Add Friends</a>
         <a href="/search" className="nav-link">Search Rooms</a>
@@ -41,28 +42,35 @@ export default function Friends() {
         <form action="/logout" method="get">
           <button type="submit" className="logout">Log Out</button>
         </form>
+      </div> */}
+
+      {/* <h1>{error && <span style={{ color: 'red' }}>{error}</span>}</h1> */}
+      <div className="mb-4">
+        <h1 className="text-red-500 font-semibold">{error && error}</h1>
       </div>
 
-      <h1>{error && <span style={{ color: 'red' }}>{error}</span>}</h1>
+      <div className='mb-8'>
+        <h1 className='text-3xl font-bold mb-4'>Add Friends</h1>
+        <h2 className="text-lg text-gray-600 mb-4">Insert the Net ID of a Friend.</h2>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <input
+            type="text"
+            value={friendId}
+            onChange={(e) => setFriendId(e.target.value)}
+            placeholder="Net ID"
+            className="p-3 border border-gray-300 rounded-md text-lg"
+          />
+          <button type="submit" className="search-button">Add Friend</button>
+        </form>
 
-      <h1>Add Friends</h1>
-      <h2>Insert the Net ID of a Friend.</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={friendId}
-          onChange={(e) => setFriendId(e.target.value)}
-          placeholder="Net ID"
-        />
-        <button type="submit">Add Friend</button>
-      </form>
-
+      </div>
+      
       <div>
-        <h2>Friends List</h2>
-        <ul>
+        <h2 className="text-2xl font-semibold mb-4">Friends List</h2>
+        <ul className="list-none space-y-2">
           {friends.map(fid => (
             <li key={fid}>
-              <a href={`/friends/${fid}`}>{fid}</a>
+              <a href={`/friends/${fid}`}  className="text-blue-800 hover:text-blue-700">{fid}</a>
             </li>
           ))}
         </ul>
