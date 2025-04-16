@@ -94,22 +94,19 @@ def api_results():
 
 @app.route('/api/summary/<int:suite_id>', methods=["GET", "POST", "DELETE"])
 def summary_api(suite_id=None):
+    user_id = session.get('net_id')
     with db.get_session() as db_session:
         if request.method == "POST" and suite_id:
-            user_id = session.get('net_id')
             db.save_suite(user_id, suite_id)
-            # return redirect('http://localhost:5173/homepage')
-        
-        if request.method == "DELETE" and suite_id:
-            user_id = session.get('net_id')
-            db.remove_suite(user_id, suite_id)
-            # return redirect('http://localhost:5173/homepage')
 
-        user_id = session.get('net_id')
+        elif request.method == "DELETE" and suite_id:
+            db.remove_suite(user_id, suite_id)
 
         suite = db_session.query(Suite).filter(Suite.id == suite_id).first()
         reviews = db_session.query(SuiteReview).filter(SuiteReview.suite_id == suite_id).all()
         is_saved = db_session.query(Preference).filter_by(user_id=user_id, suite_id=suite_id).first() is not None
+        print(f"Returning is_saved={is_saved} for suite_id={suite_id} and user_id={user_id}")  # Add logging to debug
+
 
         return jsonify({
             "suite": {

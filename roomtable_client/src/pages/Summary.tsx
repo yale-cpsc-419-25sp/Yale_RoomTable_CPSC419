@@ -23,10 +23,9 @@ function SummaryPage() {
             setSuite(data.suite);
             setReviews(data.reviews);
             setFormData(prev => ({ ...prev, user_id: data.id }))
-            setIsSaved(data.is_saved);
+            setIsSaved(data.suite.is_saved);
           });
       }, []);
-
 
     const handleSubmitReview = async (e) => {
         e.preventDefault();
@@ -52,14 +51,8 @@ function SummaryPage() {
         }));
     };
     
-
-      
     const handleSaveSuite = async () => {
         const method = isSaved ? "DELETE" : "POST"
-        // ? `http://localhost:8000/api/unsave/${suite_id}`
-        // : `http://localhost:8000/api/summary/${suite_id}`;
-        // ? `http://localhost:8000/api/summary/${suite_id}`
-        // : `http://localhost:8000/api/unsave/${suite_id}`;
     
         await fetch(`http://localhost:8000/api/summary/${suite_id}`, {
           method: method,
