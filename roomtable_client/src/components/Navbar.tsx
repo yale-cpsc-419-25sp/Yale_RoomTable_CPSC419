@@ -18,22 +18,27 @@ const Navbar = ({ user }) => {
                 
                 
             </div>
-            <ul className='flex'>
-                {!user ? (
-                    <>
-                        <li className='p-4'>
-                            <a href="http://localhost:8000/api/login">
-                                Login
-                            </a>
-                        </li>
-                        <li className='p-4'>About</li>
-                    </>
-                    ) : (
-                    <>
-                        <UserDropdown />
-                    </>
-                )}  
-            </ul>
+            <div className="flex items-center space-x-4">
+            {!user ? (
+                <>
+                <a href="http://localhost:8000/api/login" className="p-4">
+                    Login
+                </a>
+                <span className="p-4">About</span>
+                </>
+            ) : (
+                <>
+                <a href="/timeline" className="p-4">
+                    Timeline
+                </a>
+                <div className="p-4">
+                    <UserDropdown />
+                </div>
+                </>
+            )}
+            </div>
+
+            
         </div>
     )
 }

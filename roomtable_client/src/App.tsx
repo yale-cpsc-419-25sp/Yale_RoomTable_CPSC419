@@ -9,6 +9,7 @@ import Homepage from "./pages/Homepage";
 import Friends from "./pages/Friends";
 import FriendPage from "./pages/FriendPage";
 import ReviewForm from "./pages/Reviews";
+import Timeline from "./pages/Timeline";
 
 function PrivateRoute({ user, children }) {
     // console.log("user:", user);
@@ -105,6 +106,14 @@ function App() {
                     element={
                         <PrivateRoute user={user}>
                             <ReviewForm />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/timeline"
+                    element={
+                        <PrivateRoute user={user}>
+                            <Timeline />
                         </PrivateRoute>
                     }
                 />
