@@ -12,18 +12,32 @@ each residential college. To streamline the housing process, the web application
 housing spreadsheets, where students can declare their group formations and suite preferences. For
 now, we will be building our site to only display Murray rooms and suites.
 
-## Setup
+## Setup and Installation
 
-Run "runserver.py" with a given port number and then in a web browser, type localhost:"PORT".
-So by running 
+First, install all necessary packages using requirements.txt:
+
 ```
-python3 runserver.py 8000
+pip install -r requirements.txt
 ```
-I should go to 
+
+Next, set up two terminals (split terminal setup recommended). On one terminal, navigate to the flask-server directory and run the command:
+
 ```
-localhost:8000
+python runserver.py 8000
 ```
-in my browser.
+Note that port 8000 is necessary to use as of the beta version.
+
+In the other terminal, navigate to roomtable_client and run:
+```
+npm install
+```
+
+Afterwards, run:
+```
+npm run dev
+```
+
+Then, in a browser, navigate to the URL given in the terminal.
 
 ## Deliverables
 
