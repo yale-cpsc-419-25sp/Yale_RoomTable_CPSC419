@@ -225,22 +225,33 @@ def review():
     all_reviews = db.session.query(SuiteReview).all()
     return render_template('reviews.html', reviews=all_reviews, suites=suites)
 
-@app.route('/api/friends', methods=['POST'])
+@app.route('/api/friends', methods=['POST', 'DELETE'])
 def add_friend():
     user_id = session.get('net_id')
     data = request.get_json()
     friend_id = data.get('friend_id')
+    
+    if request.method == "POST":
+        if user_id == friend_id:
+            return jsonify({"error": "You cannot add yourself as a friend."}), 400
 
-    if user_id == friend_id:
-        return jsonify({"error": "You cannot add yourself as a friend."}), 400
+        with db.get_session() as db_session:
+            existing = db_session.query(Friend).filter_by(user_id=user_id, friend_id=friend_id).first()
+            if existing:
+                return jsonify({"error": "You are already friends with this user."}), 400
 
-    with db.get_session() as db_session:
-        existing = db_session.query(Friend).filter_by(user_id=user_id, friend_id=friend_id).first()
-        if existing:
-            return jsonify({"error": "You are already friends with this user."}), 400
+        db.create_friendship(user_id, friend_id)
+        return jsonify({"message": "Friend added successfully"})
+    elif request.method == "DELETE":
+        if not user_id or not friend_id:
+            return jsonify({"error": "Missing user_id or friend_id"}), 400
 
-    db.create_friendship(user_id, friend_id)
-    return jsonify({"message": "Friend added successfully"})
+        try:
+            db.remove_friend(user_id, friend_id)
+            return jsonify({"message": "Friend removed successfully"})
+        except Exception as e:
+            return jsonify({"error": "Failed to remove friend"}), 500
+
 
 @app.route('/api/friends', methods=['GET'])
 def get_friends():

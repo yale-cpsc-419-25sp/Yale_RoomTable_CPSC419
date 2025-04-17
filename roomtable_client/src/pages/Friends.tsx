@@ -32,6 +32,23 @@ export default function Friends() {
     }
   };
 
+  const handleRemove = async (friend_id: string) => {
+    const res = await fetch('/api/friends', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ friend_id })
+    });
+  
+    const data = await res.json();
+    if (data.error) {
+      setError(data.error);
+    } else {
+      setError('');
+      // Remove friend from local state
+      setFriends(prev => prev.filter(fid => fid !== friend_id));
+    }
+  };
+
   return (
     <div className='flex justify-left items-center w-full mx-auto p-6'>
       <div className="mb-4">
@@ -60,11 +77,17 @@ export default function Friends() {
             </thead>
             <tbody>
               {friends.map((fid, index) => (
-              <tr key={fid} className={index % 2 === 0 ? "bg-gray-100 w-full" : "bg-gray-200 w-full"}>
-                <td className="px-4 py-2">
-                  <a href={`/friends/${fid}`}  className="text-blue-700 underline hover:text-blue-900">{fid}</a>
-                </td>
-              </tr>
+                <tr key={fid} className={index % 2 === 0 ? "bg-gray-100 w-full" : "bg-gray-200 w-full"}>
+                  <td className="px-4 py-2">
+                    <a href={`/friends/${fid}`} className="text-blue-700 underline hover:text-blue-900 mr-4">{fid}</a>
+                    <button 
+                      onClick={() => handleRemove(fid)} 
+                      className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+                    >
+                      Remove
+                    </button>
+                  </td>
+                </tr>
               ))}
             </tbody>
           </table>

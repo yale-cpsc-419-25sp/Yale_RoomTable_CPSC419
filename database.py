@@ -149,6 +149,15 @@ class Database():
 
             self.session.expire_all()
     
+    def remove_friend(self, user_id, friend_id):
+        friendship = self.session.query(Friend).filter_by(user_id=user_id, friend_id=friend_id).first()
+
+        if friendship:
+            self.session.delete(friendship)
+            self.session.commit()
+            self.session.expire_all()
+
+    
     def liked_suite_ids(self, user_id):
         preferences = self.session.query(Preference).filter_by(user_id=user_id).all()
         return [pref.suite_id for pref in preferences]
