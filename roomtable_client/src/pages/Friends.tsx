@@ -33,7 +33,7 @@ export default function Friends() {
   };
 
   return (
-    <div className='flex justify-left items-center w-full mx-auto px-6'>
+    <div className='flex justify-left items-center w-full mx-auto p-6'>
       <div className="mb-4">
         <h1 className="text-red-500 font-semibold">{error && error}</h1>
       </div>
@@ -41,7 +41,7 @@ export default function Friends() {
       <div className='mb-8'>
         <h1 className='text-3xl font-bold mb-4'>Add Friends</h1>
         <h2 className="text-lg text-gray-600 mb-4">Insert the Net ID of a Friend.</h2>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="flex justify-between items-center gap-4">
           <input
             type="text"
             value={friendId}
@@ -51,19 +51,25 @@ export default function Friends() {
           />
           <button type="submit" className="search-button">Add Friend</button>
         </form>
-        <div>
-          <h2 className="text-2xl font-semibold mb-4 pt-12">Friends List</h2>
-          <ul className="list-none space-y-2">
-            {friends.map(fid => (
-              <li key={fid}>
-                <a href={`/friends/${fid}`}  className="text-blue-800 hover:text-blue-700">{fid}</a>
-              </li>
-            ))}
-          </ul>
+      
+
+        <div className="mt-12 overflow-hidden rounded-xl shadow-md border border-gray-300">
+          <table className="text-white bg-[#00356B] w-full">
+            <thead>
+              <th className="px-4 py-2 text-left">Friends List</th>
+            </thead>
+            <tbody>
+              {friends.map((fid, index) => (
+              <tr key={fid} className={index % 2 === 0 ? "bg-gray-100 w-full" : "bg-gray-200 w-full"}>
+                <td className="px-4 py-2">
+                  <a href={`/friends/${fid}`}  className="text-blue-700 underline hover:text-blue-900">{fid}</a>
+                </td>
+              </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
-      
-      
     </div>
   );
 }
