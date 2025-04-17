@@ -122,7 +122,7 @@ const SearchPage = () => {
                 <th className="px-4 py-2 text-left">Capacity</th>
                 <th className="px-4 py-2 text-left">Singles</th>
                 <th className="px-4 py-2 text-left">Doubles</th>
-                <th className="px-4 py-2 text-left">Class Year</th>
+                {/* <th className="px-4 py-2 text-left">Class Year</th> */}
                 <th className="px-4 py-2 text-left">Residential College</th>
               </tr>
             </thead>
@@ -138,7 +138,7 @@ const SearchPage = () => {
                   <td className="px-4 py-2">{suite.capacity}</td>
                   <td className="px-4 py-2">{suite.singles}</td>
                   <td className="px-4 py-2">{suite.doubles}</td>
-                  <td className="px-4 py-2">{suite.year === 2 ? "Sophomore" : "Junior/Senior"}</td>
+                  {/* <td className="px-4 py-2">{suite.year === 2 ? "Sophomore" : "Junior/Senior"}</td> */}
                   <td className="px-4 py-2">{suite.resco?.name}</td>
                 </tr>
               ))}

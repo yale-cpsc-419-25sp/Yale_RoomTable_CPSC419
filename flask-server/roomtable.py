@@ -85,7 +85,10 @@ def api_results():
                 "name": suite.name,
                 "entryway": suite.entryway,
                 "capacity": suite.capacity,
-                "resco": {"name": suite.resco.name} if suite.resco else None
+                "resco": {"name": suite.resco.name} if suite.resco else None,
+                "year": suite.year,
+                "doubles": suite.doubles,
+                "singles": suite.singles
             }
             for suite in suites
         ]
