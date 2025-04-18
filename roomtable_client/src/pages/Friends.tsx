@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import "../../../static/search.css"
+import "../search.css"
 
 export default function Friends() {
   const [friends, setFriends] = useState([]);
