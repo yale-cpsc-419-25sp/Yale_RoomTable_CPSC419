@@ -14,20 +14,22 @@ now, we will be building our site to only display Murray rooms and suites.
 
 ## Setup and Installation
 
+Ensure that you have [Node.js](https://nodejs.org/en/download) v20+ installed on your machine.
+
 First, install all necessary packages using requirements.txt:
 
 ```
 pip install -r requirements.txt
 ```
 
-Next, set up two terminals (split terminal setup recommended). On one terminal, navigate to the flask-server directory and run the command:
+Next, set up two terminals (split terminal setup recommended). On one terminal, `cd` to the flask-server directory and run the command:
 
 ```
 python runserver.py 8000
 ```
 Note that port 8000 is necessary to use as of the beta version.
 
-In the other terminal, navigate to roomtable_client and run:
+In the other terminal, `cd` to roomtable_client and run:
 ```
 npm install
 ```
@@ -37,7 +39,7 @@ Afterwards, run:
 npm run dev
 ```
 
-Then, in a browser, navigate to the URL given in the terminal.
+Then, in a browser, navigate to `http://localhost:5173/`, the URL given in the terminal.
 
 ## Deliverables
 
