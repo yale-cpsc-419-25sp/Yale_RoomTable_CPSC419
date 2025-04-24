@@ -9,8 +9,6 @@ from sqlalchemy.orm import joinedload
 
 # from models.room import Room
 from models.review import SuiteReview
-from models.base import Base
-from models.user import User
 from models.friend import Friend
 from database import Database
 from models.suite import Suite
@@ -49,7 +47,6 @@ def login():
 
 @app.route('/api/user', methods=['GET'])
 def get_user():
-    # print(session['net_id'])
     if 'net_id' in session:
         return jsonify({'net_id': session['net_id']})
     return jsonify({'error': 'not logged in'}), 401
@@ -205,14 +202,11 @@ def review():
         review_text = request.form['review']
         overall_rating = int(request.form['rating'])
         user_id = request.form.get('user_id')
-
-        # user_id = session.get('user_id')
         
         db.create_review(
             suite_id=suite_id,
             review_text=review_text,
             overall_rating=overall_rating,
-            # type='suite_review',
             accessibility_rating=accessibility_rating,
             space_rating=space_rating,
             user_id=user_id

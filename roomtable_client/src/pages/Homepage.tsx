@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 function Homepage() {
     const [suites, setSuites] = useState([]);
 
+    // Retrieve all the current user's saved suites through flask-server
     useEffect(() => {
         fetch("http://localhost:8000/api/homepage", {
             credentials: "include"
@@ -11,13 +12,6 @@ function Homepage() {
             .then(data => setSuites(data.suites));
     }, []);
 
-    const rescoMapping = {
-        1: "Franklin",
-        2: "Berkeley",
-        3: "Branford",
-        4: "Davenport",
-        9: "Pauli Murray"
-    }
 
     return (
         <div className="p-6 max-w-8xl mx-auto">
@@ -27,7 +21,6 @@ function Homepage() {
                     <thead className="bg-[#00356B] text-white"> 
                         <tr>
                             <th className="px-4 py-2 text-left">Suite</th>
-                            {/* <th className="px-4 py-2 text-left">Entryway</th> */}
                             <th className="px-4 py-2 text-left">Capacity</th>
                             <th className="px-4 py-2 text-left">Singles</th>
                             <th className="px-4 py-2 text-left">Doubles</th>
@@ -36,8 +29,8 @@ function Homepage() {
                         </tr>
                     </thead>
                     <tbody>
+                        {/* Display all saved suites */}
                         {suites.map((suite, index) => (
-                            // <tr key={suite.id}>
                             <tr 
                                 key={suite.id}
                                 className={index % 2 === 0 ? "bg-gray-100" : "bg-gray-200"}>
@@ -48,12 +41,11 @@ function Homepage() {
                                     {suite.name}
                                     </a>
                                 </td>
-                                {/* <td  className="px-4 py-2">{suite.entryway}</td> */}
                                 <td  className="px-4 py-2">{suite.capacity}</td>
                                 <td  className="px-4 py-2">{suite.singles}</td>
                                 <td  className="px-4 py-2">{suite.doubles}</td>
                                 <td  className="px-4 py-2">{suite.year === 2 ? "Sophomore" : "Junior/Senior"}</td>
-                                <td className="px-4 py-2">{rescoMapping[suite.resco_id] || 'Unknown'}</td>
+                                <td className="px-4 py-2">{suite.resco_name || 'Unknown'}</td>
                             </tr>
                         ))}
                     </tbody>

@@ -1,5 +1,4 @@
-import React from 'react';
-
+// Login button component (for CAS authentication on the landing page)
 const LoginButton = () => {
     const handleLogin = () => {
         window.location.href = 'http://localhost:8000/api/login';

@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 function SummaryPage() {
     const { suite_id } = useParams();
-    const navigate = useNavigate();
     const [suite, setSuite] = useState(null);
     const [reviews, setReviews] = useState([]);
     const [formData, setFormData] = useState({
@@ -16,6 +15,7 @@ function SummaryPage() {
     });
     const [isSaved, setIsSaved] = useState(false);
   
+    // Fetch suite data from flask-server
     useEffect(() => {
         fetch(`http://localhost:8000/api/summary/${suite_id}`, { credentials: "include" })
           .then(res => res.json())
@@ -96,7 +96,6 @@ function SummaryPage() {
                   <tr>
                       <th className="px-4 py-2 text-left">Name</th>
                       <th className="px-4 py-2 text-left">Residential College</th>
-                      {/* <th className="px-4 py-2 text-left">Entryway</th> */}
                       <th className="px-4 py-2 text-left">Capacity</th>
                       <th className="px-4 py-2 text-left">Singles</th>
                       <th className="px-4 py-2 text-left">Doubles</th>
@@ -107,7 +106,6 @@ function SummaryPage() {
                   <tr className="bg-gray-100">
                       <td className="px-4 py-2">{suite.name}</td>
                       <td className="px-4 py-2">{suite.resco}</td>
-                      {/* <td className="px-4 py-2">{suite.entryway}</td> */}
                       <td className="px-4 py-2">{suite.capacity}</td>
                       <td className="px-4 py-2">{suite.singles}</td>
                       <td className="px-4 py-2">{suite.doubles}</td>
@@ -196,16 +194,6 @@ function SummaryPage() {
           </button>
         </form>
       </div>
-
-      {/* <div className="mt-6 flex gap-4">
-            
-        <button
-          onClick={() => navigate("/search")}
-          className="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700"
-        >
-          Back to Search
-        </button>
-      </div> */}
     </div>
   );
 }

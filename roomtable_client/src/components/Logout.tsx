@@ -1,4 +1,5 @@
 const handleLogout = async () => {
+  // Logout through flask-server
   try {
     const response = await fetch('/api/logout', {
       method: 'POST',

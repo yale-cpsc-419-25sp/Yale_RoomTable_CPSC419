@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import "../search.css"
 
 export default function Friends() {
@@ -6,6 +6,7 @@ export default function Friends() {
   const [friendId, setFriendId] = useState('');
   const [error, setError] = useState('');
 
+  // Fetch list of friends from flask-server
   useEffect(() => {
     fetch('/api/friends')
       .then(res => res.json())
@@ -15,6 +16,7 @@ export default function Friends() {
       });
   }, []);
 
+  // Handle form submission to add a friend
   const handleSubmit = async (e) => {
     e.preventDefault();
     const res = await fetch('/api/friends', {
@@ -32,6 +34,7 @@ export default function Friends() {
     }
   };
 
+  // Handle removing a friend
   const handleRemove = async (friend_id: string) => {
     const res = await fetch('/api/friends', {
       method: 'DELETE',
@@ -58,6 +61,7 @@ export default function Friends() {
       <div className='mb-8'>
         <h1 className='text-3xl font-bold mb-4'>Add Friends</h1>
         <h2 className="text-lg text-gray-600 mb-4">Insert the Net ID of a Friend.</h2>
+        {/* Form to add friend using their net id through handleSubmit */}
         <form onSubmit={handleSubmit} className="flex justify-between items-center gap-4">
           <input
             type="text"
@@ -76,6 +80,7 @@ export default function Friends() {
               <th className="px-4 py-2 text-left">Friends List</th>
             </thead>
             <tbody>
+              {/* Display all friends of the current user and allow them to remove those friends */}
               {friends.map((fid, index) => (
                 <tr key={fid} className={index % 2 === 0 ? "bg-gray-100 w-full" : "bg-gray-200 w-full"}>
                   <td className="px-4 py-2">

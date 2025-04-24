@@ -1,7 +1,7 @@
-import React from 'react';
 import { ReactTyped } from 'react-typed';
 import LoginButton from './LoginButton';
 
+// Rotating text component on the landing page
 const Hero = () => {
     return (
         <div className='max-w-[800px] mt-[-96px] w-full h-screen mx-auto text-center flex flex-col justify-center'>

@@ -19,6 +19,7 @@ const Navbar = ({ user }) => {
                 
             </div>
             <div className="flex items-center space-x-4">
+            { /* Login button replaced with Timeline if logged in */} 
             {!user ? (
                 <>
                 <a href="http://localhost:8000/api/login" className="p-4">

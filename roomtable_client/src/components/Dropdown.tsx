@@ -1,4 +1,5 @@
-// https://tailwindcss.com/plus/ui-blocks/application-ui/elements/dropdowns
+//  Credit to Tailwind CSS for much of the Dropdown component:
+//  https://tailwindcss.com/plus/ui-blocks/application-ui/elements/dropdowns
 import { Menu, Transition, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import handleLogout from './Logout'
@@ -40,14 +41,6 @@ export default function UserDropdown() {
               Friends
             </a>
           </MenuItem>
-          {/* <MenuItem>
-            <a
-              href="/search"
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-            >
-              Search
-            </a>
-          </MenuItem> */}
           <MenuItem>
             <a
               href="/review"

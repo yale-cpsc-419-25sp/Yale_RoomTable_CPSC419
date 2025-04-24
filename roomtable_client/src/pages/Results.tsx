@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 const ResultsPage = () => {
   const [results, setResults] = useState([]);
   const [filters, setFilters] = useState({});
   const location = useLocation();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
@@ -86,10 +85,6 @@ const ResultsPage = () => {
         <p>No suites match the search criteria.</p>
       )}
 
-      {/* <button onClick={() => navigate("/search")}   className="mt-6 bg-[#00356B] hover:bg-[#00509E] text-white font-bold py-2 px-6 rounded shadow-md transition-all"
-      >
-        Back to Search
-      </button> */}
     </div>
   );
 };

@@ -1,5 +1,4 @@
-// import { useEffect, useState } from "react";
-
+// Render Google Calendar iframe
 function Timeline() {
     return (
         <div className="max-w-7xl mx-auto flex flex-col items-center pt-8">

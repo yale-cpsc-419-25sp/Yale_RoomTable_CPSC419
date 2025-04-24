@@ -11,16 +11,18 @@ import FriendPage from "./pages/FriendPage";
 import ReviewForm from "./pages/Reviews";
 import Timeline from "./pages/Timeline";
 
+// Protect routes that require authentication
+// Redirects to the login page if not logged in, otherwise renders the page
 function PrivateRoute({ user, children }) {
-    // console.log("user:", user);
-    // console.log("child:", children);
     return user ? children : <Navigate to="/" />;
 };
 
 function App() {
+    // Set default states for user and loading
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    // Fetch user data from flask-server
     useEffect(() => {
         fetch("http://localhost:8000/api/user", {
             method: "GET",
@@ -30,29 +32,37 @@ function App() {
             if (response.ok) return response.json();
             throw new Error("Not logged in.");
         })
+        // Set fetched data
         .then(data => {
             setUser(data.net_id);
         })
         .catch(() => {
             setUser(null);
         })
+        // Set loading to false, signifying that the app can be safely rendered
         .finally(() => {
             setLoading(false);
         });
     }, []);
 
+    // If not done fetching user info, do not render
     if (loading) return;
 
+    // Render page
     return (
         <Router>
+            { /* See components/Navbar.tsx for more details */ }
             <Navbar user={user} />
             <Routes>
                 <Route
                     path="/"
                     element={
+                        // If user is logged in, redirect to search page instead of login
+                        // Otherwise, render the pretty landing page
                         user ? <Navigate to="/search"> </Navigate>: <Hero />
                     }
                 />
+                { /* All routes below are protected as private routes (login-only pages) */ }
                 <Route
                     path="/search"
                     element={
