@@ -5,6 +5,7 @@ export default function Friends() {
   const [friends, setFriends] = useState([]);
   const [friendId, setFriendId] = useState('');
   const [error, setError] = useState('');
+  const [requests, setRequests] = useState([]);
 
   // Fetch list of friends from flask-server
   useEffect(() => {
@@ -13,6 +14,13 @@ export default function Friends() {
       .then(data => {
         if (data.error) setError(data.error);
         else setFriends(data.friends);
+      });
+      // Fetch list of friend requests from flask-server
+      fetch('/api/requests')
+      .then(res2 => res2.json())
+      .then(data2 => {
+        if (data2.error) setError(data2.error);
+        else setRequests(data2.requests);
       });
   }, []);
 
@@ -30,7 +38,8 @@ export default function Friends() {
     } else {
       setError('');
       setFriendId('');
-      setFriends(prev => [...prev, friendId]);
+      // Add friend requests to local state
+      setRequests(prev => [...prev, { friend_id: friendId, status: 'sent' }]);
     }
   };
 
@@ -49,6 +58,41 @@ export default function Friends() {
       setError('');
       // Remove friend from local state
       setFriends(prev => prev.filter(fid => fid !== friend_id));
+    }
+  };
+
+  const handleDenyRequest = async (friend_id: string) => {
+    const res = await fetch('/api/requests', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ friend_id })
+    });
+    const data = await res.json();
+    if (data.error) {
+      setError(data.error);
+    }
+    else {
+      setError('');
+      // Remove request from local state
+      setRequests(prev => prev.filter(req => req.friend_id !== friend_id));
+    }
+  };
+
+  const handleAcceptRequest = async (friend_id: string) => {
+    const res = await fetch('/api/requests', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ friend_id })
+    });
+    const data = await res.json();
+    if (data.error) {
+      setError(data.error);
+    } else {
+      setError('');
+      // Remove request from local state
+      setRequests(prev => prev.filter(req => req.friend_id !== friend_id));
+      // Add friend to local state
+      setFriends(prev => [...prev, friend_id]);
     }
   };
 
@@ -91,6 +135,48 @@ export default function Friends() {
                     >
                       Remove
                     </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <table className="text-white bg-[#00356B] w-full">
+            <thead>
+              <th className="px-4 py-2 text-left">Friend Requests</th>
+            </thead>
+            <tbody>
+              {/* Display all friends of the current user and allow them to remove those friends */}
+              {requests.map((req, index) => (
+                <tr key={req.friend_id} className={index % 2 === 0 ? "bg-gray-100 w-full" : "bg-gray-200 w-full"}>
+                  <td className="px-4 py-2">
+                    <a className="text-blue-700 underline hover:text-blue-900 mr-4">{req.friend_id}</a>
+                    { /* If incoming request, user can accept or deny the request */}
+                    { /* https://legacy.reactjs.org/docs/conditional-rendering.html */}
+                    {req.status == 'received' ? (
+                    <>
+                      <button 
+                        onClick={() => handleDenyRequest(req.friend_id)} 
+                        className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+                      >
+                        Deny Request
+                      </button>
+                      <button 
+                        onClick={() => handleAcceptRequest(req.friend_id)} 
+                        className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600"
+                      >
+                        Accept Request
+                      </button>
+                    </>
+                  ) : 
+                  /* If outgoing request, user can rescind the request */
+                  (
+                    <button 
+                      onClick={() => handleDenyRequest(req.friend_id)} 
+                      className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+                    >
+                      Rescind Request
+                    </button>
+                  )}
                   </td>
                 </tr>
               ))}

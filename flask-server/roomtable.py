@@ -10,6 +10,7 @@ from sqlalchemy.orm import joinedload
 # from models.room import Room
 from models.review import SuiteReview
 from models.friend import Friend
+from models.requests import Requests
 from database import Database
 from models.suite import Suite
 from models.preference import Preference
@@ -235,7 +236,7 @@ def add_friend():
                 return jsonify({"error": "You are already friends with this user."}), 400
 
         db.create_friendship(user_id, friend_id)
-        return jsonify({"message": "Friend added successfully"})
+        return jsonify({"message": "Friend request sent successfully."})
     elif request.method == "DELETE":
         if not user_id or not friend_id:
             return jsonify({"error": "Missing user_id or friend_id"}), 400
@@ -300,3 +301,45 @@ def unsave_suite(suite_id):
     # with db.get_session() as db_session:
     db.remove_suite(user_id, suite_id)
     return jsonify({'message': 'Suite unsaved successfully'})
+
+@app.route('/api/requests', methods=['GET', 'POST', 'DELETE'])
+def get_requests():
+    if request.method == "DELETE":
+        # Delete the request
+        user_id = session.get('net_id')
+        data = request.get_json()
+        friend_id = data.get('friend_id')
+        # Remove the request from the database
+        db.remove_friend_request(user_id, friend_id)
+        return jsonify({"message": "Friend request deleted successfully"})
+    elif request.method == "POST":
+        user_id = session.get('net_id')
+        data = request.get_json()
+        friend_id = data.get('friend_id')
+        db.accept_friend_request(user_id, friend_id)
+        return jsonify({"message": "Friend request accepted successfully"})
+    else:
+        user_id = session.get('net_id')
+        if not user_id:
+            return jsonify({"error": "Not logged in"}), 401
+
+        with db.get_session() as db_session:
+            # Get requests from both the user and the friend
+            requests = db_session.query(Requests).filter(
+                (Requests.user_id == user_id) | (Requests.friend_id == user_id)
+            ).all()
+            requests_list = []
+            for req in requests:
+                # Differentiate between requests sent and requests received
+                if req.user_id == user_id:
+                    requests_list.append({
+                        "friend_id": req.friend_id,
+                        "status": "sent"
+                    })
+                else:
+                    requests_list.append({
+                        "friend_id": req.user_id,
+                        "status": "received"
+                    })
+            return jsonify({"requests": requests_list})
+    

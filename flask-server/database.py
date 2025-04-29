@@ -9,6 +9,7 @@ from models.resco import ResidentialCollege
 from models.suite import Suite
 from models.review import SuiteReview
 from models.friend import Friend
+from models.requests import Requests
 from models.preference import Preference
 
 class Database():
@@ -94,7 +95,10 @@ class Database():
     
     def create_friendship(self, user_id, friend_id):
         with self.get_session() as session:
-            new_friend = Friend(user_id=user_id, friend_id=friend_id)
+            new_friend = Requests(
+                user_id=user_id,
+                friend_id=friend_id
+            )
             session.add(new_friend)
             session.commit()
     
@@ -142,6 +146,29 @@ class Database():
 
             if friendship:
                 session.delete(friendship)
+                session.commit()
+                session.expire_all()
+
+    def remove_friend_request(self, user_id, friend_id):
+        with self.get_session() as session:
+            friend_request = session.query(Requests).filter_by(user_id=user_id, friend_id=friend_id).first()
+
+            if friend_request:
+                session.delete(friend_request)
+                session.commit()
+                session.expire_all()
+
+    def accept_friend_request(self, user_id, friend_id):
+        with self.get_session() as session:
+            friend_request = session.query(Requests).filter_by(user_id=user_id, friend_id=friend_id).first()
+
+            if friend_request:
+                new_friendship = Friend(
+                    user_id=user_id,
+                    friend_id=friend_id
+                )
+                session.add(new_friendship)
+                session.delete(friend_request)
                 session.commit()
                 session.expire_all()
     
