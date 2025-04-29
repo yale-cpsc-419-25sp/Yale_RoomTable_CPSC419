@@ -95,6 +95,12 @@ class Database():
     
     def create_friendship(self, user_id, friend_id):
         with self.get_session() as session:
+            # Check if the friendship already exists
+            existing_friendship = session.query(Friend).filter(
+                (Friend.user_id == user_id) | (Friend.friend_id == friend_id)
+            ).first()
+            if existing_friendship:
+                return
             new_friend = Requests(
                 user_id=user_id,
                 friend_id=friend_id

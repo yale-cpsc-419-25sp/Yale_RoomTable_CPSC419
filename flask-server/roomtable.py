@@ -234,6 +234,10 @@ def add_friend():
             existing = db_session.query(Friend).filter_by(user_id=user_id, friend_id=friend_id).first()
             if existing:
                 return jsonify({"error": "You are already friends with this user."}), 400
+            # Check other direction
+            existing = db_session.query(Friend).filter_by(user_id=friend_id, friend_id=user_id).first()
+            if existing:
+                return jsonify({"error": "This user is already your friend."}), 400
 
         db.create_friendship(user_id, friend_id)
         return jsonify({"message": "Friend request sent successfully."})
