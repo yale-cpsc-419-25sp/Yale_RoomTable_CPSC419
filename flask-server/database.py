@@ -148,6 +148,12 @@ class Database():
                 session.delete(friendship)
                 session.commit()
                 session.expire_all()
+            # Check other direction
+            friendship = session.query(Friend).filter_by(user_id=friend_id, friend_id=user_id).first()
+            if friendship:
+                session.delete(friendship)
+                session.commit()
+                session.expire_all()
 
     def remove_friend_request(self, user_id, friend_id):
         with self.get_session() as session:

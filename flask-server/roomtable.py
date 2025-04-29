@@ -255,7 +255,7 @@ def get_friends():
         return jsonify({"error": "Not logged in"}), 401
 
     with db.get_session() as db_session:
-        friends = db_session.query(Friend).filter(Friend.user_id == user_id).all()
+        friends = db_session.query(Friend).filter((Friend.user_id == user_id) | (Friend.friend_id == user_id)).all()
         friend_list = [f.friend_id for f in friends]
         return jsonify({"friends": friend_list})
 
