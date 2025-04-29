@@ -273,6 +273,17 @@ def get_friends():
 def friend_preferences(friend_id=None):
     if friend_id:
         with db.get_session() as db_session:
+            user_id = session.get('net_id')
+            # Check if the friend_id is actually a friend of the current user
+            is_friend = db_session.query(Friend).filter(
+                ((Friend.user_id == user_id) & (Friend.friend_id == friend_id)) |
+                ((Friend.user_id == friend_id) & (Friend.friend_id == user_id))
+            ).first()
+
+        if not is_friend:
+            return jsonify({"error": "You are not friends with this user"}), 403
+
+        with db.get_session() as db_session:
             # Query the friend's saved suites
             suites = db_session.query(Suite).join(Preference).filter(Preference.user_id == friend_id).all()
             # Get the ranks for each suite
