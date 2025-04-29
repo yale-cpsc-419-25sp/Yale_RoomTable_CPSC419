@@ -260,7 +260,13 @@ def get_friends():
 
     with db.get_session() as db_session:
         friends = db_session.query(Friend).filter((Friend.user_id == user_id) | (Friend.friend_id == user_id)).all()
-        friend_list = [f.friend_id for f in friends]
+        
+        friend_list = []
+        for friend in friends:
+            if friend.user_id == user_id:
+                friend_list.append(friend.friend_id)
+            else:
+                friend_list.append(friend.user_id)
         return jsonify({"friends": friend_list})
 
 @app.route('/api/friends/<string:friend_id>', methods=["GET"])
