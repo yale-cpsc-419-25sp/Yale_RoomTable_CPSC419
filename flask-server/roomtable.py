@@ -15,6 +15,8 @@ from database import Database
 from models.suite import Suite
 from models.preference import Preference
 
+import requests
+
 db = Database()
 
 app = Flask(__name__, template_folder='./templates', static_folder='./build/static')
@@ -363,4 +365,64 @@ def get_requests():
                         "status": "received"
                     })
             return jsonify({"requests": requests_list})
+        
+
+@app.route('/api/friends/search', methods=['GET'])
+def search_friends():
+    query = request.args.get('query', '').strip()
+    print(f"Searching Yalies for: '{query}'")
     
+    if len(query) < 2:
+        return jsonify({"results": []})
+    
+    try:
+        # Minimal valid request format
+        response = requests.post(
+            "https://api.yalies.io/v2/people",
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {environ.get('YALIES_API_KEY')}",
+            },
+            json={
+                "query": query,  # Let the API handle the search logic
+                "page_size": 20  # Return more results for better matches
+            },
+            timeout=5
+        )
+        
+        print(f"API response status: {response.status_code}")
+        print(f"API response sample: {response.text[:200]}...")
+        
+        response.raise_for_status()
+        people = response.json()
+        
+        # Format results
+        results = []
+        for p in people:
+            # Handle different name formats
+            first_name = p.get('preferred_name') or p.get('first_name') or ''
+            last_name = p.get('last_name') or ''
+            name = f"{first_name} {last_name}".strip()
+            
+            if not name or not p.get('netid'):
+                continue
+                
+            results.append({
+                "netid": p["netid"],
+                "name": name,
+                "college": p.get("college", "Unknown"),
+                "year": p.get("year", "Unknown")
+            })
+        
+        print(f"Found {len(results)} results for '{query}'")
+        return jsonify({"results": results})
+        
+    except requests.exceptions.HTTPError as e:
+        error_msg = f"HTTP {e.response.status_code}"
+        if e.response.text:
+            error_msg += f": {e.response.text[:200]}"
+        print(f"API Error: {error_msg}")
+        return jsonify({"results": [], "error": "Search failed"})
+    except Exception as e:
+        print(f"Search error: {str(e)}")
+        return jsonify({"results": [], "error": "Search failed"})
