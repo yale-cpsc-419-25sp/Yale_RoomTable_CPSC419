@@ -30,6 +30,7 @@ export default function Friends() {
 
   // Handle search query changes with debounce
   useEffect(() => {
+    // If less than 2 characters inputed in the query, clear results (too general)
     if (searchQuery.trim().length < 2) {
       setSearchResults([]);
       return;
@@ -37,10 +38,13 @@ export default function Friends() {
 
     setIsSearching(true);
     
+    // Clear previous timeout if it exists
     if (searchTimeoutRef.current) {
       clearTimeout(searchTimeoutRef.current);
     }
 
+    // Set a timeout while results are fetched, preventing too many requests 
+    // from being sent to the server while user types
     searchTimeoutRef.current = setTimeout(() => {
       fetch(`/api/friends/search?query=${encodeURIComponent(searchQuery)}`)
         .then(res => res.json())
@@ -60,6 +64,7 @@ export default function Friends() {
         .finally(() => setIsSearching(false));
     }, 300);
 
+    // Make sure the previous timeout is cleared for the next search
     return () => {
       if (searchTimeoutRef.current) {
         clearTimeout(searchTimeoutRef.current);
@@ -81,6 +86,7 @@ export default function Friends() {
         setError(data.error);
       } else {
         setError('');
+        // Display success message (times out after 3 seconds)
         setSuccessMessage(`Friend request sent to ${name}!`);
         setTimeout(() => setSuccessMessage(''), 3000);
         setRequests(prev => [...prev, { friend_id: netid, status: 'sent' }]);
@@ -156,6 +162,7 @@ export default function Friends() {
     <div className='flex justify-left items-center w-full mx-auto p-6'>
       <div className="mb-4">
         <h1 className="text-red-500 font-semibold">{error && error}</h1>
+        {/* Success message for friend request */}
         {successMessage && (
           <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-md shadow-lg">
             {successMessage}
@@ -177,6 +184,7 @@ export default function Friends() {
               placeholder="Search by name..."
               className="w-full p-3 border border-gray-300 rounded-md text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+            {/* Loading spinner */}
             {isSearching && (
               <div className="absolute right-3 top-3">
                 <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>

@@ -12,26 +12,45 @@ each residential college. To streamline the housing process, the web application
 housing spreadsheets, where students can declare their group formations and suite preferences. For
 now, we will be building our site to only display Murray rooms and suites.
 
-## Requirements
+## Setup and Installation
 
+Create a .env file in the root directory. In it, place the following line and save:
+```
+YALIES_API_KEY=pK5vX8W0XJzJ27K__BOCo1RvgNb7yt21f7vV1M6ACpdQw8xxOfNs-w
+```
 
-## Setup
+Ensure that you have [Node.js](https://nodejs.org/en/download) v20+ installed on your machine.
 
-Run "runserver.py" with a given port number and then in a web browser, type localhost:"PORT".
-So by running 
+First, install all necessary packages using requirements.txt:
+
 ```
-python3 runserver.py 8000
+pip install -r requirements.txt
 ```
-I should go to 
+
+Next, set up two terminals (split terminal setup recommended). On one terminal, `cd` to the flask-server directory and run the command:
+
 ```
-localhost:8000
+python runserver.py 8000
 ```
-in my browser.
+Note that port 8000 is necessary to use as of the beta version.
+
+In the other terminal, `cd` to roomtable_client and run:
+```
+npm install
+```
+
+Afterwards, run:
+```
+npm run dev
+```
+
+Then, in a browser, navigate to `http://localhost:5173/`, the URL given in the terminal.
 
 ## Deliverables
 
 ### Final Version: May 1st, 2025
 a. Improve on any known bugs
+
 b. Strengthen stability of website
 
 ### Beta Version: April 18th, 2025

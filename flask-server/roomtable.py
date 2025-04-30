@@ -6,8 +6,8 @@ from flask_cors import CORS
 from cas import CASClient
 from sqlalchemy import func
 from sqlalchemy.orm import joinedload
+from dotenv import load_dotenv
 
-# from models.room import Room
 from models.review import SuiteReview
 from models.friend import Friend
 from models.requests import Requests
@@ -25,6 +25,7 @@ CORS(app, resources={r"/api/*": {"origins": "http://localhost:5173"}}, supports_
 
 # https://stackoverflow.com/questions/67439625/python-equivalent-of-process-env-port-3000
 port = int(environ.get('PORT', 8000))
+load_dotenv()
 
 CAS_SERVICE_URL = "http://localhost:" + str(port) + "/api/login"
 CAS_SERVER_URL = "https://secure.its.yale.edu/cas/login"
@@ -238,8 +239,22 @@ def add_friend():
                 return jsonify({"error": "You are already friends with this user."}), 400
             # Check other direction
             existing = db_session.query(Friend).filter_by(user_id=friend_id, friend_id=user_id).first()
+            
             if existing:
                 return jsonify({"error": "This user is already your friend."}), 400
+            
+            # Check if a friend request already exists
+            existing_request = db_session.query(Requests).filter_by(
+                user_id=user_id, friend_id=friend_id
+            ).first()
+            if existing_request:
+                return jsonify({"error": "Friend request already sent."}), 400
+            # Check if a friend request already exists in the other direction
+            existing_request = db_session.query(Requests).filter_by(
+                user_id=friend_id, friend_id=user_id
+            ).first()
+            if existing_request:
+                return jsonify({"error": "Friend request already sent."}), 400
 
         db.create_friendship(user_id, friend_id)
         return jsonify({"message": "Friend request sent successfully."})
@@ -370,8 +385,8 @@ def get_requests():
 @app.route('/api/friends/search', methods=['GET'])
 def search_friends():
     query = request.args.get('query', '').strip()
-    print(f"Searching Yalies for: '{query}'")
     
+    # Make sure query is long enough to get reasonable results
     if len(query) < 2:
         return jsonify({"results": []})
     
@@ -389,9 +404,6 @@ def search_friends():
             },
             timeout=5
         )
-        
-        print(f"API response status: {response.status_code}")
-        print(f"API response sample: {response.text[:200]}...")
         
         response.raise_for_status()
         people = response.json()
@@ -414,9 +426,9 @@ def search_friends():
                 "year": p.get("year", "Unknown")
             })
         
-        print(f"Found {len(results)} results for '{query}'")
         return jsonify({"results": results})
         
+    # Catch errors associated with being unable to access the API request
     except requests.exceptions.HTTPError as e:
         error_msg = f"HTTP {e.response.status_code}"
         if e.response.text:

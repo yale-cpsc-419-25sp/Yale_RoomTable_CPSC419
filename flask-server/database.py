@@ -178,6 +178,7 @@ class Database():
 
     def accept_friend_request(self, user_id, friend_id):
         with self.get_session() as session:
+
             friend_request = session.query(Requests).filter_by(user_id=user_id, friend_id=friend_id).first()
 
             if friend_request:
