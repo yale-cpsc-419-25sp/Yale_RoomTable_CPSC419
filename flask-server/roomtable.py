@@ -80,8 +80,19 @@ def api_results():
         
         suites = query.all()
 
-        suites_dicts = [
-            {
+        suites_dicts = []
+        for suite in suites:
+            reviews = db_session.query(SuiteReview).filter(SuiteReview.suite_id==suite.id).all()
+            num_reviews = len(reviews)
+
+            if num_reviews > 0:
+                overall = sum([r.overall_rating for r in reviews]) / num_reviews
+                accessibility = sum([r.accessibility_rating for r in reviews]) / num_reviews
+                space = sum([r.space_rating for r in reviews]) / num_reviews
+            else:
+                overall = accessibility = space = 0.0
+            
+            suites_dicts.append({
                 "id": suite.id,
                 "name": suite.name,
                 "entryway": suite.entryway,
@@ -89,10 +100,11 @@ def api_results():
                 "resco": {"name": suite.resco.name} if suite.resco else None,
                 "year": suite.year,
                 "doubles": suite.doubles,
-                "singles": suite.singles
-            }
-            for suite in suites
-        ]
+                "singles": suite.singles,
+                "overall": overall,
+                "accessibility": accessibility,
+                "space": space,
+            })
 
         return jsonify({"suites": suites_dicts})
 

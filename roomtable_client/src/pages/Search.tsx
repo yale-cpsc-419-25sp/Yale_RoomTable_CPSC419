@@ -14,6 +14,13 @@ const SearchPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  // Convert rating (0–5) to a pastel color on red-to-green HSL gradient
+  const getRatingColor = (rating) => {
+    if (rating == null) return "#ddd"; 
+    const hue = (rating / 5) * 120; 
+    return `hsl(${hue}, 50%, 80%)`;
+  };
+
   // Redirect to default filters on first load if none are present
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
@@ -122,6 +129,9 @@ const SearchPage = () => {
                 <th className="px-4 py-2 text-left">Singles</th>
                 <th className="px-4 py-2 text-left">Doubles</th>
                 <th className="px-4 py-2 text-left">Residential College</th>
+                <th className="px-4 py-2 text-left">Overall Rating</th>
+                <th className="px-4 py-2 text-left">Accessibility Rating</th>
+                <th className="px-4 py-2 text-left">Space Rating</th>
               </tr>
             </thead>
             <tbody>
@@ -136,6 +146,30 @@ const SearchPage = () => {
                   <td className="px-4 py-2">{suite.singles}</td>
                   <td className="px-4 py-2">{suite.doubles}</td>
                   <td className="px-4 py-2">{suite.resco?.name}</td>
+                  <td className="px-4 py-2">
+                    <span
+                      className="inline-block text-white text-sm font-semibold px-2 py-1 rounded-full"
+                      style={{ backgroundColor: getRatingColor(suite.overall), minWidth: "2.5rem", textAlign: "center", color: 'black'}}
+                    >
+                      {suite.overall?.toFixed(1)}
+                    </span>
+                  </td>
+                  <td className="px-4 py-2">
+                    <span
+                      className="inline-block text-white text-sm font-semibold px-2 py-1 rounded-full"
+                      style={{ backgroundColor: getRatingColor(suite.accessibility), minWidth: "2.5rem", textAlign: "center", color: 'black'}}
+                    >
+                      {suite.accessibility?.toFixed(1)}
+                    </span>
+                  </td>
+                  <td className="px-4 py-2">
+                    <span
+                      className="inline-block text-white text-sm font-semibold px-2 py-1 rounded-full"
+                      style={{ backgroundColor: getRatingColor(suite.space), minWidth: "2.5rem", textAlign: "center", color: 'black'}}
+                    >
+                      {suite.space?.toFixed(1)}
+                    </span>
+                  </td>
                 </tr>
               ))}
             </tbody>
