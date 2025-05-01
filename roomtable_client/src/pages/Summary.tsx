@@ -14,6 +14,7 @@ function SummaryPage() {
         user_id: '',
     });
     const [isSaved, setIsSaved] = useState(false);
+    const [successMessage, setSuccessMessage] = useState("");
   
     // Fetch suite data from flask-server
     useEffect(() => {
@@ -40,13 +41,14 @@ function SummaryPage() {
         const res = await fetch(`http://localhost:8000/api/summary/${suite_id}`, { credentials: "include" });
         const data = await res.json();
         setReviews(data.reviews);
-    
+        setSuccessMessage("Submitted!");
+
         // Optionally clear the form:
         setFormData(prev => ({
             ...prev,
             accessibility: "",
             space: "",
-            rating: "",
+            overall: "",
             review: "",
         }));
     };
@@ -81,6 +83,10 @@ function SummaryPage() {
 
     return (
         <div className="px-6 max-w-5xl mx-auto">
+            <link
+              rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+            />
             <div className="flex justify-between items-center mb-4">
               <h1 className="text-3xl font-bold">Suite Summary</h1>
               <button
@@ -116,83 +122,105 @@ function SummaryPage() {
             </div>
             
 
-        <img src={floorPlans} alt="Suite Floorplan" className="w-full h-auto mb-6 rounded-md shadow-md" />
+        <img src={floorPlans} alt="Suite Floorplan" className="w-full h-auto mt-6 mb-6 rounded-md shadow-md" />
         <div className="mb-6">
-            <h2 className="text-2xl font-semibold mb-2">Reviews</h2>
-                {reviews.length ? (
-                    reviews.map((r, i) => (
-                        <div
-                        key={i}
-                        className="border border-gray-300 rounded-md p-4 mb-4 bg-gray-50 shadow-sm"
-                        >
-                            <p><strong>Overall Rating: </strong>{r.overall_rating}</p>
-                            <p><strong>Accessibility Rating: </strong>{r.accessibility_rating}</p>
-                            <p><strong>Space Rating: </strong>{r.space_rating}</p>
-                            <p>{r.review_text || "N/A"}</p>
-                        </div>
-                    )) 
-                ) : (
-
-                    <p className="text-gray-500">No reviews.</p>
-                 )}
+          <h2 className="text-2xl font-semibold mb-2">Reviews</h2>
+          {reviews.length ? (
+            reviews.map((r, i) => (
+              <div
+                key={i}
+                className="border border-gray-300 rounded-md p-4 mb-4 bg-gray-50 shadow-sm"
+              >
+                <div className="mb-2">
+                  <strong className="mr-2">Overall </strong>
+                  {[1, 2, 3, 4, 5].map((val) => (
+                    <span
+                      key={val}
+                      className={`fa-star fa text-yellow-400 ${
+                        r.overall_rating >= val ? "fas" : "far text-gray-300"
+                      }`}
+                    ></span>
+                  ))}
+                </div>
+                <div className="mb-2">
+                  <strong className="mr-2">Accessibility </strong>
+                  {[1, 2, 3, 4, 5].map((val) => (
+                    <span
+                      key={val}
+                      className={`fa-star fa text-yellow-400 ${
+                        r.accessibility_rating >= val ? "fas" : "far text-gray-300"
+                      }`}
+                    ></span>
+                  ))}
+                </div>
+                <div className="mb-6">
+                  <strong className="mr-2">Space </strong>
+                  {[1, 2, 3, 4, 5].map((val) => (
+                    <span
+                      key={val}
+                      className={`fa-star fa text-yellow-400 ${
+                        r.space_rating >= val ? "fas" : "far text-gray-300"
+                      }`}
+                    ></span>
+                  ))}
+                </div>
+                <p>{r.review_text || "N/A"}</p>
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-500">No reviews.</p>
+          )}
         </div>
-        <div className="bg-white p-6 rounded-md shadow-md border border-gray-300">
-        <h2 className="text-xl font-semibold mb-4">Add a Review</h2>
+
+      
+      <div className="p-6 max-w-6xl mx-auto bg-white shadow-lg rounded-lg">
+        <h1 className="text-2xl font-bold mb-4">Submit a Review</h1>
         <form onSubmit={handleSubmitReview} className="space-y-4">
-          <div>
-            <label className="block font-medium">Accessibility (1–5)</label>
-            <input
-              type="number"
-              name="accessibility"
-              min="1"
-              max="5"
-              required
-              value={formData.accessibility ?? ""}
-              onChange={handleChange}
-              className="w-full border px-3 py-2 rounded-md"
-            />
+        {['overall', 'accessibility', 'space'].map((field) => (
+          <div className="rating-group mb-4 flex items-center" key={field}>
+            <label className="block font-medium mb-1 mr-6">
+              {field.charAt(0).toUpperCase() + field.slice(1)}
+            </label>
+            <div className="flex space-x-1">
+              {[1, 2, 3, 4, 5].map((val) => (
+                <label key={val} className="cursor-pointer">
+                  <input
+                    type="radio"
+                    name={field}
+                    value={val}
+                    checked={formData[field] === String(val)}
+                    onChange={handleChange}
+                    className="hidden"
+                  />
+                  <span
+                    className={`fa-star fa text-xl ${
+                      Number(formData[field]) >= val ? "fas text-yellow-400" : "far text-gray-300"
+                    }`}
+                  ></span>
+                </label>
+              ))}
+            </div>
           </div>
+          ))}
           <div>
-            <label className="block font-medium">Space (1–5)</label>
-            <input
-              type="number"
-              name="space"
-              min="1"
-              max="5"
-              required
-              value={formData.space ?? ""}
-              onChange={handleChange}
-              className="w-full border px-3 py-2 rounded-md"
-            />
+          <textarea
+            name="review"
+            value={formData.review}
+            onChange={handleChange}
+            rows="4"
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+            placeholder="Write your review here..."
+          />
           </div>
-          <div>
-            <label className="block font-medium">Overall Rating (1–5)</label>
-            <input
-              type="number"
-              name="rating"
-              min="1"
-              max="5"
-              required
-              value={formData.rating ?? ""}
-              onChange={handleChange}
-              className="w-full border px-3 py-2 rounded-md"
-            />
-          </div>
-          <div>
-            <label className="block font-medium">Review Text</label>
-            <textarea
-              name="review"
-              onChange={handleChange}
-              className="w-full border px-3 py-2 rounded-md"
-            />
-          </div>
-          <button
-            type="submit"
-            className="bg-[#00356B] text-white px-4 py-2 rounded-md hover:bg-[#002955]"
-          >
+
+          <button type="submit" className="search-button">
             Submit Review
           </button>
+          
         </form>
+        {successMessage && (
+          <div className="mt-6 text-green-600 font-semibold mb-2">{successMessage}</div>
+        )}
       </div>
     </div>
   );

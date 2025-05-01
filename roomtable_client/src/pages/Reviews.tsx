@@ -112,9 +112,7 @@ function ReviewForm() {
             </div>
           </div>
         ))}
-        <div>
-          
-        </div>
+  
         <div>
           <textarea
             name="review"
