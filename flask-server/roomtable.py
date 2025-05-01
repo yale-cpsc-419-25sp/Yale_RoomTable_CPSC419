@@ -186,7 +186,7 @@ def reviews_api():
         db.create_review(
             suite_id=data['suite'],
             review_text=data['review'],
-            overall_rating=int(data['rating']),
+            overall_rating=int(data['overall']),
             accessibility_rating=int(data['accessibility']),
             space_rating=int(data['space']),
             user_id=session['net_id']
@@ -197,6 +197,7 @@ def reviews_api():
         all_reviews = db_session.query(SuiteReview).join(Suite).all()
         return jsonify({
             'reviews': [{
+                'suite_id' : r.suite.id,
                 'suite_name': r.suite.name,
                 'accessibility_rating': r.accessibility_rating,
                 'space_rating': r.space_rating,
