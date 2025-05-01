@@ -25,7 +25,6 @@ const Navbar = ({ user }) => {
                 <a href="http://localhost:8000/api/login" className="p-4">
                     Login
                 </a>
-                <span className="p-4">About</span>
                 </>
             ) : (
                 <>

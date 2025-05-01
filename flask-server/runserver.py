@@ -1,13 +1,10 @@
 from sys import argv, exit, stderr
-from roomtable import app
 from os import environ
+from roomtable import app
 
-
-from database import Database
 
 def main():
-    db = Database()
-
+    """Main function to start Flask API."""
     if len(argv) != 2:
         print('Usage: ' + argv[0] + ' port', file=stderr)
         exit(1)
@@ -23,9 +20,6 @@ def main():
     except Exception as ex:
         print(ex, file=stderr)
         exit(1)
-    
-    db.close()
 
 if __name__ == '__main__':
     main()
-  
