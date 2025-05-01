@@ -18,7 +18,7 @@ const SearchPage = () => {
   const getRatingColor = (rating) => {
     if (rating == null) return "#ddd"; 
     const hue = (rating / 5) * 120; 
-    return `hsl(${hue}, 50%, 80%)`;
+    return `hsl(${hue}, 65%, 75%)`;
   };
 
   // Redirect to default filters on first load if none are present
@@ -151,7 +151,7 @@ const SearchPage = () => {
                       className="inline-block text-white text-sm font-semibold px-2 py-1 rounded-full"
                       style={{ backgroundColor: getRatingColor(suite.overall), minWidth: "2.5rem", textAlign: "center", color: 'black'}}
                     >
-                      {suite.overall?.toFixed(1)}
+                      {suite.overall != null ? suite.overall.toFixed(1) : "N/A"}
                     </span>
                   </td>
                   <td className="px-4 py-2">
@@ -159,7 +159,7 @@ const SearchPage = () => {
                       className="inline-block text-white text-sm font-semibold px-2 py-1 rounded-full"
                       style={{ backgroundColor: getRatingColor(suite.accessibility), minWidth: "2.5rem", textAlign: "center", color: 'black'}}
                     >
-                      {suite.accessibility?.toFixed(1)}
+                      {suite.accessibility != null ? suite.accessibility.toFixed(1) : "N/A"}
                     </span>
                   </td>
                   <td className="px-4 py-2">
@@ -167,7 +167,7 @@ const SearchPage = () => {
                       className="inline-block text-white text-sm font-semibold px-2 py-1 rounded-full"
                       style={{ backgroundColor: getRatingColor(suite.space), minWidth: "2.5rem", textAlign: "center", color: 'black'}}
                     >
-                      {suite.space?.toFixed(1)}
+                      {suite.space != null ? suite.space.toFixed(1) : "N/A"}
                     </span>
                   </td>
                 </tr>

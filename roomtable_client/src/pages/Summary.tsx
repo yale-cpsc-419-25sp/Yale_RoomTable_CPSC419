@@ -125,10 +125,10 @@ function SummaryPage() {
                         key={i}
                         className="border border-gray-300 rounded-md p-4 mb-4 bg-gray-50 shadow-sm"
                         >
-                            <p><strong>overall Rating:</strong>{r.overall_rating}</p>
-                            <p><strong>Accessibility Rating:</strong>{r.accessibility_rating}</p>
-                            <p><strong>Space Rating:</strong>{r.space_rating}</p>
-                            <p><strong>Review:</strong>{r.review_text || "N/A"}</p>
+                            <p><strong>Overall Rating: </strong>{r.overall_rating}</p>
+                            <p><strong>Accessibility Rating: </strong>{r.accessibility_rating}</p>
+                            <p><strong>Space Rating: </strong>{r.space_rating}</p>
+                            <p>{r.review_text || "N/A"}</p>
                         </div>
                     )) 
                 ) : (

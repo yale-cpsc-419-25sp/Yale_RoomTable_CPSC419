@@ -88,7 +88,7 @@ def api_results():
                 accessibility = sum([r.accessibility_rating for r in reviews]) / num_reviews
                 space = sum([r.space_rating for r in reviews]) / num_reviews
             else:
-                overall = accessibility = space = 0.0
+                overall = accessibility = space = None
 
             suites_dicts.append({
                 "id": suite.id,
