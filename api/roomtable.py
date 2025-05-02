@@ -300,6 +300,16 @@ def friend_preferences(friend_id=None):
 
             suite_list = []
             for suite in suites:
+                reviews = db_session.query(SuiteReview).filter(SuiteReview.suite_id==suite.id).all()
+                num_reviews = len(reviews)
+
+                if num_reviews > 0:
+                    overall = sum([r.overall_rating for r in reviews]) / num_reviews
+                    accessibility = sum([r.accessibility_rating for r in reviews]) / num_reviews
+                    space = sum([r.space_rating for r in reviews]) / num_reviews
+                else:
+                    overall = accessibility = space = None
+
                 suite_list.append({
                     "id": suite.id,
                     "name": suite.name,
@@ -309,7 +319,10 @@ def friend_preferences(friend_id=None):
                     "singles": suite.singles,
                     "doubles": suite.doubles,
                     "year": suite.year,
-                    "rank": rank_dict[suite.id]
+                    "rank": rank_dict[suite.id],
+                    "overall": overall,
+                    "accessibility": accessibility,
+                    "space": space
                 })
 
             return jsonify({
