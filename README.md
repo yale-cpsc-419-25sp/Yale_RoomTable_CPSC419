@@ -22,14 +22,7 @@ First, install all necessary packages using requirements.txt:
 pip install -r requirements.txt
 ```
 
-Next, set up two terminals (split terminal setup recommended). On one terminal, `cd` to the flask-server directory and run the command:
-
-```
-python runserver.py 8000
-```
-Note that port 8000 is necessary to use as of the beta version.
-
-In the other terminal, `cd` to roomtable_client and run:
+Next, `cd` to client and run:
 ```
 npm install
 ```
@@ -43,7 +36,7 @@ Then, in a browser, navigate to `http://localhost:5173/`, the URL given in the t
 
 ## Deliverables
 
-### Final Version: May 1st, 2025
+### Final Version: May 3rd, 2025
 a. Improve on any known bugs
 
 b. Strengthen stability of website

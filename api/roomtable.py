@@ -1,19 +1,20 @@
+"""Core functionality for communication between server and client."""
 from os import urandom, environ
-from flask import Flask, jsonify, request, session, redirect, url_for, render_template
+from flask import Flask, jsonify, request, session, redirect
 from flask_cors import CORS
 from cas import CASClient
 from sqlalchemy import func
 from sqlalchemy.orm import joinedload
 from dotenv import load_dotenv
-
+import requests
+from database import Database
 from models.review import SuiteReview
 from models.friend import Friend
 from models.requests import Requests
-from database import Database
 from models.suite import Suite
 from models.preference import Preference
 
-import requests
+
 
 db = Database()
 
@@ -35,6 +36,7 @@ cas = CASClient(
 
 @app.route('/api/login', methods=['GET'])
 def login():
+    """Login the user using Yale CAS"""
     if 'net_id' in session:
         return redirect('http://localhost:5173/search')
 
@@ -49,17 +51,20 @@ def login():
 
 @app.route('/api/user', methods=['GET'])
 def get_user():
+    """Returns logged in user's NetID"""
     if 'net_id' in session:
         return jsonify({'net_id': session['net_id']})
     return jsonify({'error': 'not logged in'}), 401
 
 @app.route('/api/logout', methods=['POST'])
 def logout():
+    """Log out user and remove from session."""
     session.pop('net_id', None)
     return jsonify({'message': 'logged out'})
 
 @app.route('/api/results', methods=['GET'])
 def api_results():
+    """Returns list of dictionaries of suites given search filters."""
     capacity = request.args.get('capacity')
     floor = request.args.get('floor')
     class_year = request.args.get('class_year')
@@ -108,6 +113,7 @@ def api_results():
 
 @app.route('/api/summary/<int:suite_id>', methods=["GET", "POST", "DELETE"])
 def summary_api(suite_id=None):
+    """Returns all details of a suite, including reviews and ratings."""
     user_id = session.get('net_id')
     with db.get_session() as db_session:
         if request.method == "POST" and suite_id:
@@ -119,8 +125,6 @@ def summary_api(suite_id=None):
         suite = db_session.query(Suite).filter(Suite.id == suite_id).first()
         reviews = db_session.query(SuiteReview).filter(SuiteReview.suite_id == suite_id).all()
         is_saved = db_session.query(Preference).filter_by(user_id=user_id, suite_id=suite_id).first() is not None
-        print(f"Returning is_saved={is_saved} for suite_id={suite_id} and user_id={user_id}")  # Add logging to debug
-
 
         return jsonify({
             "suite": {
@@ -206,33 +210,6 @@ def reviews_api():
             } for r in all_reviews]
         })
 
-@app.route('/reviews', methods = ["GET", "POST"])
-def review():
-    suites = db.session.query(Suite).all()
-
-    if request.method == 'POST':
-        suite_id = request.form['suite']
-        accessibility_rating = int(request.form['accessibility'])
-        space_rating = int(request.form['space'])
-        review_text = request.form['review']
-        overall_rating = int(request.form['rating'])
-        user_id = request.form.get('user_id')
- 
-        db.create_review(
-            suite_id=suite_id,
-            review_text=review_text,
-            overall_rating=overall_rating,
-            accessibility_rating=accessibility_rating,
-            space_rating=space_rating,
-            user_id=user_id
-        )
-
-        return redirect(url_for('review'))
-
-    # Query all reviews to display
-    all_reviews = db.session.query(SuiteReview).all()
-    return render_template('reviews.html', reviews=all_reviews, suites=suites)
-
 @app.route('/api/friends', methods=['POST', 'DELETE'])
 def add_friend():
     user_id = session.get('net_id')
@@ -275,7 +252,7 @@ def add_friend():
         try:
             db.remove_friend(user_id, friend_id)
             return jsonify({"message": "Friend removed successfully"})
-        except Exception as e:
+        except Exception:
             return jsonify({"error": "Failed to remove friend"}), 500
 
 
