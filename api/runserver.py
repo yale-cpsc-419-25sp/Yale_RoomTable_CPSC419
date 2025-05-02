@@ -1,3 +1,10 @@
+"""
+Runs the server
+
+Usage:
+    python3 runserver.py [PORT]
+"""
+
 from sys import argv, exit, stderr
 from os import environ
 from roomtable import app

@@ -1,3 +1,4 @@
+import os
 import csv
 
 from contextlib import contextmanager
@@ -13,7 +14,10 @@ from models.requests import Requests
 from models.preference import Preference
 
 class Database():
-    def __init__(self, database_url="sqlite:///data/roomtable.db"):
+    def __init__(self, database_url=None):
+        if not database_url:
+            basedir = os.path.abspath(os.path.dirname(__file__))
+            database_url = f"sqlite:///{os.path.join(basedir, 'data', 'roomtable.db')}"
         self.engine = create_engine(database_url, connect_args={'check_same_thread': False})
         self.Session = sessionmaker(bind=self.engine)
 
@@ -57,7 +61,9 @@ class Database():
             session.commit()
 
     def _populate_suites(self, csvfile_url):
-        with open(csvfile_url, newline="") as csvfile:
+        basedir = os.path.abspath(os.path.dirname(__file__))
+        full_path = os.path.join(basedir, csvfile_url)
+        with open(full_path, newline="") as csvfile:
             csvreader = csv.DictReader(csvfile)
             with self.get_session() as session:
                 for row in csvreader:
