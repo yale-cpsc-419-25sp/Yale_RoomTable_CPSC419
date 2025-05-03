@@ -36,3 +36,23 @@ Then, in a browser, navigate to
 ```
 http://localhost:5173/
 ```
+
+## Project Structure
+```
+root/
+├── api/
+│   ├── data/
+│   ├── models/
+│   ├── database.py
+│   ├── roomtable.py
+│   └── runserver.py
+├── client/
+│   ├── public/
+│   └── src/
+│       ├── components/
+│       └── pages/
+│
+└── 
+```
+
+The most interesting and technically impressive features we implemented were the Yale CAS Login, friend request functionality (including being able to see the suites that your friend has saved and utilizing the Yalies API to validate friend search), and overall UI/UX. The Yale CAS Login functionality can be found in `root/api/roomtable.py` in the first ~50 lines of the file. The friend request backend functionality can be found in `root/api/roomtable.py` in the `add_friend()`, `get_friends()`, `get_requests()`, and `search_friends()` functions, and the frontend functionality can be found in `root/client/src/pages/Friends.tsx`.
