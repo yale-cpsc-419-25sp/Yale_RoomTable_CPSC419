@@ -49,6 +49,13 @@ export default function UserDropdown() {
               Reviews
             </a>
           </MenuItem>
+          <MenuItem>
+            <a
+              href="/timeline"
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+              Timeline
+            </a>
+          </MenuItem>
         </div>
 
         {/* Group 2: Log Out */}

@@ -13,9 +13,12 @@ import Timeline from "./pages/Timeline";
 
 // Protect routes that require authentication
 // Redirects to the login page if not logged in, otherwise renders the page
-function PrivateRoute({ user, children }: { user : string | null; children : ReactNode }) {
-    return user ? children : <Navigate to="/" />;
-};
+function PrivateRoute({ user, children }: { user: string | null; children: ReactNode }) {
+    if (!user) {
+        return <Navigate to="/" />;
+    }
+    return <>{children}</>;
+}
 
 function App() {
     // Set default states for user and loading
@@ -52,7 +55,7 @@ function App() {
     return (
         <Router>
             { /* See components/Navbar.tsx for more details */ }
-            {user && <Navbar user={user} />}
+            <Navbar user={user} />
             <Routes>
                 <Route
                     path="/"

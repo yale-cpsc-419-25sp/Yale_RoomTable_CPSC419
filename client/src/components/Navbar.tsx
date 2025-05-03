@@ -28,9 +28,6 @@ const Navbar = ({ user }: { user : string | null }) => {
                 </>
             ) : (
                 <>
-                <a href="/timeline" className="p-4">
-                    Timeline
-                </a>
                 <div className="p-4">
                     <UserDropdown />
                 </div>
