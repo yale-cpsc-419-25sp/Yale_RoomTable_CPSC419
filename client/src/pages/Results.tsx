@@ -1,16 +1,34 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
+interface Suite {
+  id: number;
+  name: string;
+  entryway: string;
+  capacity: number;
+  singles: number;
+  doubles: number;
+  year: number;
+  resco_id: string | null;
+  resco_name: string | null;
+}
+
+type FilterType = {
+  capacity?: string;
+  floor?: string;
+  classYear?: string;
+};
+
 const ResultsPage = () => {
-  const [results, setResults] = useState([]);
-  const [filters, setFilters] = useState({});
+  const [results, setResults] = useState<Suite[]>([]);
+  const [filters, setFilters] = useState<FilterType>({});
   const location = useLocation();
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
-    const capacity = queryParams.get("capacity");
-    const floor = queryParams.get("floor");
-    const classYear = queryParams.get("class");
+    const capacity = queryParams.get("capacity") || undefined;
+    const floor = queryParams.get("floor") || undefined;
+    const classYear = queryParams.get("class") || undefined;
 
     setFilters({ capacity, floor, classYear });
 
@@ -76,7 +94,7 @@ const ResultsPage = () => {
                 <td className="px-4 py-2">{suite.singles}</td>
                 <td className="px-4 py-2">{suite.doubles}</td>
                 <td  className="px-4 py-2">{suite.year === 2 ? "Sophomore" : "Junior/Senior"}</td>
-                <td className="px-4 py-2">{suite.resco?.name}</td>
+                <td className="px-4 py-2">{suite.resco_name}</td>
               </tr>
             ))}
           </tbody>

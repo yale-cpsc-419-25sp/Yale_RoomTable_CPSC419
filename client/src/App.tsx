@@ -49,7 +49,7 @@ function App() {
     }, []);
 
     // If not done fetching user info, do not render
-    if (loading) return;
+    if (loading) return null;
 
     // Render page
     return (

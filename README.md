@@ -1,8 +1,6 @@
 # RoomTable
 
-Project Group 2
-
-## Team Members
+## Project Group 2
 Brandon Nguyen, Angelica Pham, Kevin Guillen, Mandy Zhang, Briley Thomas
 
 ## Summary 
@@ -32,44 +30,7 @@ Afterwards, run:
 npm run dev
 ```
 
-Then, in a browser, navigate to `http://localhost:5173/`, the URL given in the terminal.
-
-## Deliverables
-
-### Final Version: May 3rd, 2025
-a. Improve on any known bugs
-
-b. Strengthen stability of website
-
-### Beta Version: April 18th, 2025
-a. Add Bootstrap and other Javascript functionalities using libraries like React.js
-
-b. Continue to improve on Presentation Tier to build a cohesive, aesthetically pleasing
-front-end
-
-c. Google Calendar integration for housing process timeline
-### Alpha Version: April 9th, 2025
-a. Enhance Presentation Tier by adding site logo, fonts, color, etc.
-
-b. Attach floor plans to each suite/room on the Room Summary Page
-
-c. Adding review and viewing reviews functionality to the Room Summary Page
-
-### MVP: March 28th, 2025
-a. Yale Central Authentication Service for user login
-
-b. Presentation & Application Tiers
-- Room Search Functionality
-- Search for a room number or room characteristics, return from the
-database
-- Filter rooms based on configuration, number of people, etc. (Room Summary Page)
-- Display information from the database about the room characteristics (Room Preference List)
-- Ordered list of user’s favorite rooms/suites (Friends List)
-- Users can add each other as friends and view each other’s Room
-Preference List
-
-c. Data Tier
-- Users and Rooms Tables
-- Other basic information about users and rooms relating them (room
-preference, residential college, etc.)
-- Relations between users and users (friends)
+Then, in a browser, navigate to
+```
+http://localhost:5173/
+```

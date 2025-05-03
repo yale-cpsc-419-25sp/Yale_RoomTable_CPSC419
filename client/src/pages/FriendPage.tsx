@@ -1,9 +1,23 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
+interface Suite {
+    id: number;
+    name: string;
+    entryway: string;
+    capacity: number;
+    singles: number;
+    doubles: number;
+    year: number;
+    resco: string | null;
+    overall: number | null;
+    accessibility: number | null;
+    space: number | null;
+  }
+
 function FriendPage() {
     const { friendId } = useParams();
-    const [suites, setSuites] = useState([]);
+    const [suites, setSuites] = useState<Suite[]>([]);
     const [error, setError] = useState('');
 
     // Fetch the friend's suites from flask-server using friendId
@@ -19,7 +33,7 @@ function FriendPage() {
     }, [friendId]);
 
     // Convert rating (0–5) to a pastel color on red-to-green HSL gradient
-    const getRatingColor = (rating) => {
+    const getRatingColor = (rating : number | null) => {
         if (rating == null) return "#ddd"; 
         const hue = (rating - 1) * 30; 
         return `hsl(${hue}, 75%, 75%)`;

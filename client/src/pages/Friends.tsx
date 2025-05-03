@@ -1,15 +1,22 @@
 import { useState, useEffect, useRef } from 'react';
 import "../search.css"
 
+type Person = {
+  netid: string;
+  name: string;
+  college: string;
+  year: number;
+};
+
 export default function Friends() {
-  const [friends, setFriends] = useState([]);
+  const [friends, setFriends] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchResults, setSearchResults] = useState<Person[]>([]);
   const [error, setError] = useState('');
-  const [requests, setRequests] = useState([]);
+  const [requests, setRequests] = useState<{ friend_id: string; status: string }[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
-  const searchTimeoutRef = useRef(null);
+  const searchTimeoutRef = useRef<number | null>(null);
 
   // Fetch list of friends and requests
   useEffect(() => {
@@ -73,7 +80,7 @@ export default function Friends() {
   }, [searchQuery]);
 
   // Handle direct friend request from search results
-  const handleDirectAdd = async (netid, name) => {
+  const handleDirectAdd = async (netid : string, name : string) => {
     try {
       const res = await fetch('/api/friends', {
         method: 'POST',
@@ -99,7 +106,7 @@ export default function Friends() {
   };
 
   // Handle removing a friend
-  const handleRemove = async (friend_id) => {
+  const handleRemove = async (friend_id : string) => {
     try {
       const res = await fetch('/api/friends', {
         method: 'DELETE',
@@ -119,7 +126,7 @@ export default function Friends() {
     }
   };
 
-  const handleDenyRequest = async (friend_id) => {
+  const handleDenyRequest = async (friend_id : string) => {
     try {
       const res = await fetch('/api/requests', {
         method: 'DELETE',
@@ -138,7 +145,7 @@ export default function Friends() {
     }
   };
 
-  const handleAcceptRequest = async (friend_id) => {
+  const handleAcceptRequest = async (friend_id : string) => {
     try {
       const res = await fetch('/api/requests', {
         method: 'POST',
