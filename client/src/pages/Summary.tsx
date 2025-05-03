@@ -27,31 +27,44 @@ function SummaryPage() {
             setIsSaved(data.suite.is_saved);
           });
       }, []);
-
-    const handleSubmitReview = async (e) => {
-        e.preventDefault();
-        await fetch(`http://localhost:8000/api/reviews`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify(formData)
-        });
     
-        // Re-fetch reviews to show the newly added one
-        const res = await fetch(`http://localhost:8000/api/summary/${suite_id}`, { credentials: "include" });
-        const data = await res.json();
-        setReviews(data.reviews);
-        setSuccessMessage("Submitted!");
-
-        // Optionally clear the form:
-        setFormData(prev => ({
-            ...prev,
-            accessibility: "",
-            space: "",
-            overall: "",
-            review: "",
-        }));
+    // Convert rating (0–5) to a pastel color on red-to-green HSL gradient
+    const getRatingColor = (rating) => {
+      if (rating == null) return "#ddd"; 
+      const hue = (rating / 5) * 120; 
+      return `hsl(${hue}, 65%, 75%)`;
     };
+      
+    const handleSubmitReview = async (e) => {
+      e.preventDefault();
+  
+      await fetch(`http://localhost:8000/api/reviews`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(formData)
+      });
+  
+      // Re-fetch summary data so new review is included and averages are updated
+      const res = await fetch(`http://localhost:8000/api/summary/${suite_id}`, {
+          credentials: "include"
+      });
+      const data = await res.json();
+      
+      setSuite(data.suite);           // <- ✅ Also update the suite object
+      setReviews(data.reviews);       // <- Keep updating reviews as before
+      setSuccessMessage("Submitted!");
+  
+      // Optionally clear the form:
+      setFormData(prev => ({
+          ...prev,
+          accessibility: "",
+          space: "",
+          overall: "",
+          review: "",
+      }));
+  };
+  
     
     const handleSaveSuite = async () => {
         const method = isSaved ? "DELETE" : "POST"
@@ -125,6 +138,29 @@ function SummaryPage() {
         <img src={floorPlans} alt="Suite Floorplan" className="w-full h-auto mt-6 mb-6 rounded-md shadow-md" />
         <div className="mb-6">
           <h2 className="text-2xl font-semibold mb-2">Reviews</h2>
+          {suite && (
+            <div className="flex justify-between space-x-4 my-4">
+              {[
+                ["Overall", suite.overall],
+                ["Accessibility", suite.accessibility],
+                ["Space", suite.space],
+              ].map(([label, val]) => (
+                <div
+                  key={label}
+                  className="flex-1 text-center p-6 rounded-xl shadow-md"
+                  style={{
+                    backgroundColor: getRatingColor(val),
+                    color: 'black',
+                    fontWeight: 'bold',
+                    fontSize: '1.2rem',
+                  }}
+                >
+                  {label} Average | {val != null ? val.toFixed(2) : "N/A"}
+                </div>
+              ))}
+            </div>
+          )}
+
           {reviews.length ? (
             reviews.map((r, i) => (
               <div
