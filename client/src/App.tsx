@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, ReactNode } from "react";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import SearchPage from "./pages/Search";
@@ -13,9 +13,12 @@ import Timeline from "./pages/Timeline";
 
 // Protect routes that require authentication
 // Redirects to the login page if not logged in, otherwise renders the page
-function PrivateRoute({ user, children }) {
-    return user ? children : <Navigate to="/" />;
-};
+function PrivateRoute({ user, children }: { user: string | null; children: ReactNode }) {
+    if (!user) {
+        return <Navigate to="/" />;
+    }
+    return <>{children}</>;
+}
 
 function App() {
     // Set default states for user and loading

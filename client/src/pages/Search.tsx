@@ -17,8 +17,8 @@ const SearchPage = () => {
   // Convert rating (0–5) to a pastel color on red-to-green HSL gradient
   const getRatingColor = (rating) => {
     if (rating == null) return "#ddd"; 
-    const hue = (rating / 5) * 120; 
-    return `hsl(${hue}, 65%, 75%)`;
+    const hue = (rating - 1) * 30; 
+    return `hsl(${hue}, 75%, 75%)`;
   };
 
   // Redirect to default filters on first load if none are present

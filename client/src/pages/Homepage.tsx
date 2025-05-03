@@ -1,7 +1,20 @@
 import { useEffect, useState } from "react";
 
+interface Suite {
+    id: number;
+    name: string;
+    entryway: string;
+    capacity: number;
+    singles: number;
+    doubles: number;
+    year: number;
+    resco_id: string | null;
+    resco_name: string | null;
+}
+
+
 function Homepage() {
-    const [suites, setSuites] = useState([]);
+    const [suites, setSuites] = useState<Suite[]>([]);
 
     // Retrieve all the current user's saved suites through flask-server
     useEffect(() => {

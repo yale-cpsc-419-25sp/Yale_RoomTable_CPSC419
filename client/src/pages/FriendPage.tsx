@@ -18,6 +18,13 @@ function FriendPage() {
             });
     }, [friendId]);
 
+    // Convert rating (0–5) to a pastel color on red-to-green HSL gradient
+    const getRatingColor = (rating) => {
+        if (rating == null) return "#ddd"; 
+        const hue = (rating - 1) * 30; 
+        return `hsl(${hue}, 75%, 75%)`;
+    };
+
     return (
         <div className="p-6 max-w-8xl mx-auto">
             <h2 className="text-3xl font-bold mb-6">{friendId}'s Saved Rooms:</h2>
@@ -32,6 +39,9 @@ function FriendPage() {
                         <th className="px-4 py-2 text-left">Doubles</th>
                         <th className="px-4 py-2 text-left">Class Year</th>
                         <th className="px-4 py-2 text-left">Residential College</th>
+                        <th className="px-4 py-2 text-left">Overall Rating</th>
+                        <th className="px-4 py-2 text-left">Accessibility Rating</th>
+                        <th className="px-4 py-2 text-left">Space Rating</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -52,6 +62,30 @@ function FriendPage() {
                             <td className="px-4 py-2">{suite.doubles}</td>
                             <td className="px-4 py-2">{suite.year === 2 ? "Sophomore" : "Junior/Senior"}</td>
                             <td className="px-4 py-2">{suite.resco}</td>
+                            <td className="px-4 py-2">
+                                <span
+                                className="inline-block text-white text-sm font-semibold px-2 py-1 rounded-full"
+                                style={{ backgroundColor: getRatingColor(suite.overall), minWidth: "2.5rem", textAlign: "center", color: 'black'}}
+                                >
+                                {suite.overall != null ? suite.overall.toFixed(1) : "N/A"}
+                                </span>
+                            </td>
+                            <td className="px-4 py-2">
+                                <span
+                                className="inline-block text-white text-sm font-semibold px-2 py-1 rounded-full"
+                                style={{ backgroundColor: getRatingColor(suite.accessibility), minWidth: "2.5rem", textAlign: "center", color: 'black'}}
+                                >
+                                {suite.accessibility != null ? suite.accessibility.toFixed(1) : "N/A"}
+                                </span>
+                            </td>
+                            <td className="px-4 py-2">
+                                <span
+                                className="inline-block text-white text-sm font-semibold px-2 py-1 rounded-full"
+                                style={{ backgroundColor: getRatingColor(suite.space), minWidth: "2.5rem", textAlign: "center", color: 'black'}}
+                                >
+                                {suite.space != null ? suite.space.toFixed(1) : "N/A"}
+                                </span>
+                            </td>
                         </tr>
                     ))}
                 </tbody>

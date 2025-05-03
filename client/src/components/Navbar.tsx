@@ -1,7 +1,7 @@
 import UserDropdown from './Dropdown';
 // import Search from '../pages/Search'
 
-const Navbar = ({ user }) => {
+const Navbar = ({ user }: { user : string | null }) => {
     return (
         <div className='flex justify-between items-center h-24 w-full mx-auto px-6'>
             <div className="flex items-center space-x-2">
@@ -28,9 +28,6 @@ const Navbar = ({ user }) => {
                 </>
             ) : (
                 <>
-                <a href="/timeline" className="p-4">
-                    Timeline
-                </a>
                 <div className="p-4">
                     <UserDropdown />
                 </div>
