@@ -1,8 +1,22 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, FormEvent, ChangeEvent } from 'react';
+
+interface Suite {
+  id: number;
+  name: string;
+}
+
+interface Review {
+  suite_id: number;
+  suite_name: string;
+  overall_rating: number;
+  accessibility_rating: number;
+  space_rating: number;
+  review_text: string;
+}
 
 function ReviewForm() {
-  const [suites, setSuites] = useState([]);
-  const [reviews, setReviews] = useState([]);
+  const [suites, setSuites] = useState<Suite[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [formData, setFormData] = useState({
     suite: '',
     accessibility: '',
@@ -23,12 +37,14 @@ function ReviewForm() {
       .then((data) => setReviews(data.reviews));
   }, []);
 
-  const handleChange = (e) => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e : FormEvent) => {
     e.preventDefault();
 
     await fetch('/api/reviews', {
@@ -54,7 +70,7 @@ function ReviewForm() {
   };
 
   // Convert rating (0–5) to a pastel color on red-to-green HSL gradient
-  const getRatingColor = (rating) => {
+  const getRatingColor = (rating : number) => {
     if (rating == null) return "#ddd"; 
     const hue = (rating - 1) * 30; 
     return `hsl(${hue}, 75%, 75%)`;
@@ -98,13 +114,13 @@ function ReviewForm() {
                     type="radio"
                     name={field}
                     value={val}
-                    checked={formData[field] === String(val)}
+                    checked={formData[field as keyof typeof formData] === String(val)}
                     onChange={handleChange}
                     className="hidden"
                   />
                   <span
                     className={`fa-star fa text-xl ${
-                      Number(formData[field]) >= val ? "fas text-yellow-400" : "far text-gray-300"
+                      Number(formData[field as keyof typeof formData]) >= val ? "fas text-yellow-400" : "far text-gray-300"
                     }`}
                   ></span>
                 </label>
@@ -118,7 +134,7 @@ function ReviewForm() {
             name="review"
             value={formData.review}
             onChange={handleChange}
-            rows="4"
+            rows={4}
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
             placeholder="Write your review here..."
           />

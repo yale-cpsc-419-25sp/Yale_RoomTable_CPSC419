@@ -64,7 +64,7 @@ export default function Friends() {
             setSearchResults(data.results || []);
           }
         })
-        .catch(err => {
+        .catch(() => {
           setError('Failed to search for friends');
           setSearchResults([]);
         })
@@ -188,7 +188,7 @@ export default function Friends() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by name..."
+              placeholder="Search by name or NetID..."
               className="w-full p-3 border border-gray-300 rounded-md text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             {/* Loading spinner */}

@@ -1,11 +1,43 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, FormEvent } from "react";
 import { useParams } from "react-router-dom";
+
+interface Suite {
+  id: number;
+  name: string;
+  entryway: string;
+  capacity: number;
+  singles: number;
+  doubles: number;
+  year: number;
+  resco_id: string | null;
+  resco: string | null;
+  overall: number;
+  accessibility: number;
+  space: number;
+}
+
+interface Review {
+  overall_rating: number;
+  accessibility_rating: number;
+  space_rating: number;
+  review_text: string;
+}
+
+interface FormData {
+  suite: string | undefined;
+  accessibility: string | null;
+  space: string | null;
+  rating: string | null;
+  review: string;
+  user_id: string;
+  [key: string]: string | undefined | null;
+}
 
 function SummaryPage() {
     const { suite_id } = useParams();
-    const [suite, setSuite] = useState(null);
-    const [reviews, setReviews] = useState([]);
-    const [formData, setFormData] = useState({
+    const [suite, setSuite] = useState<Suite | null>(null);
+    const [reviews, setReviews] = useState<Review[]>([]);
+    const [formData, setFormData] = useState<FormData>({
         suite: suite_id,
         accessibility: null,
         space: null,
@@ -29,13 +61,13 @@ function SummaryPage() {
       }, []);
     
     // Convert rating (0–5) to a pastel color on red-to-green HSL gradient
-    const getRatingColor = (rating) => {
+    const getRatingColor = (rating : number) => {
       if (rating == null) return "#ddd"; 
       const hue = (rating - 1) * 30; 
       return `hsl(${hue}, 75%, 75%)`;
     };
       
-    const handleSubmitReview = async (e) => {
+    const handleSubmitReview = async (e : FormEvent) => {
       e.preventDefault();
   
       await fetch(`http://localhost:8000/api/reviews`, {
@@ -77,14 +109,12 @@ function SummaryPage() {
         setIsSaved(!isSaved);
     };
 
-    const handleChange = (e) => {
-        
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    if (!suite) return;
+    if (!suite) return null;
 
-    // Todo: account for the two floor suite
     let floorPlans = "/floorplans/MY";
     // Check for A Lower and B Lower suites
     if (suite.name.charAt(1) == " "){
@@ -149,13 +179,13 @@ function SummaryPage() {
                   key={label}
                   className="flex-1 text-center p-6 rounded-xl shadow-md"
                   style={{
-                    backgroundColor: getRatingColor(val),
+                    backgroundColor: getRatingColor(Number(val)),
                     color: 'black',
                     fontWeight: 'bold',
                     fontSize: '1.2rem',
                   }}
                 >
-                  {label} Average | {val != null ? val.toFixed(2) : "N/A"}
+                  {label} Average | {typeof val === 'number' ? val.toFixed(2) : "N/A"}
                 </div>
               ))}
             </div>
@@ -243,7 +273,7 @@ function SummaryPage() {
             name="review"
             value={formData.review}
             onChange={handleChange}
-            rows="4"
+            rows={4}
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
             placeholder="Write your review here..."
           />

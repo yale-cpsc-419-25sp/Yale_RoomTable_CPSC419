@@ -14,10 +14,12 @@ now, we will be building our site to only display Murray rooms and suites.
 
 Ensure that you have [Node.js](https://nodejs.org/en/download) v20+ installed on your machine.
 
-First, install all necessary packages using requirements.txt:
+First, create a virtual environment and install all necessary packages using requirements.txt:
 
 ```
-pip install -r requirements.txt
+python3 -m venv [NAME OF YOUR VENV]
+source [NAME OF YOUR VENV]/bin/activate
+pip3 install -r requirements.txt
 ```
 
 Next, `cd` to client and run:

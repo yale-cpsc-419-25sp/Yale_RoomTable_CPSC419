@@ -62,7 +62,7 @@ function App() {
                     element={
                         // If user is logged in, redirect to search page instead of login
                         // Otherwise, render the pretty landing page
-                        user ? <Navigate to="/search"> </Navigate>: <Hero />
+                        user ? <Navigate to="/search" />: <Hero />
                     }
                 />
                 { /* All routes below are protected as private routes (login-only pages) */ }

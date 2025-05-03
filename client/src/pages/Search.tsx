@@ -1,5 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, ChangeEvent } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+
+interface Suite {
+  id: number;
+  name: string;
+  entryway: string;
+  capacity: number;
+  singles: number;
+  doubles: number;
+  year: number;
+  resco_id: string | null;
+  resco_name: string | null;
+  overall: number;
+  accessibility: number;
+  space: number;
+}
 
 const DEFAULT_FILTERS = {
   college: "murray",
@@ -9,13 +24,13 @@ const DEFAULT_FILTERS = {
 };
 
 const SearchPage = () => {
-  const [filteredRooms, setFilteredRooms] = useState([]);
+  const [filteredRooms, setFilteredRooms] = useState<Suite[]>([]);
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
   const location = useLocation();
   const navigate = useNavigate();
 
   // Convert rating (0–5) to a pastel color on red-to-green HSL gradient
-  const getRatingColor = (rating) => {
+  const getRatingColor = (rating : number) => {
     if (rating == null) return "#ddd"; 
     const hue = (rating - 1) * 30; 
     return `hsl(${hue}, 75%, 75%)`;
@@ -70,7 +85,7 @@ const SearchPage = () => {
   }, [filters]);
 
   // Handle filter changes
-  const handleFilterChange = (e) => {
+  const handleFilterChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     const updatedFilters = { ...filters, [name]: value };
 
@@ -145,7 +160,7 @@ const SearchPage = () => {
                   <td className="px-4 py-2">{suite.capacity}</td>
                   <td className="px-4 py-2">{suite.singles}</td>
                   <td className="px-4 py-2">{suite.doubles}</td>
-                  <td className="px-4 py-2">{suite.resco?.name}</td>
+                  <td className="px-4 py-2">{suite.resco_name}</td>
                   <td className="px-4 py-2">
                     <span
                       className="inline-block text-white text-sm font-semibold px-2 py-1 rounded-full"
