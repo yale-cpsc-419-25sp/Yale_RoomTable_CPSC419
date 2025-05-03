@@ -124,6 +124,15 @@ def summary_api(suite_id=None):
 
         suite = db_session.query(Suite).filter(Suite.id == suite_id).first()
         reviews = db_session.query(SuiteReview).filter(SuiteReview.suite_id == suite_id).all()
+        num_reviews = len(reviews)
+
+        if num_reviews > 0:
+            overall = sum([r.overall_rating for r in reviews]) / num_reviews
+            accessibility = sum([r.accessibility_rating for r in reviews]) / num_reviews
+            space = sum([r.space_rating for r in reviews]) / num_reviews
+        else:
+            overall = accessibility = space = None
+
         is_saved = db_session.query(Preference).filter_by(user_id=user_id, suite_id=suite_id).first() is not None
 
         return jsonify({
@@ -136,7 +145,10 @@ def summary_api(suite_id=None):
                 "singles": suite.singles,
                 "doubles": suite.doubles,
                 "year": suite.year,
-                "is_saved": is_saved
+                "is_saved": is_saved,
+                "overall": overall,
+                "accessibility": accessibility,
+                "space": space,
             },
             "reviews": [
                 {
